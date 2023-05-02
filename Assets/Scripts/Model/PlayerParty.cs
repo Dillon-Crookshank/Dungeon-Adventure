@@ -1,13 +1,21 @@
-namespace DefaultNamespace; 
+namespace DefaultNamespace;
 
-internal class PlayerParty : AbstractParty {
+internal class PlayerParty : AbstractParty
+{
 
     private List<AbstractPlayerCharacter> playerPartyComposition;
 
-    PlayerParty(AbstractPlayerCharacter theHero) {
-        if (playerPartyComposition == null) {
+    PlayerParty(AbstractPlayerCharacter theHero)
+    {
+        if (playerPartyComposition == null)
+        {
             playerPartyComposition = new List<AbstractPlayerCharacter>();
-            playerPartyComposition.
+            playerPartyComposition.add(theHero);
         }
+    }
+
+    private void Flee()
+    {
+        // write flee code here
     }
 }

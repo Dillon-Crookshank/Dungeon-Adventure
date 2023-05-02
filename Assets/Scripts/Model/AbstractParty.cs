@@ -1,26 +1,28 @@
-using System;
-
-namespace DefaultNamespace; 
+namespace DefaultNamespace;
 
 
-internal abstract class AbstractParty {
+internal abstract class AbstractParty
+{
 
-    AbstractParty() {
-        
+    private bool isAllAlive;
+
+    private enum partyOrder
+    {
+        party1,
+        party2,
+        party3,
+        party4,
+        party5,
+        party6
     }
 
-     private enum partyOrder {
-         1,
-         2,
-         3,
-         4,
-         5,
-         6
-     }
-
     private List<AbstractActor> partyComposition;
-    
+
     private int[2, 3] partyGrid;
 
+    private bool IsAllAlive()
+    {
+        return isAllAlive;
+    }
 
 }

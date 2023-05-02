@@ -1,5 +1,6 @@
+namespace DefaultNamespace;
 
+internal class DungeonRoom
+{
 
-internal class DungeonRoom {
-    
 }
