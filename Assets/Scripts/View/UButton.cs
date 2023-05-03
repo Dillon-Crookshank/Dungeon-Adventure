@@ -24,45 +24,31 @@ public class UButton {
 }
 
 class ButtonMouseListener : MonoBehaviour {
-    private bool myRightDown;
-    private bool myLeftDown;
-
-    public void Start() {
-        myRightDown = false;
-        myLeftDown = false;
-    }
+    public void Start() {}
     
     public void OnMouseOver() {
-        ChangeColor(Color.blue);
-
-        if (Input.GetMouseButton(0)) {
-            if (!myLeftDown) {
-                FireListener((this.name, EventType.LeftMousePressed));
-            }
-
-            myLeftDown = true;
-            ChangeColor(Color.green);
-        }
-
-        else if (myLeftDown) {
-            myLeftDown = false;
+        if (!Input.GetMouseButton(0) && !Input.GetMouseButton(1)) {
             ChangeColor(Color.blue);
+        }
+        
+        if (Input.GetMouseButtonDown(0)) {
+            FireListener((this.name, EventType.LeftMousePressed));
+            ChangeColor(Color.green);
+        } 
+        
+        else if (Input.GetMouseButtonUp(0)) {
             FireListener((this.name, EventType.LeftMouseReleased));
+            ChangeColor(Color.blue);
         }
 
-        if (Input.GetMouseButton(1)) {
-            if (!myRightDown) {
-                FireListener((this.name, EventType.RightMousePressed));
-            }
-
-            myRightDown = true;
+        if (Input.GetMouseButtonDown(1)) {
+            FireListener((this.name, EventType.RightMousePressed));
             ChangeColor(Color.red);
         } 
-
-        else if (myRightDown) {
-            myRightDown = false;
-            ChangeColor(Color.blue);
+        
+        else if (Input.GetMouseButtonUp(1)) {
             FireListener((this.name, EventType.RightMouseReleased));
+            ChangeColor(Color.blue);
         }
     }
 
@@ -76,8 +62,5 @@ class ButtonMouseListener : MonoBehaviour {
 
     public void OnMouseExit() {
         ChangeColor(Color.white);
-        
-        myRightDown = false;
-        myLeftDown = false;
     }
 }

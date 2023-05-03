@@ -12,7 +12,7 @@ public class DungeonController : MonoBehaviour {
     }
 
     public void Update() {
-
+        //Debug.Log(Input.mousePosition);
     }
 
     public void EventListener((string, EventType) theInfo) {
