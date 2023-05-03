@@ -8,6 +8,7 @@ public class testBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame
@@ -23,11 +24,11 @@ public class testBehavior : MonoBehaviour
     }
     void OnMouseOver(){
         focused = true;
-        gameObject.GetComponent<SpriteRenderer>().color = new Color(0.0f, 0.8f, 0.0f);
+        gameObject.GetComponent<SpriteRenderer>().color = Color.green;
     }
     void OnMouseExit(){
         focused = false;
-        gameObject.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f);
+        gameObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
 }
