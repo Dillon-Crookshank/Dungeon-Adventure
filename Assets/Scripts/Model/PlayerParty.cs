@@ -1,21 +1,25 @@
-namespace DefaultNamespace;
+using System.Collections.Generic;
 
-internal class PlayerParty : AbstractParty
+namespace DefaultNamespace
 {
 
-    private List<AbstractPlayerCharacter> playerPartyComposition;
-
-    PlayerParty(AbstractPlayerCharacter theHero)
+    internal class PlayerParty : AbstractParty
     {
-        if (playerPartyComposition == null)
+
+        private List<AbstractPlayerCharacter> playerPartyComposition;
+
+        PlayerParty(AbstractPlayerCharacter theHero)
         {
-            playerPartyComposition = new List<AbstractPlayerCharacter>();
-            playerPartyComposition.add(theHero);
+            if (playerPartyComposition == null)
+            {
+                playerPartyComposition = new List<AbstractPlayerCharacter>();
+                playerPartyComposition.Add(theHero);
+            }
         }
-    }
 
-    private void Flee()
-    {
-        // write flee code here
+        private void Flee()
+        {
+            // write flee code here
+        }
     }
 }
