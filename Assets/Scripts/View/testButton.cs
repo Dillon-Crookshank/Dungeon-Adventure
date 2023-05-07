@@ -2,42 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class testButton : MonoBehaviour
+sealed class testButton : MonoBehaviour
 {
     [Header("Events")]
     public GameEvent onButtonClicked;
     bool held = false;
     private SpriteRenderer rend;
+
     // Start is called before the first frame update
-    
-    
-    
+
     void Start()
     {
         rend = gameObject.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
-    void Update()
+    void Update() { }
+
+    void OnMouseOver()
     {
-        
-    }
-    void OnMouseOver(){
-        if (Input.GetMouseButtonDown(0)){
+        if (Input.GetMouseButtonDown(0))
+        {
             onButtonClicked.Raise(this, "PRESSED");
             held = true;
-        } else if (Input.GetMouseButtonUp(0)) {
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
             held = false;
         }
 
-        if (held){
+        if (held)
+        {
             rend.color = new Color(0.0f, 0.5f, 0.0f);
-        } else {
+        }
+        else
+        {
             rend.color = Color.green;
         }
-
     }
-    void OnMouseExit(){
+
+    void OnMouseExit()
+    {
         held = false;
         rend.color = Color.white;
     }

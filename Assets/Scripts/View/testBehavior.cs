@@ -2,33 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class testBehavior : MonoBehaviour
+sealed class testBehavior : MonoBehaviour
 {
     bool focused = false;
-    // Start is called before the first frame update
-    void Start()
+
+    void OnMouseDrag()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void OnMouseDrag(){
-        if (focused){
+        if (focused)
+        {
             gameObject.transform.Translate(0.01f, 0.01f, 0.0f);
         }
     }
-    void OnMouseOver(){
+
+    void OnMouseOver()
+    {
         focused = true;
         gameObject.GetComponent<SpriteRenderer>().color = Color.green;
     }
-    void OnMouseExit(){
+
+    void OnMouseExit()
+    {
         focused = false;
         gameObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
-
 }
