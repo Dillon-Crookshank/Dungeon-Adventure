@@ -7,11 +7,11 @@ public class GameEvent : ScriptableObject
 {
     public List<GameEventListener> listeners = new List<GameEventListener>();
 
-    public void RaiseEvent()
+    public void Raise(Component sender, string data)
     {
         foreach (GameEventListener listener in listeners) 
         { 
-            listener.OnEventRaised();
+            listener.OnEventRaised(sender, data);
         }
     }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class testButton : MonoBehaviour
 {
+    [Header("Events")]
+    public GameEvent onButtonClicked;
     bool held = false;
     private SpriteRenderer rend;
     // Start is called before the first frame update
@@ -22,7 +24,7 @@ public class testButton : MonoBehaviour
     }
     void OnMouseOver(){
         if (Input.GetMouseButtonDown(0)){
-            Debug.Log(gameObject.name + " pressed");
+            onButtonClicked.Raise(this, "PRESSED");
             held = true;
         } else if (Input.GetMouseButtonUp(0)) {
             held = false;
