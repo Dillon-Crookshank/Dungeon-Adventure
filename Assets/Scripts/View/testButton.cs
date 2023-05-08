@@ -37,7 +37,6 @@ sealed class testButton : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log(gameObject.transform.position);
             if (hasHero)
             {
                 ToggleSelectMove(this, null);
@@ -65,23 +64,29 @@ sealed class testButton : MonoBehaviour
                 arrowDisplay.SetActive(true);
                 arrowDisplay.transform.position = arrowVector;
                 arrowDisplay.GetComponent<SpriteRenderer>().size = new Vector2(
-                    20 * Mathf.Sqrt(
-                        Mathf.Pow(
-                            (clickedVector.x - gameObject.transform.position.x) / 2,
-                            2
+                    10f,
+                    20
+                        * Mathf.Sqrt(
+                            Mathf.Pow((clickedVector.x - gameObject.transform.position.x) / 2, 2)
+                                + Mathf.Pow(
+                                    (clickedVector.y - gameObject.transform.position.y) / 2,
+                                    2
+                                )
                         )
-                            + Mathf.Pow(
-                                (clickedVector.y - gameObject.transform.position.y) / 2,
-                                2
-                            )
-                    ),
-                    10f
                 );
-                arrowDisplay.transform.rotation = Quaternion.Euler(
-                    0f,
-                    0f,
-                    180 + Mathf.Cos((clickedVector.x - gameObject.transform.position.x)*(clickedVector.y - gameObject.transform.position.y))
-                );
+                // arrowDisplay.transform.localRotation = Quaternion.Euler(
+                //     0f,
+                //     0f,
+                //     -180
+                //         * DotProduct2D(
+                //             new Vector3(0f, gameObject.transform.position.y, 0f),
+                //             new Vector3(
+                //                 (clickedVector.x - gameObject.transform.position.x),
+                //                 (clickedVector.y - gameObject.transform.position.y),
+                //                 0f
+                //             )
+                //         )
+                // );
             }
         }
     }
@@ -132,5 +137,15 @@ sealed class testButton : MonoBehaviour
     public bool GetSelectMoveMode()
     {
         return selectMoveMode;
+    }
+
+    private float Pythagorean(float v1, float v2)
+    {
+        return Mathf.Sqrt(Mathf.Pow(v1, 2) + Mathf.Pow(v2, 2));
+    }
+
+    private float DotProduct2D(Vector3 v1, Vector3 v2)
+    {
+        return v1.x * v2.x + v1.y * v2.y;
     }
 }
