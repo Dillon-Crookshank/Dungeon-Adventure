@@ -8,6 +8,6 @@ sealed class textBehavior : MonoBehaviour
 
     public void setString(Component sender, string data)
     {
-        textMesh.text = (sender.name);
+        textMesh.text = (data);
     }
 }
