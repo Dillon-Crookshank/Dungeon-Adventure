@@ -73,3 +73,12 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+.vscode/extensions.json
+.vscode/settings.json
+Assets/Scripts/Model/.idea/.idea.Model.dir/.idea/indexLayout.xml
+Assets/Scripts/Model/.idea/.idea.Model.dir/.idea/projectSettingsUpdater.xml
+Assets/Scripts/Model/.idea/.idea.Model.dir/.idea/vcs.xml
+Assets/Scripts/Model/.idea/.idea.Model.dir/.idea/workspace.xml
+Packages/manifest.json
+Packages/packages-lock.json
+Packages/manifest.json
