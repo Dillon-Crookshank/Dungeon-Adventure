@@ -46,7 +46,7 @@ public class MapView {
     /// <param name="theRoom"></param>
     public void PrimaryFocusRoom(DungeonRoom theRoom) {
         FocusRoom(theRoom);
-        myRooms[theRoom.GetHashCode()].SetSprite(mySprites[(int)RoomFocus.PrimaryFocus]);
+        myRooms[theRoom.GetID()].SetSprite(mySprites[(int)RoomFocus.PrimaryFocus]);
     }
 
     /// <summary>
@@ -55,21 +55,21 @@ public class MapView {
     /// <param name="theRoom"> The DungeonRoom to be focused. </param>
     public void FocusRoom(DungeonRoom theRoom) {
         //Create the UButton if it dosen't exist yet
-        if (!myRooms.ContainsKey(theRoom.GetHashCode())) {
+        if (!myRooms.ContainsKey(theRoom.GetID())) {
             myRooms.Add(
-                theRoom.GetHashCode(),
+                theRoom.GetID(),
                 new UButton(
-                    $"Room:{theRoom.GetHashCode()}",
+                    $"Room:{theRoom.GetID()}",
                     mySprites[0],
                     new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, 0),
                     new Vector2(theRoom.GetW(), theRoom.GetH())
                 )
             );
 
-            myRooms[theRoom.GetHashCode()].AddComponent(typeof(MapViewObserver));
+            myRooms[theRoom.GetID()].AddComponent(typeof(MapViewObserver));
         }
         else {
-            myRooms[theRoom.GetHashCode()].SetSprite(mySprites[(int)RoomFocus.Focused]);
+            myRooms[theRoom.GetID()].SetSprite(mySprites[(int)RoomFocus.Focused]);
         }
     }
 

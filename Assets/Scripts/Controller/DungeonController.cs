@@ -11,6 +11,8 @@ public class DungeonController : MonoBehaviour {
     [SerializeField]
     private Sprite[] mySprites;
 
+    private CameraController myMapCamera;
+
     /// <summary>
     /// The View component that displays the Map.
     /// </summary>
@@ -25,6 +27,7 @@ public class DungeonController : MonoBehaviour {
     /// The Start method is run once, after the DungeonController GameObject is initialized.
     /// </summary>
     public void Start() {
+        myMapCamera = new CameraController("MainCamera", new Vector3(0, 0, -1), (4.5f, 9.0f), (16.0f, 9.0f));
         myMapView = new MapView(new Vector2(0, 0), mySprites);
         myMapModel = new DungeonMap();
     }
@@ -35,6 +38,7 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     public void Update() {
         UpdateMapView();
+        myMapCamera.UpdateCamera();
     }
 
     /// <summary>
@@ -53,12 +57,12 @@ public class DungeonController : MonoBehaviour {
     /// <summary>
     /// Called by the MapView whenever a valid adjacent room was left-clicked.
     /// </summary>
-    /// <param name="theHashCode"> The hashcode of the DungeonRoom that the Primary Focus of the map should be set to.</param>
-    public void MapViewListener(int theHashCode) {
-        //We use the hashcode and look through the adjacent rooms until we find a matching hashcode
+    /// <param name="theID"> The ID of the DungeonRoom that the Primary Focus of the map should be set to.</param>
+    public void MapViewListener(int theID) {
+        //We use the ID to look through the adjacent rooms until we find a matching ID
         int i = 0;
         while ( myMapModel.GetNthAdjacentRoom(i) != null
-            && theHashCode != myMapModel.GetNthAdjacentRoom(i).GetHashCode()) {
+            && theID != myMapModel.GetNthAdjacentRoom(i).GetID()) {
             i++;
         }
 

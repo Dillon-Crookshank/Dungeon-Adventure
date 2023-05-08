@@ -11,25 +11,27 @@ public class DungeonRoom
     /// </summary>
     private int myHash;
 
+    private int myID;
+
     /// <summary>
     /// The x-coordiante of the room.
     /// </summary>
-    private int myX;
+    private float myX;
 
     /// <summary>
     /// The y-coordinate of the room.
     /// </summary>
-    private int myY;
+    private float myY;
 
     /// <summary>
     /// The width of the room.
     /// </summary>
-    private int myW;
+    private float myW;
 
     /// <summary>
     /// The height of the room.
     /// </summary>
-    private int myH;
+    private float myH;
 
     /// <summary>
     /// **Unimplemented**
@@ -48,19 +50,24 @@ public class DungeonRoom
     /// <param name="theY"> The y-coordinate of the room. </param>
     /// <param name="theW"> The width of the room. </param>
     /// <param name="theH"> The height of the room. </param>
-    public DungeonRoom(int theX, int theY, int theW, int theH)
+    public DungeonRoom(int theID, float theX, float theY, float theW, float theH)
     {
+        myID = theID;
         myX = theX;
         myY = theY;
         myW = theW;
         myH = theH;
     }
 
+    public int GetID() {
+        return myID;
+    }
+
     /// <summary>
     /// An accessor for the x-coordinate of the room.
     /// </summary>
     /// <returns> The x-coordiante of the room. </returns>
-    public int GetX()
+    public float GetX()
     {
         return myX;
     }
@@ -69,7 +76,7 @@ public class DungeonRoom
     /// An accessor for the y-coordinate of the room. 
     /// </summary>
     /// <returns> The y-coordinate of the room. </returns>
-    public int GetY()
+    public float GetY()
     {
         return myY;
     }
@@ -78,7 +85,7 @@ public class DungeonRoom
     /// An accessor for the width of the room
     /// </summary>
     /// <returns> The width of the room. </returns>
-    public int GetW()
+    public float GetW()
     {
         return myW;
     }
@@ -87,7 +94,7 @@ public class DungeonRoom
     /// An accessor for the height of the room.
     /// </summary>
     /// <returns> The height of the room. </returns>
-    public int GetH()
+    public float GetH()
     {
         return myH;
     }
@@ -100,7 +107,7 @@ public class DungeonRoom
     {
         if (myHash == 0)
         {
-            myHash = (myW ^ myX) + 31 * (myH ^ myY);
+            myHash = (int) Math.Round(Math.Pow(myW, myX) + 31 * Math.Pow(myH, myY));
         }
         return myHash;
     }

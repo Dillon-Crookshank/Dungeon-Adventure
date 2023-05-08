@@ -29,8 +29,8 @@ public class MapViewObserver : MonoBehaviour {
             myLeftPressedFlag = false;
 
             //We isolate the hashcode from the name so we can send it to the GameController.
-            int hashCode = Int32.Parse((this.name.Split(':'))[1]);
-            (GameObject.FindWithTag("GameController")).SendMessage("MapViewListener", hashCode);
+            int ID = Int32.Parse((this.name.Split(':'))[1]);
+            (GameObject.FindWithTag("GameController")).SendMessage("MapViewListener", ID);
         }
     }
 }
