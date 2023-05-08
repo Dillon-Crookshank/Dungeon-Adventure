@@ -8,9 +8,7 @@ sealed class buttonFactory : MonoBehaviour
     public GameObject backgroundBasis;
     public float GridCenterOnBackgroundPercentage = 0.75f;
     private GameObject[] arrayOfObjects;
-
     private static Vector3[] positionVectors;
-
     public string[] buttonLabels;
 
     RectTransform rt;
@@ -39,6 +37,7 @@ sealed class buttonFactory : MonoBehaviour
             arrayOfObjects[i].transform.localScale = scaleSize;
             arrayOfObjects[i].name = buttonLabels[i];
             arrayOfObjects[i].transform.position = (positionVectors[i]);
+            Debug.Log(i + ": " + positionVectors[i]);
             
         }
         int randomIndex = UnityEngine.Random.Range(0, arrayOfObjects.Length);

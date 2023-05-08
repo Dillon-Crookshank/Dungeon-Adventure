@@ -74,6 +74,13 @@ sealed class testButton : MonoBehaviour
                                 )
                         )
                 );
+                float priorX = arrowDisplay.transform.rotation.x;
+                float priorY = arrowDisplay.transform.rotation.y;
+                arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
+                float newZ = arrowDisplay.transform.rotation.z;
+                float newW = arrowDisplay.transform.rotation.w;
+                arrowDisplay.transform.rotation = new Quaternion(priorX, priorY, newZ, newW);
+                
                 // arrowDisplay.transform.localRotation = Quaternion.Euler(
                 //     0f,
                 //     0f,
