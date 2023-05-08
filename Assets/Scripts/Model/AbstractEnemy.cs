@@ -1,29 +1,42 @@
 using System;
-using System.Collections.Generic;
 
 namespace DefaultNamespace
 {
 
+    /// <summary>
+    /// An abstract representation of an Enemy.
+    /// Includes a RNG and a lootTable.
+    /// </summary>
     internal abstract class AbstractEnemy : AbstractActor
     {
 
+        /// <summary>
+        /// A random number generator to be used for deciding Actions to perform and loot rolled.
+        /// </summary>
         Random enemyRng;
 
-        //private List<Item> lootTable;
+        // TODO: private List<Item> lootTable;
 
+        /// <summary>
+        /// Base constructor for an AbstractEnemy.
+        /// </summary>
+        /// <param name="theName">The name of the AbstractEnemy.</param>
+        /// <param name="theHitpoints">The maximum hitpoints of the AbstractEnemy.</param>
+        /// <param name="theAttack">The attack of the AbstractEnemy.</param>
+        /// <param name="theDefence">The defence of the AbstractEnemy.</param>
+        /// <param name="theMana">The maximum mana of the AbstractEnemy.</param>
+        /// <param name="theInitiative">The initiative of the AbstractEnemy.</param>
         internal AbstractEnemy(string theName, double theHitpoints, double theAttack,
      double theDefence, double theMana, int theInitiative) : base(theName, theHitpoints, theAttack,
      theDefence, theMana, theInitiative)
         {
             enemyRng = new Random();
-            //lootTable = new List<Item>();
+            //TODO: lootTable = new List<Item>();
         }
 
-        private int randomizeAction(int theActionCount)
-        {
-            int num = (enemyRng.Next(1, theActionCount));
-            return num;
-        }
+        //TODO: lootRoll
+
+        //TODO: decideAction
 
     }
 }

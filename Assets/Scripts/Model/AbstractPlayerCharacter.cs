@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace DefaultNamespace
 {
 
@@ -13,26 +11,29 @@ namespace DefaultNamespace
         /// </summary>
         private double experience;
 
-        // probably want to change this to a map or enum
-        //private List<Equipment> Gear;
+        //TODO: private List<Equipment> Gear;
 
+
+        /// <summary>
+        /// Base constructor for an AbstractPlayerCharacter.
+        /// </summary>
+        /// <param name="theName">The name of the AbstractPlayerCharacter.</param>
+        /// <param name="theHitpoints">The maximum hitpoints of the AbstractPlayerCharacter.</param>
+        /// <param name="theAttack">The attack of the AbstractPlayerCharacter.</param>
+        /// <param name="theDefence">The defence of the AbstractPlayerCharacter.</param>
+        /// <param name="theMana">The maximum mana of the AbstractPlayerCharacter.</param>
+        /// <param name="theInitiative">The initiative of the AbstractPlayerCharacter.</param>
         internal AbstractPlayerCharacter(string theName, double theHitpoints, double theAttack,
      double theDefence, double theMana, int theInitiative) : base(theName, theHitpoints, theAttack,
      theDefence, theMana, theInitiative)
         {
             experience = 0.0;
-            //Gear = new List<Equipment>();
+            //TODO: Gear = new List<Equipment>();
         }
 
-        //private void UseItem(Item theItem)
-        //{
-        // code for using an item
-        //}
+        //TODO: useItem
 
-        //private Action ChooseAction(int theChoice)
-        //{
-        //    return Action = (Actions)theChoice;
-        //}
+        //TODO: decideAction
 
     }
 }

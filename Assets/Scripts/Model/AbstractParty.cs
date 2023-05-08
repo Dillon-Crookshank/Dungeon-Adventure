@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 using DefaultNamespace;
 
 /// <summary>
@@ -15,7 +16,7 @@ internal abstract class AbstractParty
     /// <summary>
     /// An enumeration to track the order of the party members.
     /// </summary>
-    private enum partyOrder
+    private enum partyOrder //TODO: necessary???
     {
         partyMember1,
         partyMember2,
@@ -30,10 +31,6 @@ internal abstract class AbstractParty
     /// </summary>
     private List<AbstractActor> partyComposition;
 
-    /// <summary>
-    /// A 2D Array that represents the 'layout' of the party.
-    /// </summary>
-    private int[] partyGrid;
 
     /// <summary>
     /// Getter method for whether the party is defeated or not.

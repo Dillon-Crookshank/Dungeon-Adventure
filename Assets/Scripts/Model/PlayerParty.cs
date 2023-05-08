@@ -13,13 +13,10 @@ namespace DefaultNamespace
             if (playerPartyComposition == null)
             {
                 playerPartyComposition = new List<AbstractPlayerCharacter>();
-                playerPartyComposition.Add(theHero);
             }
+            playerPartyComposition.Add(theHero);
         }
 
-        private void Flee()
-        {
-            // write flee code here
-        }
+        //TODO: flee
     }
 }
