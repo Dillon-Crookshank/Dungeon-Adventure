@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class CameraController {
 
@@ -15,7 +16,7 @@ public class CameraController {
     /// <summary>
     /// 
     /// </summary>
-    private const float STEP_SIZE = 0.005f;
+    private const float STEP_SIZE = 0.05f;
 
     /// <summary>
     /// 
@@ -146,12 +147,11 @@ public class CameraController {
     /// </summary>
     /// <param name="thePosition"></param>
     public void SetCameraPosition(Vector2 thePosition) {
-        if (   thePosition.y + GetCameraSize() > myYBound
-            || thePosition.y - GetCameraSize() < -myYBound
-            || thePosition.x + (GetCameraSize() / ASPECT_Y * ASPECT_X) > myXBound
-            || thePosition.x - (GetCameraSize() / ASPECT_Y * ASPECT_X) < -myXBound) {
-            return;
+        if (Math.Abs(thePosition.y - myOrigin.y) + GetCameraSize() > myYBound 
+            || Math.Abs(thePosition.x - myOrigin.x) + (GetCameraSize() / ASPECT_Y * ASPECT_X) > myXBound) {
+                return;
         }
+
         GetCameraObject().transform.localPosition = new Vector3(thePosition.x, thePosition.y, -1);
     }
 
@@ -178,13 +178,11 @@ public class CameraController {
     public void SetCameraSize(float theSize) {
         if (theSize < myMinSize || theSize > myMaxSize) {
             return;
-        }
+        } 
 
-        if (   GetCameraPosition().y + theSize > myYBound 
-            || GetCameraPosition().y - theSize < -myYBound 
-            || GetCameraPosition().x + (theSize / ASPECT_Y * ASPECT_X) > myXBound
-            || GetCameraPosition().x - (theSize / ASPECT_Y * ASPECT_X) < -myXBound) {
-            return;
+        if (Math.Abs(GetCameraPosition().y - myOrigin.y) + theSize > myYBound 
+            || Math.Abs(GetCameraPosition().x - myOrigin.x) + (theSize / ASPECT_Y * ASPECT_X) > myXBound) {
+                return;
         }
 
         (GetCameraObject().GetComponent<Camera>()).orthographicSize = theSize;
