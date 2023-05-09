@@ -27,7 +27,7 @@ public class DungeonController : MonoBehaviour {
     /// The Start method is run once, after the DungeonController GameObject is initialized.
     /// </summary>
     public void Start() {
-        myMapCamera = new CameraController("MainCamera", new Vector3(0, 0, -1), (4.5f, 9.0f), (16.0f, 9.0f));
+        myMapCamera = new CameraController("Main Camera", new Vector3(0, 0, -1), (4.5f, 9.0f), (16.0f, 9.0f));
         myMapView = new MapView(new Vector2(0, 0), mySprites);
         myMapModel = new DungeonMap();
     }
@@ -47,10 +47,10 @@ public class DungeonController : MonoBehaviour {
     private void UpdateMapView() {
         //We call UnfocusAll to reset the mapView
         myMapView.UnfocusAll();
-        myMapView.PrimaryFocusRoom(myMapModel.GetFocusedRoom());
+        myMapView.SetPrimaryFocus(myMapModel.GetFocusedRoom());
         int i = 0;
         do {
-            myMapView.FocusRoom(myMapModel.GetNthAdjacentRoom(i++));
+            myMapView.SetSecondaryFocus(myMapModel.GetNthAdjacentRoom(i++));
         } while (myMapModel.GetNthAdjacentRoom(i) != null);
     }
 
@@ -68,7 +68,7 @@ public class DungeonController : MonoBehaviour {
 
         //Use the index to update the model if the index is valid.
         if (myMapModel.GetNthAdjacentRoom(i) != null) {
-            myMapModel.MoveToNthAdjacentRoom(i);
+            myMapModel.FocusNthAdjacentRoom(i);
         }
     }
 }

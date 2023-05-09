@@ -7,10 +7,18 @@ using System;
 public class DungeonRoom
 {   
     /// <summary>
+    /// A static variable used to make unique ID's for each new room.
+    /// </summary>
+    private static int currentID = 0;
+    
+    /// <summary>
     /// The cached hashcode of the room.
     /// </summary>
     private int myHash;
 
+    /// <summary>
+    /// The unique ID number of the room.
+    /// </summary>
     private int myID;
 
     /// <summary>
@@ -39,26 +47,25 @@ public class DungeonRoom
     private Stack<Object> myLoot;
 
     /// <summary>
-    /// **Unimplemented**
-    /// </summary>
-    private Object myEnemyParty;
-
-    /// <summary>
     /// Creates a new dungeon room with the given bounds.
     /// </summary>
     /// <param name="theX"> The x-coordiante of the room. </param>
     /// <param name="theY"> The y-coordinate of the room. </param>
     /// <param name="theW"> The width of the room. </param>
     /// <param name="theH"> The height of the room. </param>
-    public DungeonRoom(int theID, float theX, float theY, float theW, float theH)
+    public DungeonRoom(float theX, float theY, float theW, float theH)
     {
-        myID = theID;
+        myID = currentID++;
         myX = theX;
         myY = theY;
         myW = theW;
         myH = theH;
     }
 
+    /// <summary>
+    /// An accessor for the unique room ID number.
+    /// </summary>
+    /// <returns> The ID number of the room. </returns>
     public int GetID() {
         return myID;
     }
@@ -100,19 +107,6 @@ public class DungeonRoom
     }
 
     /// <summary>
-    /// An accessor for the hashcode of the room. The hashcode is generated based on the bounds of the room only.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode()
-    {
-        if (myHash == 0)
-        {
-            myHash = (int) Math.Round(Math.Pow(myW, myX) + 31 * Math.Pow(myH, myY));
-        }
-        return myHash;
-    }
-
-    /// <summary>
     /// An accessor for the top of the Loot Stack. Pops the top of the stack once per method call, until none is left in the stack.
     /// </summary>
     /// <returns> The top of the loot stack. </returns>
@@ -127,11 +121,11 @@ public class DungeonRoom
     }
 
     /// <summary>
-    /// An accessor for the top of the Loot stack. Does not change the Loot stack.
+    /// A predicate function to check if the room stil contains uncollected loot.
     /// </summary>
-    /// <returns> The top of the Loot stack. </returns>
-    public Object PeekLoot()
+    /// <returns> True if the room stil contains loot. False otherwise. </returns>
+    public bool HasLoot()
     {
-        return myLoot.Peek();
+        return myLoot.Peek() != null;
     }
 }

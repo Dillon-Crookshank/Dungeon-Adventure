@@ -25,9 +25,9 @@ public class MapView {
     private Sprite[] mySprites;
 
     /// <summary>
-    /// The collection of view components.
+    /// The collection of Sprite components.
     /// </summary>
-    private Dictionary<int, UButton> myRooms;
+    private Dictionary<int, SlicedSprite> myRooms;
 
     /// <summary>
     /// The lone constructor.
@@ -37,15 +37,15 @@ public class MapView {
     public MapView(Vector2 theOrigin, Sprite[] theSprites) {
         myOrigin = theOrigin;
         mySprites = theSprites;
-        myRooms = new Dictionary<int, UButton>();
+        myRooms = new Dictionary<int, SlicedSprite>();
     }
 
     /// <summary>
     /// Sets the primary focused room. Does not override any existing PrimaryFocused rooms.
     /// </summary>
     /// <param name="theRoom"></param>
-    public void PrimaryFocusRoom(DungeonRoom theRoom) {
-        FocusRoom(theRoom);
+    public void SetPrimaryFocus(DungeonRoom theRoom) {
+        SetSecondaryFocus(theRoom);
         myRooms[theRoom.GetID()].SetSprite(mySprites[(int)RoomFocus.PrimaryFocus]);
     }
 
@@ -53,12 +53,12 @@ public class MapView {
     /// Sets a room to be focused.
     /// </summary>
     /// <param name="theRoom"> The DungeonRoom to be focused. </param>
-    public void FocusRoom(DungeonRoom theRoom) {
-        //Create the UButton if it dosen't exist yet
+    public void SetSecondaryFocus(DungeonRoom theRoom) {
+        //Create the SlicedSprite if it dosen't exist yet
         if (!myRooms.ContainsKey(theRoom.GetID())) {
             myRooms.Add(
                 theRoom.GetID(),
-                new UButton(
+                new SlicedSprite(
                     $"Room:{theRoom.GetID()}",
                     mySprites[0],
                     new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, 0),
@@ -66,7 +66,9 @@ public class MapView {
                 )
             );
 
+            //Add observer and listener scripts to add UI functionality
             myRooms[theRoom.GetID()].AddComponent(typeof(MapViewObserver));
+            myRooms[theRoom.GetID()].AddComponent(typeof(ButtonMouseListener));
         }
         else {
             myRooms[theRoom.GetID()].SetSprite(mySprites[(int)RoomFocus.Focused]);
@@ -77,7 +79,7 @@ public class MapView {
     /// Resets the sprites of the Map View to unfocused sprites.
     /// </summary>
     public void UnfocusAll() {
-        foreach (UButton button in myRooms.Values) {
+        foreach (SlicedSprite button in myRooms.Values) {
             button.SetSprite(mySprites[(int)RoomFocus.Unfocused]);
         }
     }
