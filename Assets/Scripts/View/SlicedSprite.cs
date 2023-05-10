@@ -79,4 +79,11 @@ public class SlicedSprite {
     public void AddComponent(System.Type theComponent) {
         myObject.AddComponent(theComponent);
     }
+
+    /// <summary>
+    /// Destroys the underlying game object.
+    /// </summary>
+    public void Destroy() {
+        GameObject.Destroy(myObject);
+    }
 }

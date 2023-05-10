@@ -37,7 +37,8 @@ public class DungeonController : MonoBehaviour {
     /// The Update method is called once per frame while the DungeonController GameObject is active.
     /// </summary>
     public void Update() {
-        UpdateMapView();
+        //UpdateMapView();
+        DebugMapView();
         myMapCamera.UpdateCamera();
     }
 
@@ -49,9 +50,26 @@ public class DungeonController : MonoBehaviour {
         myMapView.UnfocusAll();
         myMapView.SetPrimaryFocus(myMapModel.GetFocusedRoom());
         int i = 0;
-        do {
+        while (myMapModel.GetNthAdjacentRoom(i) != null) {
             myMapView.SetSecondaryFocus(myMapModel.GetNthAdjacentRoom(i++));
-        } while (myMapModel.GetNthAdjacentRoom(i) != null);
+        }
+    }
+
+    /// <summary>
+    /// Shows the entire map at once. Everytime you press enter, it generates a new dungeon.
+    /// </summary>
+    private void DebugMapView() {
+        myMapView.UnfocusAll();
+        int i = 0;
+        while (myMapModel.GetNthRoom(i) != null) {
+            myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i++));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            myMapModel = new DungeonMap();
+            myMapView.Clear();
+            myMapView = new MapView(new Vector2(0, 0), mySprites);
+        }
     }
 
     /// <summary>

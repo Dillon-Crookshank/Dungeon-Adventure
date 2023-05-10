@@ -74,6 +74,8 @@ public class CameraController {
 
         myXBound = theAxisBounds.Item1;
         myYBound = theAxisBounds.Item2;
+
+        ResetCamera();
     }
 
     /// <summary>

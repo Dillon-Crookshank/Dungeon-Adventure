@@ -83,4 +83,13 @@ public class MapView {
             button.SetSprite(mySprites[(int)RoomFocus.Unfocused]);
         }
     }
+
+    /// <summary>
+    /// Destroys every view component in the map
+    /// </summary>
+    public void Clear() {
+        foreach (int id in myRooms.Keys) {
+            myRooms[id].Destroy();
+        }
+    }
 }

@@ -1,10 +1,17 @@
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// The DungeonMap class is a collection of DungeonRooms held in a Graph, represented as an Adjacency List.
 /// </summary>
 internal class DungeonMap
 {
+    private const int SIDE_MIN = 3;
+    private const int SIDE_MAX = 5;
+    private const int X_BOUND = 16;
+    private const int Y_BOUND = 9;
+
+
     /// <summary>
     /// The underlying adjacency list of the class.
     /// </summary>
@@ -46,7 +53,8 @@ internal class DungeonMap
         myAdjacentcyList = new List<GraphEntry>();
 
         //Hard Coded example map
-        FullExample();
+        GenerateDungeon();
+        //FullExample();
         //SimpleExample();
     }
 
@@ -62,15 +70,28 @@ internal class DungeonMap
     /// <summary>
     /// Given an index N, this method returns the Nth Adjacent room. If  N is out of bounds, a null reference is returned. 
     /// </summary>
-    /// <param name="index"> The index of the adjacent room. If out of bounds, a null reference is returned. </param>
+    /// <param name="theIndex"> The index of the adjacent room. If out of bounds, a null reference is returned. </param>
     /// <returns></returns>
-    public DungeonRoom GetNthAdjacentRoom(int index)
+    public DungeonRoom GetNthAdjacentRoom(int theIndex)
     {
-        if (index < 0 || index >= myFocusedRoom.myAdjacentRooms.Count) {
+        if (theIndex < 0 || theIndex >= myFocusedRoom.myAdjacentRooms.Count) {
             return null;
         }
 
-        return myFocusedRoom.myAdjacentRooms[index].myRoom;
+        return myFocusedRoom.myAdjacentRooms[theIndex].myRoom;
+    }
+
+    /// <summary>
+    /// Given an index N, this method retuns the Nth room in the adjacency list.
+    /// </summary>
+    /// <param name="theIndex"> The index of the room in the base adjacency list. If out of bounds, a null reference is returned. </param>
+    /// <returns></returns>
+    public DungeonRoom GetNthRoom(int theIndex) {
+        if (theIndex < 0 || theIndex >= myAdjacentcyList.Count) {
+            return null;
+        }
+
+        return myAdjacentcyList[theIndex].myRoom;
     }
 
     /// <summary>
@@ -84,6 +105,48 @@ internal class DungeonMap
         }
 
         myFocusedRoom = myFocusedRoom.myAdjacentRooms[index];
+    }
+
+
+    private void GenerateDungeon() {
+        for (int n = 0; n < 500; n++) {
+            CreateRandomRoom();
+        }
+    }
+
+    /// <summary>
+    /// Used in the procedural algorithm. Creates a random room with side lengths that varry from 3 to 5 and tries to randomly place it without colliding with other rooms
+    /// </summary>
+    private void CreateRandomRoom() {
+        Random rand = new Random();
+
+        float width = (float) rand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
+        float height = (float) rand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
+        float x = (float) ((rand.NextDouble() - 0.5) * 2 * (X_BOUND - 1 - width / 2.0));
+        float y = (float) ((rand.NextDouble() - 0.5) * 2 * (Y_BOUND - 1 - height / 2.0));
+        
+        if (!CheckCollision(x, y, width, height)) {
+            myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(x, y, width, height)));
+        }
+    }
+
+    /// <summary>
+    /// This method checks if the given room colides with any existing rooms.
+    /// </summary>
+    /// <param name="theX"> The x-coordinate of the room. </param>
+    /// <param name="theY"> The y-coordinate of the room. </param>
+    /// <param name="theW"> The width of the room. </param>
+    /// <param name="theH"> The height of the room. </param>
+    /// <returns> True if the given room colides with an existing room. False otherwise. </returns>
+    private bool CheckCollision(float theX, float theY, float theW, float theH) {
+        for (int i = 0; i < myAdjacentcyList.Count; i++) {
+            if (Math.Abs(myAdjacentcyList[i].myRoom.GetX() - theX) < (myAdjacentcyList[i].myRoom.GetW() + theW) / 2.0 + 1 
+                && Math.Abs(myAdjacentcyList[i].myRoom.GetY() - theY) < (myAdjacentcyList[i].myRoom.GetH() + theH) / 2.0 + 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
