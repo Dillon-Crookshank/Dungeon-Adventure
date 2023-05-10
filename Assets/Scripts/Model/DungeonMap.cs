@@ -7,9 +7,14 @@ using System;
 internal class DungeonMap
 {
     private const int SIDE_MIN = 3;
-    private const int SIDE_MAX = 5;
-    private const int X_BOUND = 16;
-    private const int Y_BOUND = 9;
+    private const int SIDE_MAX = 8;
+    private const int X_BOUND = 32;
+    private const int Y_BOUND = 18;
+    private const float MIN_ALLEY_SPACE = 1.5f;
+
+    private const int ATTEMPTS = 50;
+
+    private static Random myRand = new Random();
 
 
     /// <summary>
@@ -21,6 +26,8 @@ internal class DungeonMap
     /// The GraphEntry that contains the room that is currently being focused.
     /// </summary>
     private GraphEntry myFocusedRoom;
+
+    
 
     /// <summary>
     /// A nested class, used as the building block of the adjacentcy list.
@@ -109,29 +116,33 @@ internal class DungeonMap
 
 
     private void GenerateDungeon() {
-        for (int n = 0; n < 500; n++) {
+        //Attempt to generate multiple rooms
+        for (int n = 0; n < ATTEMPTS; n++) {
             CreateRandomRoom();
         }
+
+        //Place initial focus on the room that was generated first.
+        myFocusedRoom = myAdjacentcyList[0];
     }
 
     /// <summary>
     /// Used in the procedural algorithm. Creates a random room with side lengths that varry from 3 to 5 and tries to randomly place it without colliding with other rooms
     /// </summary>
     private void CreateRandomRoom() {
-        Random rand = new Random();
-
-        float width = (float) rand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
-        float height = (float) rand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
-        float x = (float) ((rand.NextDouble() - 0.5) * 2 * (X_BOUND - 1 - width / 2.0));
-        float y = (float) ((rand.NextDouble() - 0.5) * 2 * (Y_BOUND - 1 - height / 2.0));
+        float width = (float) myRand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
+        float height = (float) myRand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
+        float x = (float) ((myRand.NextDouble() - 0.5) * 2 * (X_BOUND - MIN_ALLEY_SPACE - width / 2.0));
+        float y = (float) ((myRand.NextDouble() - 0.5) * 2 * (Y_BOUND - MIN_ALLEY_SPACE - height / 2.0));
         
         if (!CheckCollision(x, y, width, height)) {
             myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(x, y, width, height)));
         }
     }
 
+
+
     /// <summary>
-    /// This method checks if the given room colides with any existing rooms.
+    /// This method checks if the given room bounds collides with any existing rooms.
     /// </summary>
     /// <param name="theX"> The x-coordinate of the room. </param>
     /// <param name="theY"> The y-coordinate of the room. </param>
@@ -140,8 +151,8 @@ internal class DungeonMap
     /// <returns> True if the given room colides with an existing room. False otherwise. </returns>
     private bool CheckCollision(float theX, float theY, float theW, float theH) {
         for (int i = 0; i < myAdjacentcyList.Count; i++) {
-            if (Math.Abs(myAdjacentcyList[i].myRoom.GetX() - theX) < (myAdjacentcyList[i].myRoom.GetW() + theW) / 2.0 + 1 
-                && Math.Abs(myAdjacentcyList[i].myRoom.GetY() - theY) < (myAdjacentcyList[i].myRoom.GetH() + theH) / 2.0 + 1) {
+            if (Math.Abs(myAdjacentcyList[i].myRoom.GetX() - theX) < (myAdjacentcyList[i].myRoom.GetW() + theW) / 2.0 + MIN_ALLEY_SPACE 
+                && Math.Abs(myAdjacentcyList[i].myRoom.GetY() - theY) < (myAdjacentcyList[i].myRoom.GetH() + theH) / 2.0 + MIN_ALLEY_SPACE) {
                 return true;
             }
         }

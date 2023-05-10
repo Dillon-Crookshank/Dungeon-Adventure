@@ -27,7 +27,7 @@ public class DungeonController : MonoBehaviour {
     /// The Start method is run once, after the DungeonController GameObject is initialized.
     /// </summary>
     public void Start() {
-        myMapCamera = new CameraController("Main Camera", new Vector3(0, 0, -1), (4.5f, 9.0f), (16.0f, 9.0f));
+        myMapCamera = new CameraController("Main Camera", new Vector3(0, 0, -1), (4.5f, 18.0f), (32.0f, 18.0f));
         myMapView = new MapView(new Vector2(0, 0), mySprites);
         myMapModel = new DungeonMap();
     }
