@@ -10,6 +10,8 @@ sealed class buttonFactory : MonoBehaviour
     private GameObject[] arrayOfObjects;
     private static Vector3[] positionVectors;
     public string[] buttonLabels;
+    private Vector2 centeringPoint;
+    private Vector2 gapBorder;
 
     RectTransform rt;
 
@@ -22,7 +24,7 @@ sealed class buttonFactory : MonoBehaviour
         Vector3 scaleSize = new Vector3(
             3 * templateSprite.transform.localScale.x / (numObjects * 1.25f),
             3 * templateSprite.transform.localScale.y / (numObjects * 1.25f),
-            2 * templateSprite.transform.localScale.z / (numObjects * 1.5f)
+            0.01f
         );
         arrayOfObjects = new GameObject[numObjects];
         positionVectors = returnPositionValues(
@@ -41,7 +43,8 @@ sealed class buttonFactory : MonoBehaviour
             
         }
         int randomIndex = UnityEngine.Random.Range(0, arrayOfObjects.Length);
-        arrayOfObjects[randomIndex].GetComponent<testButton>().ToggleHasHero();
+        arrayOfObjects[0].GetComponent<testButton>().ToggleHasHero();
+        arrayOfObjects[5].GetComponent<testButton>().ToggleHasHero();
         Debug.LogFormat("{0}: {1}", randomIndex, arrayOfObjects[randomIndex].GetComponent<testButton>().GetSelectMoveMode());
     }
 
