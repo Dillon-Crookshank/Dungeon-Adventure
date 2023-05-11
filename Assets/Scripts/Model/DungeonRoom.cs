@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-public class DungeonRoom
-{
-        
-
-}
-=======
 using System.Collections.Generic;
 using System;
 
@@ -136,4 +129,3 @@ public class DungeonRoom
         return myLoot.Peek() != null;
     }
 }
->>>>>>> Dillon
