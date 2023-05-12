@@ -40,6 +40,26 @@ public class DungeonRoom
     /// The height of the room.
     /// </summary>
     private float myH;
+    
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. This holds the minimum X grid constraint.
+    /// </summary>
+    private int myGridXMin;
+
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. This holds the maximum X grid constraint.
+    /// </summary>
+    private int myGridXMax;
+
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. This holds the minimum Y grid constraint.
+    /// </summary>
+    private int myGridYMin;
+
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. This holds the maximum Y grid constraint.
+    /// </summary>
+    private int myGridYMax;
 
     /// <summary>
     /// **Unimplemented**
@@ -49,7 +69,7 @@ public class DungeonRoom
     /// <summary>
     /// Creates a new dungeon room with the given bounds.
     /// </summary>
-    /// <param name="theX"> The x-coordiante of the room. </param>
+    /// <param name="theX"> The x-coordinate of the room. </param>
     /// <param name="theY"> The y-coordinate of the room. </param>
     /// <param name="theW"> The width of the room. </param>
     /// <param name="theH"> The height of the room. </param>
@@ -60,7 +80,27 @@ public class DungeonRoom
         myY = theY;
         myW = theW;
         myH = theH;
+
+        myGridXMin = 0;
+        myGridXMax = 0;
+        myGridYMin = 0;
+        myGridYMax = 0;
     }
+
+    /// <summary>
+    /// Creates a DungeonRoom Given integer bounds that are snapped to a grid. 
+    /// </summary>
+    /// <param name="theXMin"> The Lowest X-value of the DungeonRoom. </param>
+    /// <param name="theXMax"> The Highest X-value of the DungeonRoom. </param>
+    /// <param name="theYMin"> The Lowest Y-value of the DungeonRoom. </param>
+    /// <param name="theYMax"> The Highest Y-value of the DungeonRoom. </param>
+    public DungeonRoom(int theXMin, int theXMax, int theYMin, int theYMax) 
+    : this((theXMin + theXMax) / 2.0f, (theYMin + theYMax) / 2.0f, Math.Abs(theXMin - theXMax) + 1.0f, Math.Abs(theYMin - theYMax) + 1.0f) {
+        myGridXMin = theXMin;
+        myGridXMax = theXMax;
+        myGridYMin = theYMin;
+        myGridYMax = theYMax;
+     }
 
     /// <summary>
     /// An accessor for the unique room ID number.
@@ -127,5 +167,37 @@ public class DungeonRoom
     public bool HasLoot()
     {
         return myLoot.Peek() != null;
+    }
+
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. Returns the minimum X grid constraint.
+    /// </summary>
+    /// <returns> Returns the minimum X grid constraint. </returns>
+    public int GetXMin() {
+        return myGridXMin;
+    }
+
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. Returns the maximum X grid constraint.
+    /// </summary>
+    /// <returns> Returns the maximum X grid constraint. </returns>
+    public int GetXMax() {
+        return myGridXMax;
+    }
+
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. Returns the minimum Y grid constraint.
+    /// </summary>
+    /// <returns> Returns the minimum Y grid constraint. </returns>
+    public int GetYMin() {
+        return myGridYMin;
+    }
+
+    /// <summary>
+    /// Only used when initialized using the grid constraints method. Returns the maximum Y grid constraint.
+    /// </summary>
+    /// <returns> Returns the maximum Y grid constraint. </returns>
+    public int GetYMax() {
+        return myGridYMax;
     }
 }

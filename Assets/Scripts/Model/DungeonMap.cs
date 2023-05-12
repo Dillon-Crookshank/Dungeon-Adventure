@@ -8,14 +8,14 @@ using static UnityEngine.Debug;
 internal class DungeonMap
 {
     private const int SIDE_MIN = 3;
-    private const int SIDE_MAX = 8;
+    private const int SIDE_MAX = 6;
     private const int X_BOUND = 32;
     private const int Y_BOUND = 18;
     private const float MIN_ALLEY_SPACE = 1.5f;
 
     private const float HALLWAY_WIDTH = 1.0f;
 
-    private const int ATTEMPTS = 50;
+    private const int ATTEMPTS = 100;
     private const int PASSES = 1;
 
     private static Random myRand = new Random();
@@ -24,7 +24,9 @@ internal class DungeonMap
     /// <summary>
     /// The underlying adjacency list of the class.
     /// </summary>
-    private List<GraphEntry> myAdjacentcyList;
+    private List<GraphEntry> myAdjacencyList;
+
+    private int[,] myGrid;
 
     /// <summary>
     /// The GraphEntry that contains the room that is currently being focused.
@@ -34,11 +36,11 @@ internal class DungeonMap
     
 
     /// <summary>
-    /// A nested class, used as the building block of the adjacentcy list.
+    /// A nested class, used as the building block of the adjacency list.
     /// </summary>
     private class GraphEntry {
         /// <summary>
-        /// The dungeon room within this slot of the adjacentcy list.
+        /// The dungeon room within this slot of the adjacency list.
         /// </summary>
         public DungeonRoom myRoom;
 
@@ -54,7 +56,7 @@ internal class DungeonMap
         public List<int> myConnectedRooms;
 
         /// <summary>
-        /// A constructor that initializes given a room. **The adjacent rooms list needs to be initialized manualy**
+        /// A constructor that initializes given a room. **The adjacent rooms list needs to be initialized manually**
         /// </summary>
         /// <param name="theRoom"> The room in the GraphEntry. </param>
         public GraphEntry(in DungeonRoom theRoom) {
@@ -68,15 +70,10 @@ internal class DungeonMap
     /// Initializes a unique DungeonMap. **WIP: For now, an example map is created**
     /// </summary>
     public DungeonMap() {
-        myAdjacentcyList = new List<GraphEntry>();
+        myAdjacencyList = new List<GraphEntry>();
+        myGrid = new int[Y_BOUND * 2, X_BOUND * 2];
         
-        //GenerateDungeon(); 
-
-        
-        CircularDungeonTest();
-        //StraightHallwayCases();
-
-        //FullExample();
+        GenerateDungeon(); 
     }
 
     /// <summary>
@@ -103,16 +100,16 @@ internal class DungeonMap
     }
 
     /// <summary>
-    /// Given an index N, this method retuns the Nth room in the adjacency list.
+    /// Given an index N, this method returns the Nth room in the adjacency list.
     /// </summary>
     /// <param name="theIndex"> The index of the room in the base adjacency list. If out of bounds, a null reference is returned. </param>
     /// <returns></returns>
     public DungeonRoom GetNthRoom(int theIndex) {
-        if (theIndex < 0 || theIndex >= myAdjacentcyList.Count) {
+        if (theIndex < 0 || theIndex >= myAdjacencyList.Count) {
             return null;
         }
 
-        return myAdjacentcyList[theIndex].myRoom;
+        return myAdjacencyList[theIndex].myRoom;
     }
 
     /// <summary>
@@ -132,183 +129,220 @@ internal class DungeonMap
     private void GenerateDungeon() {
         //Attempt to generate multiple rooms
         for (int n = 0; n < ATTEMPTS; n++) {
-            CreateRandomRoom();
+            GenerateRandomGridRoom();
         }
 
-        for (int n = 0; n < PASSES; n++) {
-            int length = myAdjacentcyList.Count;
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < length; j++) {
-                    Log($"Trying ({i}, {j})...");
-                    CreateStraightHallway(i, j);
+        //before adding any hallways, iterate through the list and remove any that are directly adjacent to any rooms on their long side
+
+        //pick a random index from the list
+        //turn that hallway into a room
+        //Before adding the room, check if the connection was already made
+        //iterate through the list and remove any with a similar room[5] (Other index)
+        //Repeat until list is empty 
+
+        foreach (int[] room in GetValidHallways(0)) {
+            DrawHallway(room);
+        }
+
+        //Place initial focus on the room that was generated first.
+        myFocusedRoom = myAdjacencyList[0];
+    }
+
+    /// <summary>
+    /// Generates a random room snapped to a grid and tries to place it in the map. If it doesn't fit, the method returns without placing a room.
+    /// </summary>
+    private void GenerateRandomGridRoom() {
+        int xMin, xMax, yMin, yMax, w, h;
+
+        //Generate side lengths first so we can safely generate coordinates without violating bounds
+        w = myRand.Next(SIDE_MIN, SIDE_MAX) - 1;
+        h = myRand.Next(SIDE_MIN, SIDE_MAX) - 1;
+        
+        //Find the bottom left x andy value
+        xMin = myRand.Next(-X_BOUND, X_BOUND - w);
+        yMin = myRand.Next(-Y_BOUND, Y_BOUND - h);
+
+        //Find the top right x and y values by using the width and height
+        xMax = xMin + w;
+        yMax = yMin + h;
+
+        if (CheckGridSpace(xMin, xMax, yMin, yMax)) {
+            myAdjacencyList.Add(new GraphEntry(new DungeonRoom(xMin, xMax, yMin, yMax)));
+            StampRoomOnGrid(myAdjacencyList.Count, xMin, xMax, yMin, yMax);
+        }
+    }
+
+    /// <summary>
+    /// Given the Grid constraints of a 'virtual' room, the method checks if any rooms already exist too close.
+    /// </summary>
+    /// <param name="xMin"></param>
+    /// <param name="xMax"></param>
+    /// <param name="yMin"></param>
+    /// <param name="yMax"></param>
+    /// <returns> True if the room can fit in the map. False otherwise. </returns>
+    private bool CheckGridSpace(int xMin, int xMax, int yMin, int yMax) {
+        for (int y = yMin; y <= yMax; y++) {
+            for (int x = xMin; x <= xMax; x++) {
+                if (myGrid[y + Y_BOUND, x + X_BOUND] != 0) {
+                    return false;
                 }
             }
         }
 
-        //Place initial focus on the room that was generated first.
-        myFocusedRoom = myAdjacentcyList[0];
-
-
+        return true;
     }
 
     /// <summary>
-    /// Used in the procedural algorithm. Creates a random room with side lengths that varry from 3 to 5 and tries to randomly place it without colliding with other rooms
+    /// Given the Grid constraints of an existing room, this method 'stamps' the rooms shadow on a matrix, so that the CheckGridSpace() method knows it exists.
     /// </summary>
-    private void CreateRandomRoom() {
-        float width = (float) myRand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
-        float height = (float) myRand.NextDouble() * (SIDE_MAX - SIDE_MIN) + SIDE_MIN;
-        float x = (float) ((myRand.NextDouble() - 0.5f) * 2 * (X_BOUND - MIN_ALLEY_SPACE - width / 2.0f));
-        float y = (float) ((myRand.NextDouble() - 0.5f) * 2 * (Y_BOUND - MIN_ALLEY_SPACE - height / 2.0f));
-        
-        //Make sure that the generated room fits
-        if (!CheckCollision(x, y, width, height)) {
-            myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(x, y, width, height)));
-        }
-    }
-
-    private void CreateStraightHallway(int theIndex0, int theIndex1) {
-        //Exit if the connection already exists or trying to connect a room to itself
-        if (theIndex0 == theIndex1 || myAdjacentcyList[theIndex0].myConnectedRooms.Contains(theIndex1)) {
-            Log($"Failed: -1");
-            return;
-        }
-        
-        DungeonRoom room0 = myAdjacentcyList[theIndex0].myRoom;
-        DungeonRoom room1 = myAdjacentcyList[theIndex1].myRoom;
-
-        float yMin, yMax, xMin, xMax;
-        float x = 0, y = 0, width = 0, height = 0;
-        
-        if ((room0.GetY() + room0.GetH() / 2.0f) - (room1.GetY() - room1.GetH() / 2.0f) > HALLWAY_WIDTH
-            && (room0.GetY() + room0.GetH() / 2.0f) - (room1.GetY() - room1.GetH() / 2.0f) <= Math.Min(room0.GetH(), room1.GetH())
-            || (room1.GetY() + room1.GetH() / 2.0f) - (room0.GetY() - room0.GetH() / 2.0f) > HALLWAY_WIDTH
-            && (room1.GetY() + room1.GetH() / 2.0f) - (room0.GetY() - room0.GetH() / 2.0f) <= Math.Min(room0.GetH(), room1.GetH())) {
-            
-            yMax = Math.Min((room0.GetY() + room0.GetH() / 2.0f), (room1.GetY() + room1.GetH() / 2.0f));
-            yMin = Math.Max((room0.GetY() - room0.GetH() / 2.0f), (room1.GetY() - room1.GetH() / 2.0f));
-            xMax = Math.Max((room0.GetX() - room0.GetW() / 2.0f), (room1.GetX() - room1.GetW() / 2.0f));
-            xMin = Math.Min((room0.GetX() + room0.GetW() / 2.0f), (room1.GetX() + room1.GetW() / 2.0f));
-
-            width = xMax - xMin;
-            height = HALLWAY_WIDTH;
-            x = (xMax + xMin) / 2.0f;
-            y = (float) myRand.NextDouble() * (yMax - yMin - HALLWAY_WIDTH) + yMin + HALLWAY_WIDTH / 2.0f;
-        }
-
-        else if ((room0.GetX() + room0.GetW() / 2.0f) - (room1.GetX() - room1.GetW() / 2.0f) > HALLWAY_WIDTH
-            && (room0.GetX() + room0.GetW() / 2.0f) - (room1.GetX() - room1.GetW() / 2.0f) <= Math.Min(room0.GetW(), room1.GetW())
-            || (room1.GetX() + room1.GetW() / 2.0f) - (room0.GetX() - room0.GetW() / 2.0f) > HALLWAY_WIDTH
-            && (room1.GetX() + room1.GetW() / 2.0f) - (room0.GetX() - room0.GetW() / 2.0f) <= Math.Min(room0.GetW(), room1.GetW())) {
-            
-            yMax = Math.Max((room0.GetY() - room0.GetH() / 2.0f), (room1.GetY() - room1.GetH() / 2.0f));
-            yMin = Math.Min((room0.GetY() + room0.GetH() / 2.0f), (room1.GetY() + room1.GetH() / 2.0f));
-            xMax = Math.Min((room0.GetX() + room0.GetW() / 2.0f), (room1.GetX() + room1.GetW() / 2.0f));
-            xMin = Math.Max((room0.GetX() - room0.GetW() / 2.0f), (room1.GetX() - room1.GetW() / 2.0f));
-
-            width = HALLWAY_WIDTH;
-            height = yMax - yMin;
-            x = (float) myRand.NextDouble() * (xMax - xMin - HALLWAY_WIDTH) + xMin + HALLWAY_WIDTH / 2.0f;
-            y = (yMax + yMin) / 2.0f;
-        }
-
-        
-        if (width < HALLWAY_WIDTH || height < HALLWAY_WIDTH) {
-            Log($"Failed: -2");
-            Log($"X: {x}, Y: {y}, W: {width}, H: {height}");
-            return;
-        }
-        
-
-        //Make sure that the hallway fits before adding
-        if (!CheckCollision(x, y, width, height, 0)) {
-            myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(x, y, width, height)));
-
-            //create a graph connection with the new hallway
-            myAdjacentcyList[theIndex0].myAdjacentRooms.Add(myAdjacentcyList[myAdjacentcyList.Count - 1]);
-            myAdjacentcyList[theIndex1].myAdjacentRooms.Add(myAdjacentcyList[myAdjacentcyList.Count - 1]);
-            myAdjacentcyList[myAdjacentcyList.Count - 1].myAdjacentRooms.Add(myAdjacentcyList[theIndex0]);
-            myAdjacentcyList[myAdjacentcyList.Count - 1].myAdjacentRooms.Add(myAdjacentcyList[theIndex1]);
-            myAdjacentcyList[theIndex0].myConnectedRooms.Add(theIndex1);
-            myAdjacentcyList[theIndex1].myConnectedRooms.Add(theIndex0);
-            Log($"Succsess!\n");
-        }
-
-        Log($"Failed: -3");
-        Log($"X: {x}, Y: {y}, W: {width}, H: {height}");
-    }
-
-    /// <summary>
-    /// This method checks if the given room bounds collides with any existing rooms.
-    /// </summary>
-    /// <param name="theX"> The x-coordinate of the room. </param>
-    /// <param name="theY"> The y-coordinate of the room. </param>
-    /// <param name="theW"> The width of the room. </param>
-    /// <param name="theH"> The height of the room. </param>
-    /// <param name="theAlleySpace"> The amount of space that should be inbetween rooms </param>
-    /// <returns> True if the given room colides with an existing room. False otherwise. </returns>
-    private bool CheckCollision(float theX, float theY, float theW, float theH, float theAlleySpace = MIN_ALLEY_SPACE) {
-        for (int i = 0; i < myAdjacentcyList.Count; i++) {
-            if (Math.Abs(myAdjacentcyList[i].myRoom.GetX() - theX) < (myAdjacentcyList[i].myRoom.GetW() + theW) / 2.0 + theAlleySpace 
-                && Math.Abs(myAdjacentcyList[i].myRoom.GetY() - theY) < (myAdjacentcyList[i].myRoom.GetH() + theH) / 2.0 + theAlleySpace) {
-                return true;
+    /// <param name="theIndex"> The index of the DungeonRoom in the adjacency list. </param>
+    /// <param name="xMin"></param>
+    /// <param name="xMax"></param>
+    /// <param name="yMin"></param>
+    /// <param name="yMax"></param>
+    private void StampRoomOnGrid(int theIndex, int xMin, int xMax, int yMin, int yMax) {
+        for (int y = yMin; y <= yMax; y++) {
+            for (int x = xMin; x <= xMax; x++) {
+                myGrid[y + Y_BOUND, x + X_BOUND] = theIndex;
             }
         }
 
-        return false;
+        //Place -1's over the perimeter of the room
+        int y1 = yMin + Y_BOUND - 1;
+        int y2 = yMax + Y_BOUND + 1;
+        int x1 = xMin + X_BOUND - 1; 
+        int x2 = xMax + X_BOUND + 1;
+
+        for (int x = xMin + X_BOUND; x <= xMax + X_BOUND; x++) {
+            if (y1 >= 0 && myGrid[y1, x] == 0) myGrid[y1, x] = -1;
+            if (y2 < Y_BOUND * 2 && myGrid[y2, x] == 0) myGrid[y2, x] = -1;
+        }
+
+        for (int y = yMin + Y_BOUND; y <= yMax + Y_BOUND; y++) {
+            if (x1 >= 0 && myGrid[y, x1] == 0) myGrid[y, x1] = -1;
+            if (x2 < X_BOUND * 2 && myGrid[y, x2] == 0) myGrid[y, x2] = -1;
+        }
+    }
+
+    /// <summary>
+    /// Given the index of a room, this method collects every possible hallway in a list and returns it.
+    /// Data in the form: {xMin, xMax,yMin, yMax, index0, index1}
+    /// </summary>
+    /// <param name="theIndex"></param>
+    /// <returns> Returns a list of valid hallways. </returns>
+    private List<int[]> GetValidHallways(int theIndex) {
+        DungeonRoom room0 = myAdjacencyList[theIndex].myRoom;
+        
+        int xMin = room0.GetXMin();
+        int xMax = room0.GetXMax();
+        int yMin = room0.GetYMin();
+        int yMax = room0.GetYMax();
+
+        //A place to store everything needed to create multiple hallways
+        List<int[]> validHallways = new List<int[]>();
+        //0: xMin
+        //1: xMax
+        //2: yMin
+        //3: yMax
+        //4: otherIndex
+
+        //Iterate over the perimeter
+        for (int x = xMin; x <= xMax; x++) {
+            //yMin - 1
+            int y0 = CastRay(x, yMin - 1, -1, false);
+
+            if (y0 != -1 && y0 + 1 != yMin - 1) {
+                //Possible hallway found!
+                validHallways.Add(new int[] {x, x, y0 + 1, yMin - 1, myGrid[y0 + Y_BOUND, x + X_BOUND] - 1, theIndex});
+            }
+
+
+            //yMax + 1
+            int y1 = CastRay(x, yMax + 1, 1, false);
+
+            if (y1 != -1 && y1 - 1 != xMax + 1) {
+                //Possible hallway found!
+                validHallways.Add(new int[] {x, x, y1 - 1, yMax + 1, myGrid[y1 + Y_BOUND, x + X_BOUND] - 1, theIndex});
+            }
+        }
+
+        for (int y = yMin; y <= yMax; y++) {
+            //xMin - 1
+            int x0 = CastRay(xMin - 1, y, -1, true);
+
+            if (x0 != -1 && x0 + 1 != xMin - 1) {
+                //Possible hallway found!
+                validHallways.Add(new int[] {x0 + 1, xMin - 1, y, y, myGrid[y + Y_BOUND, x0 + X_BOUND] - 1, theIndex});
+            }
+
+
+            //xMax + 1
+            int x1 = CastRay(xMax + 1, y, 1, true);
+
+            if (x1 != -1 && x1 - 1 != xMax + 1) {
+                //Possible hallway found!
+                validHallways.Add(new int[] {x1 - 1, xMax + 1, y, y, myGrid[y + Y_BOUND, x1 + X_BOUND] - 1, theIndex});
+            }
+        }
+
+        return validHallways;
+    }
+
+    private void DrawHallway(int[] theRoom) {
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(theRoom[0], theRoom[1], theRoom[2], theRoom[3])));
+
+        //We stamp the hallway so that hallways in the future can connect to it
+        StampRoomOnGrid(myAdjacencyList.Count, theRoom[0], theRoom[1], theRoom[2], theRoom[3]);
+
+        myAdjacencyList[theRoom[4]].myAdjacentRooms.Add(myAdjacencyList[myAdjacencyList.Count - 1]);
+        myAdjacencyList[theRoom[5]].myAdjacentRooms.Add(myAdjacencyList[myAdjacencyList.Count - 1]);
+        myAdjacencyList[myAdjacencyList.Count - 1].myAdjacentRooms.Add(myAdjacencyList[theRoom[4]]);
+        myAdjacencyList[myAdjacencyList.Count - 1].myAdjacentRooms.Add(myAdjacencyList[theRoom[5]]);
+        myAdjacencyList[theRoom[4]].myConnectedRooms.Add(theRoom[5]);
+        myAdjacencyList[theRoom[5]].myConnectedRooms.Add(theRoom[4]);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    private void StraightHallwayCases() {
-        //Create DungeonRooms
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(0, 0, 3, 3)));
-
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(6, 6.5f, 3, 3)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(6, 0.5f, 3, 3)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(6, -5.5f, 3, 3)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(0, -6, 3, 3)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-6, -6, 3, 3)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-6, 0, 3, 3)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-6, 6, 3, 3)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(0, 6, 3, 3)));
-
-
-        for (int n = 0; n < PASSES; n++) {
-            int length = myAdjacentcyList.Count;
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < length; j++) {
-                    Log($"Trying ({i}, {j})...");
-                    CreateStraightHallway(i, j);
+    /// <param name="theX"> The initial x-coordinate. </param>
+    /// <param name="theY"> The initial y-coordinate. </param>
+    /// <param name="theStep"> The step length of the Ray. (if casting down/left, value should be negative)</param>
+    /// <param name="theAxis"> Specify the Axis: True if x-axis, False if y-axis</param>
+    /// <returns></returns>
+    private int CastRay(int theX, int theY, int theStep, bool theAxis) {
+        //x-axis
+        if (theAxis) {
+            for (int x = theX; x >= -X_BOUND && x < X_BOUND; x += theStep) {
+                if (myGrid[theY + Y_BOUND, x + X_BOUND] > 0) {
+                    return x;
                 }
             }
-        }
+
+            return -1;
+        } 
         
+        //y-axis
+        else {
+            for (int y = theY; y >= -Y_BOUND && y < Y_BOUND; y += theStep) {
+                if (myGrid[y + Y_BOUND, theX + X_BOUND] > 0) {
+                    return y;
+                }
+            }
 
-
-        myFocusedRoom = myAdjacentcyList[0];
+            return -1;
+        }
     }
 
-    private void CircularDungeonTest() {
-        const double R = 8;
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(0, 0, 5, 5)));
-
-        for (double theta = 0; theta < 2 * Math.PI; theta += Math.PI / 6.0d) {
-            myAdjacentcyList.Add(new GraphEntry(new DungeonRoom((float) (R * Math.Cos(theta)), (float) (R * Math.Sin(theta)), 3, 3)));
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="theMainRoom"></param>
+    /// <param name="theAdjacentRooms"></param>
+    private void AddAdjacentRooms(int theMainRoom, int[] theAdjacentRooms) {
+        foreach (int i in theAdjacentRooms) {
+            myAdjacencyList[theMainRoom].myAdjacentRooms.Add(myAdjacencyList[i]);
         }
-
-        for (int n = 0; n < PASSES; n++) {
-            int length = myAdjacentcyList.Count;
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < length; j++) {
-                    Log($"Trying ({i}, {j})...");
-                    CreateStraightHallway(i, j);
-                }
-            }
-        }
-
-        myFocusedRoom = myAdjacentcyList[0];
-        
     }
 
     /// <summary>
@@ -316,27 +350,27 @@ internal class DungeonMap
     /// </summary>
     private void FullExample() {
         //Create DungeonRooms
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-13.5f, 6.5f, 3.0f, 3.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-10.0f, 7.5f, 4, 1)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-6.0f, 5.5f, 4.0f, 5.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-1.5f, 5.5f, 5.0f, 1.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(3.5f, 4.5f, 5.0f, 5.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(8.5f, 5.5f, 5.0f, 1.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(12.5f, 5.5f, 3.0f, 3.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(12.5f, 2.0f, 1.0f, 4.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(3.5f, 0.5f, 1.0f, 3.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-4.5f, 2.0f, 1.0f, 2.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-11.5f, 0.5f, 3.0f, 3.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-8.0f, 0.5f, 4.0f, 1.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-4.0f, -1.0f, 4.0f, 4.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(4.5f, -1.5f, 13.0f, 1.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(12.5f, -1.5f, 3.0f, 3.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(7.5f, -3.5f, 1.0f, 3.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(0.5f, -3.0f, 1.0f, 2.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-11.5f, -1.5f, 1.0f, 1.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(-11.0f, -4.0f, 4.0f, 4.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(0.0f, -6.0f, 4.0f, 4.0f)));
-        myAdjacentcyList.Add(new GraphEntry(new DungeonRoom(7.5f, -6.5f, 3.0f, 3.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-13.5f, 6.5f, 3.0f, 3.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-10.0f, 7.5f, 4, 1)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-6.0f, 5.5f, 4.0f, 5.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-1.5f, 5.5f, 5.0f, 1.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(3.5f, 4.5f, 5.0f, 5.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(8.5f, 5.5f, 5.0f, 1.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(12.5f, 5.5f, 3.0f, 3.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(12.5f, 2.0f, 1.0f, 4.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(3.5f, 0.5f, 1.0f, 3.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-4.5f, 2.0f, 1.0f, 2.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-11.5f, 0.5f, 3.0f, 3.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-8.0f, 0.5f, 4.0f, 1.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-4.0f, -1.0f, 4.0f, 4.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(4.5f, -1.5f, 13.0f, 1.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(12.5f, -1.5f, 3.0f, 3.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(7.5f, -3.5f, 1.0f, 3.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(0.5f, -3.0f, 1.0f, 2.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-11.5f, -1.5f, 1.0f, 1.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(-11.0f, -4.0f, 4.0f, 4.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(0.0f, -6.0f, 4.0f, 4.0f)));
+        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(7.5f, -6.5f, 3.0f, 3.0f)));
 
         //Create Graph Connections
         AddAdjacentRooms(0, new int[] {1});
@@ -362,17 +396,6 @@ internal class DungeonMap
         AddAdjacentRooms(20, new int[] {15});
 
         //Set initial room
-        myFocusedRoom = myAdjacentcyList[0];
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="theMainRoom"></param>
-    /// <param name="theAdjacentRooms"></param>
-    private void AddAdjacentRooms(int theMainRoom, int[] theAdjacentRooms) {
-        foreach (int i in theAdjacentRooms) {
-            myAdjacentcyList[theMainRoom].myAdjacentRooms.Add(myAdjacentcyList[i]);
-        }
+        myFocusedRoom = myAdjacencyList[0];
     }
 }
