@@ -54,15 +54,27 @@ namespace DefaultNamespace
         private double currentMana;
 
         /// <summary>
-        /// The initiative of the Actor.
-        /// This primarily determines how early in the turn order that the Actor will be placed.
+        /// The base initiative of the Actor.
+        /// This base value has an additional D20 roll added to it to determine turn order.
         /// </summary>
         private int initiative;
+
+        /// <summary>
+        /// The initiative of the Actor for this combat iteration.
+        /// Base initiative + D20.
+        /// This value is rerolled for each combat.
+        /// </summary>
+        private int combatInitiative;
 
         /// <summary>
         /// A boolean that represents whether the Actor is currently alive.
         /// </summary>
         private bool isAlive;
+
+        /// <summary>
+        /// The position this Actor holds in the party.
+        /// </summary>
+        private int partyPosition;
 
 
         /// <summary>
@@ -84,6 +96,7 @@ namespace DefaultNamespace
             SetDefence(theDefence);
             SetMaxMana(theMana);
             SetInitiative(theInitiative);
+            SetCombatInitiative(0);
             isAlive = true;
         }
 
@@ -160,10 +173,29 @@ namespace DefaultNamespace
         /// <summary>
         /// Getter for the initiative of the Actor.
         /// </summary>
-        /// <returns>The current Name of the Actor.</returns>
+        /// <returns>The base initiative of the Actor.</returns>
         internal int GetInitiative()
         {
             return initiative;
+        }
+
+        /// <summary>
+        /// Getter for the combatInitiative of the Actor.
+        /// </summary>
+        /// <returns>The initiative for this specific combat after the D20 roll.</returns>
+        internal int GetCombatInitiative()
+        {
+            return combatInitiative;
+        }
+
+
+        /// <summary>
+        /// Getter for the Actor's party position.
+        /// </summary>
+        /// <returns>The party position of the Actor.</returns>
+        internal int GetPartyPosition()
+        {
+            return partyPosition;
         }
 
 
@@ -312,6 +344,17 @@ namespace DefaultNamespace
             initiative += theChange;
         }
 
+        /// <summary>
+        /// Setter for the combat initiative of the Actor.
+        /// A positive value represents an increase, and a negative represents a decrease.
+        /// If reduced below 0, initiative is set to 0.
+        /// </summary>
+        /// <param name="theChange">Positive for an increase in initiative, negative for a decrease.</param>
+        internal void SetCombatInitiative(int theChange)
+        {
+            combatInitiative += theChange;
+        }
+
 
         /// <summary>
         /// Setter for the bool isAlive.
@@ -321,6 +364,36 @@ namespace DefaultNamespace
         {
             isAlive = aliveStatus;
         }
+
+        /// <summary>
+        /// Updates the locally stored partyPosition after a move has occurred.
+        /// </summary>
+        /// <param name="thePosition">The position the Actor is attempting to move to.</param>
+        /// <returns>True if the move was successful, false otherwise.</returns>
+        internal bool SetPartyPosition(int thePosition)
+        {
+            if (thePosition < 1 || thePosition > AbstractParty.MAX_PARTY_SIZE)
+            {
+                return false;
+            }
+            partyPosition = thePosition;
+            return true;
+        }
+
+
+        /// <summary>
+        /// A string representation of the current status of the Actor.
+        /// </summary>
+        /// <returns>A string representation of the current status of the Actor.</returns>
+        internal string toString()
+        {
+            return "Information about this actor:" + "\nPosition: " + partyPosition +
+            "\nName: " + name + "\nAttack: " + attack
+            + "\nHitpoints: " + currentHitpoints + "/" + maxHitpoints + "\nDefence: " + defence
+            + "\nMana: " + currentMana + "/" + maxMana + "\nInitiative: " + initiative + " + " +
+            (combatInitiative - initiative) + "\nAlive?: " + isAlive;
+        }
+
 
     }
 

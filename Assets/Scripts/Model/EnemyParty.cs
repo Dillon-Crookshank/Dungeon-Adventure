@@ -4,16 +4,13 @@ using DefaultNamespace;
 internal class EnemyParty : AbstractParty
 {
 
-    private List<AbstractEnemy> enemyPartyComposition;
-
-
-    private EnemyParty(AbstractEnemy theEnemy)
+    internal EnemyParty(AbstractEnemy theEnemy)
     {
-        if (enemyPartyComposition == null)
-        {
-            enemyPartyComposition = new List<AbstractEnemy>();
-        }
-        enemyPartyComposition.Add(theEnemy);
+        partyPositions = new Dictionary<int, AbstractActor>();
+        AddActor(theEnemy);
+        isAllAlive = true;
     }
+
+
 
 }

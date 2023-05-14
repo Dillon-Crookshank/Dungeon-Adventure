@@ -6,17 +6,12 @@ namespace DefaultNamespace
     internal class PlayerParty : AbstractParty
     {
 
-        private List<AbstractPlayerCharacter> playerPartyComposition;
-
-        PlayerParty(AbstractPlayerCharacter theHero)
+        internal PlayerParty(AbstractPlayerCharacter theHero)
         {
-            if (playerPartyComposition == null)
-            {
-                playerPartyComposition = new List<AbstractPlayerCharacter>();
-            }
-            playerPartyComposition.Add(theHero);
+            partyPositions = new Dictionary<int, AbstractActor>();
+            AddActor(theHero);
+            isAllAlive = true;
         }
 
-        //TODO: flee
     }
 }
