@@ -39,13 +39,11 @@ sealed class buttonFactory : MonoBehaviour
             arrayOfObjects[i].transform.localScale = scaleSize;
             arrayOfObjects[i].name = buttonLabels[i];
             arrayOfObjects[i].transform.position = (positionVectors[i]);
-            Debug.Log(i + ": " + positionVectors[i]);
-            
+          
         }
         int randomIndex = UnityEngine.Random.Range(0, arrayOfObjects.Length);
         arrayOfObjects[0].GetComponent<testButton>().ToggleHasHero();
         arrayOfObjects[5].GetComponent<testButton>().ToggleHasHero();
-        Debug.LogFormat("{0}: {1}", randomIndex, arrayOfObjects[randomIndex].GetComponent<testButton>().GetSelectMoveMode());
     }
 
     private Vector3[] returnPositionValues(int numObjects, float width, float length)
@@ -63,12 +61,6 @@ sealed class buttonFactory : MonoBehaviour
         {
             centeringPoint.y = (gapBorder.y + length) / 2;
         }
-        Debug.LogFormat(
-            "{0} * {1} = {2}",
-            backgroundCenterPoint,
-            GridCenterOnBackgroundPercentage,
-            backgroundCenterPoint * GridCenterOnBackgroundPercentage
-        );
         for (int i = 0; i < breakPoint; i++)
         {
             returnSet[i] = new Vector3(

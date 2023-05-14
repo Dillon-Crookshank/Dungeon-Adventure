@@ -17,6 +17,10 @@ sealed class testButton : MonoBehaviour
 
     public Sprite[] spriteArray = new Sprite[2];
 
+    public TextMesh[] stats = new TextMesh[3];
+
+    public GameObject labelArea;
+
     bool hasHero = false;
     bool selectMoveMode = false;
     bool held = false;
@@ -31,6 +35,22 @@ sealed class testButton : MonoBehaviour
         arrowDisplay.SetActive(false);
         rend = gameObject.GetComponent<SpriteRenderer>();
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
+    }
+
+    void Update(){
+        
+        string labelTexts = "";
+        bool spaceActive = false;
+        if (hasHero){
+            labelTexts = "0";
+        }
+
+        foreach(TextMesh textLabel in stats){
+            textLabel.text = labelTexts;
+        }
+
+        rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
+        labelArea.SetActive(hasHero);
     }
 
     void OnMouseOver()
@@ -140,7 +160,6 @@ sealed class testButton : MonoBehaviour
                 if (this == sender || clicked){
                     clicked = false;
                     ToggleHasHero();
-                    rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
                     rend.color = Color.white;
                 }
             }
