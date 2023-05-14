@@ -40,7 +40,6 @@ sealed class testButton : MonoBehaviour
     void Update(){
         
         string labelTexts = "";
-        bool spaceActive = false;
         if (hasHero){
             labelTexts = "0";
         }
