@@ -144,6 +144,12 @@ internal class DungeonMap
             DrawHallway(room);
         }
 
+        /*
+        foreach (int[] room in GetValidHallways(1)) {
+            DrawHallway(room);
+        }
+        */
+
         //Place initial focus on the room that was generated first.
         myFocusedRoom = myAdjacencyList[0];
     }
@@ -248,7 +254,7 @@ internal class DungeonMap
 
         //Iterate over the perimeter
         for (int x = xMin; x <= xMax; x++) {
-            //yMin - 1
+            // -y-axis
             int y0 = CastRay(x, yMin - 1, -1, false);
 
             if (y0 != -1 && y0 + 1 != yMin - 1) {
@@ -257,17 +263,17 @@ internal class DungeonMap
             }
 
 
-            //yMax + 1
+            // +y-axis
             int y1 = CastRay(x, yMax + 1, 1, false);
 
-            if (y1 != -1 && y1 - 1 != xMax + 1) {
+            if (y1 != -1 && y1 - 1 != yMax + 1) {
                 //Possible hallway found!
                 validHallways.Add(new int[] {x, x, y1 - 1, yMax + 1, myGrid[y1 + Y_BOUND, x + X_BOUND] - 1, theIndex});
             }
         }
 
         for (int y = yMin; y <= yMax; y++) {
-            //xMin - 1
+            // -x-axis
             int x0 = CastRay(xMin - 1, y, -1, true);
 
             if (x0 != -1 && x0 + 1 != xMin - 1) {
@@ -276,7 +282,7 @@ internal class DungeonMap
             }
 
 
-            //xMax + 1
+            // +x-axis
             int x1 = CastRay(xMax + 1, y, 1, true);
 
             if (x1 != -1 && x1 - 1 != xMax + 1) {
@@ -284,6 +290,7 @@ internal class DungeonMap
                 validHallways.Add(new int[] {x1 - 1, xMax + 1, y, y, myGrid[y + Y_BOUND, x1 + X_BOUND] - 1, theIndex});
             }
         }
+
 
         return validHallways;
     }
@@ -314,8 +321,15 @@ internal class DungeonMap
         //x-axis
         if (theAxis) {
             for (int x = theX; x >= -X_BOUND && x < X_BOUND; x += theStep) {
+                //Check if the casted ray has reached a room
                 if (myGrid[theY + Y_BOUND, x + X_BOUND] > 0) {
                     return x;
+                }
+
+                //Check if any rooms are adjacent to the casted ray
+                if (theY + Y_BOUND != 0 && myGrid[theY + Y_BOUND - 1, x + X_BOUND] > 0
+                    || theY + Y_BOUND != Y_BOUND * 2 - 1 && myGrid[theY + Y_BOUND + 1, x + X_BOUND] > 0) {
+                    return -1;
                 }
             }
 
@@ -325,8 +339,15 @@ internal class DungeonMap
         //y-axis
         else {
             for (int y = theY; y >= -Y_BOUND && y < Y_BOUND; y += theStep) {
+                //Check if the casted ray has reached a room
                 if (myGrid[y + Y_BOUND, theX + X_BOUND] > 0) {
                     return y;
+                }
+
+                //Check if any rooms are adjacent to the casted ray
+                if (theX + X_BOUND != 0 && myGrid[y + Y_BOUND, theX + X_BOUND - 1] > 0
+                    || theX + X_BOUND != X_BOUND * 2 - 1 && myGrid[y + Y_BOUND, theX + X_BOUND + 1] > 0) {
+                    return -1;
                 }
             }
 

@@ -95,7 +95,7 @@ public class DungeonRoom
     /// <param name="theYMin"> The Lowest Y-value of the DungeonRoom. </param>
     /// <param name="theYMax"> The Highest Y-value of the DungeonRoom. </param>
     public DungeonRoom(int theXMin, int theXMax, int theYMin, int theYMax) 
-    : this((theXMin + theXMax) / 2.0f, (theYMin + theYMax) / 2.0f, Math.Abs(theXMin - theXMax) + 1.0f, Math.Abs(theYMin - theYMax) + 1.0f) {
+    : this((theXMin + theXMax) / 2.0f + 0.5f, (theYMin + theYMax) / 2.0f + 0.5f, Math.Abs(theXMin - theXMax) + 1.0f, Math.Abs(theYMin - theYMax) + 1.0f) {
         myGridXMin = theXMin;
         myGridXMax = theXMax;
         myGridYMin = theYMin;
