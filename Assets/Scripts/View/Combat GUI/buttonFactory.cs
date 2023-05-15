@@ -1,23 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DefaultNamespace;
+using System;
 
 sealed class buttonFactory : MonoBehaviour
 {
+    [Header("Events")]
+    public GameEvent testingHeroInjection;
     public GameObject templateSprite;
     public GameObject backgroundBasis;
     public float GridCenterOnBackgroundPercentage = 0.75f;
     private GameObject[] arrayOfObjects;
     private static Vector3[] positionVectors;
-    public string[] buttonLabels;
+    private string[] buttonLabels = {"1", "2", "3", "4", "5", "6"};
     private Vector2 centeringPoint;
     private Vector2 gapBorder;
+    private PlayerParty party;
+    private Dictionary<int, AbstractActor> partyDictionary;
 
     RectTransform rt;
 
     // Start is called before the first frame update
     void Start()
     {
+
+        testHero h1 = new testHero("Knight 1", 25, 3, 2, 10, 5);
+        testHero h2 = new testHero("Knight 2", 25, 7, 9, 10, 5);
+        party = new PlayerParty(h1);
+        party.AddActor(h2);
+        partyDictionary = party.GetPartyPositions();
         int numObjects = buttonLabels.Length;
 
         Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
@@ -39,13 +51,25 @@ sealed class buttonFactory : MonoBehaviour
             arrayOfObjects[i].transform.localScale = scaleSize;
             arrayOfObjects[i].name = buttonLabels[i];
             arrayOfObjects[i].transform.position = (positionVectors[i]);
-            Debug.Log(i + ": " + positionVectors[i]);
-            
+            if (partyDictionary.ContainsKey(i+1)){
+                testingHeroInjection.Raise(this, new DataPacket(partyDictionary[i+1], "CharacterData", arrayOfObjects[i].name));
+            }
         }
         int randomIndex = UnityEngine.Random.Range(0, arrayOfObjects.Length);
-        arrayOfObjects[0].GetComponent<testButton>().ToggleHasHero();
-        arrayOfObjects[5].GetComponent<testButton>().ToggleHasHero();
-        Debug.LogFormat("{0}: {1}", randomIndex, arrayOfObjects[randomIndex].GetComponent<testButton>().GetSelectMoveMode());
+    }
+
+    public void ReceiveDataPacket(Component sender, object data){
+        DataPacket dPacket = (DataPacket) data;
+        if (dPacket.GetLabel() == "SwapRequest"){
+            int startPosition = Int32.Parse((string) dPacket.GetData());
+            int endPosition = Int32.Parse(sender.name);
+            Debug.Log(startPosition + " / " + endPosition);
+            arrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
+            testingHeroInjection.Raise(this, new DataPacket(partyDictionary[startPosition], "CharacterData", arrayOfObjects[endPosition - 1].name));
+            testingHeroInjection.Raise(this, new DataPacket(null, "CharacterData", arrayOfObjects[startPosition - 1].name));
+            arrayOfObjects[startPosition - 1].GetComponent<testButton>().ToggleClicked();
+            party.moveCharacter(endPosition, partyDictionary[startPosition]);
+        }
     }
 
     private Vector3[] returnPositionValues(int numObjects, float width, float length)
@@ -63,12 +87,6 @@ sealed class buttonFactory : MonoBehaviour
         {
             centeringPoint.y = (gapBorder.y + length) / 2;
         }
-        Debug.LogFormat(
-            "{0} * {1} = {2}",
-            backgroundCenterPoint,
-            GridCenterOnBackgroundPercentage,
-            backgroundCenterPoint * GridCenterOnBackgroundPercentage
-        );
         for (int i = 0; i < breakPoint; i++)
         {
             returnSet[i] = new Vector3(
@@ -99,4 +117,5 @@ sealed class buttonFactory : MonoBehaviour
             return positionVectors[index];
         }
     }
+
 }
