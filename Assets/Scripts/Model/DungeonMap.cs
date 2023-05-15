@@ -140,9 +140,14 @@ internal class DungeonMap
         //iterate through the list and remove any with a similar room[5] (Other index)
         //Repeat until list is empty 
 
-        foreach (int[] room in GetValidHallways(0)) {
-            DrawHallway(room);
+        int size = myAdjacencyList.Count;
+        for (int i = 0; i < size; i++) {
+            foreach (int[] room in GetValidHallways(i)) {
+                DrawHallway(room);
+            }
         }
+        
+        
 
         /*
         foreach (int[] room in GetValidHallways(1)) {
@@ -296,6 +301,10 @@ internal class DungeonMap
     }
 
     private void DrawHallway(int[] theRoom) {
+        if (!CheckGridSpace(theRoom[0], theRoom[1], theRoom[2], theRoom[3])) {
+            return;
+        }
+        
         myAdjacencyList.Add(new GraphEntry(new DungeonRoom(theRoom[0], theRoom[1], theRoom[2], theRoom[3])));
 
         //We stamp the hallway so that hallways in the future can connect to it
@@ -318,6 +327,10 @@ internal class DungeonMap
     /// <param name="theAxis"> Specify the Axis: True if x-axis, False if y-axis</param>
     /// <returns></returns>
     private int CastRay(int theX, int theY, int theStep, bool theAxis) {
+        /*if (myGrid[theY + Y_BOUND, theX + X_BOUND] > 0) {
+            return -1;
+        }*/
+        
         //x-axis
         if (theAxis) {
             for (int x = theX; x >= -X_BOUND && x < X_BOUND; x += theStep) {
