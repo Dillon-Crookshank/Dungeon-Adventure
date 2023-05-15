@@ -672,7 +672,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1607023452}
         m_TargetAssemblyTypeName: testButton, Assembly-CSharp
-        m_MethodName: ToggleSelectMove
+        m_MethodName: ReceiveDataPacket
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -782,6 +782,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1622406112}
   - component: {fileID: 1622406111}
+  - component: {fileID: 1622406113}
   m_Layer: 0
   m_Name: Button Factory
   m_TagString: Untagged
@@ -801,16 +802,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 219fa021d965782408c7d321045af18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testingHeroInjection: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
   templateSprite: {fileID: 1607023450}
   backgroundBasis: {fileID: 1803705462}
   GridCenterOnBackgroundPercentage: 0.2
-  buttonLabels:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
 --- !u!4 &1622406112
 Transform:
   m_ObjectHideFlags: 0
@@ -826,6 +821,34 @@ Transform:
   m_Father: {fileID: 878085358}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1622406113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622406110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1622406111}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1803705462
 GameObject:
   m_ObjectHideFlags: 0
