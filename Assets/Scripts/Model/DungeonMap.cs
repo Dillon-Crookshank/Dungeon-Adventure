@@ -132,28 +132,23 @@ internal class DungeonMap
             GenerateRandomGridRoom();
         }
 
-        //before adding any hallways, iterate through the list and remove any that are directly adjacent to any rooms on their long side
-
-        //pick a random index from the list
-        //turn that hallway into a room
-        //Before adding the room, check if the connection was already made
-        //iterate through the list and remove any with a similar room[5] (Other index)
-        //Repeat until list is empty 
-
         int size = myAdjacencyList.Count;
         for (int i = 0; i < size; i++) {
-            foreach (int[] room in GetValidHallways(i)) {
-                DrawHallway(room);
+            List<int[]> validHallways = GetValidHallways(i);
+            while (validHallways.Count != 0) {
+                //Get a random hallway
+                int index = myRand.Next(validHallways.Count);
+                int[] room = validHallways[index];
+                
+                //Check if the room connection was already made
+                if (!myAdjacencyList[room[4]].myConnectedRooms.Contains(room[5])) {
+                    DrawHallway(room);
+                } 
+
+                //Remove the hallway since we have either drawn it or determined that a hallway was already drawn between the rooms
+                validHallways.RemoveAt(index);
             }
         }
-        
-        
-
-        /*
-        foreach (int[] room in GetValidHallways(1)) {
-            DrawHallway(room);
-        }
-        */
 
         //Place initial focus on the room that was generated first.
         myFocusedRoom = myAdjacencyList[0];
@@ -327,11 +322,8 @@ internal class DungeonMap
     /// <param name="theAxis"> Specify the Axis: True if x-axis, False if y-axis</param>
     /// <returns></returns>
     private int CastRay(int theX, int theY, int theStep, bool theAxis) {
-        /*if (myGrid[theY + Y_BOUND, theX + X_BOUND] > 0) {
-            return -1;
-        }*/
         
-        //x-axis
+        //x-axis3
         if (theAxis) {
             for (int x = theX; x >= -X_BOUND && x < X_BOUND; x += theStep) {
                 //Check if the casted ray has reached a room
