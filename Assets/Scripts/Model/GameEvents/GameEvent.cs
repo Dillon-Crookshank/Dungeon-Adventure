@@ -9,10 +9,13 @@ public class GameEvent : ScriptableObject
 
     public void Raise(Component sender, DataPacket data)
     {
-        foreach (GameEventListener listener in listeners) 
+        foreach (GameEventListener listener in listeners)
         {
-            if (listener != sender && (data.GetDestination() == null || data.GetDestination().Equals(listener.name))) 
-            listener.OnEventRaised(sender, data);
+            if (
+                listener != sender
+                && (data.GetDestination() == null || data.GetDestination().Equals(listener.name))
+            )
+                listener.OnEventRaised(sender, data);
         }
     }
 

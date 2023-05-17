@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DefaultNamespace;
 
@@ -47,16 +45,19 @@ sealed class testButton : MonoBehaviour
     {
         hasHero = (characterRepresentative != null);
 
-        if (hasHero){
+        if (hasHero)
+        {
             stats[0].text = "" + characterRepresentative.GetAttack();
             stats[1].text = "" + characterRepresentative.GetDefence();
             stats[2].text = "" + characterRepresentative.GetName();
-        } else {
+        }
+        else
+        {
             stats[0].text = "";
             stats[1].text = "";
             stats[2].text = "";
         }
-        
+
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
         labelArea.SetActive(hasHero);
     }
@@ -72,7 +73,10 @@ sealed class testButton : MonoBehaviour
                 // (First click) checking cell for character
                 if (hasHero)
                 {
-                    onToggleMove.Raise(this, new DataPacket(gameObject.transform.position, "ArrowVector"));
+                    onToggleMove.Raise(
+                        this,
+                        new DataPacket(gameObject.transform.position, "ArrowVector")
+                    );
                     rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
                     held = true;
                     clicked = !clicked;
@@ -83,16 +87,24 @@ sealed class testButton : MonoBehaviour
                 // (Second click) checking clicked cell for empty
                 if (!hasHero)
                 {
-
-                    onToggleMove.Raise(this, new DataPacket(clickedCellName, "SwapRequest", "Button Factory"));
-                    onToggleMove.Raise(this, new DataPacket(gameObject.transform.position, "ArrowVector"));
+                    onToggleMove.Raise(
+                        this,
+                        new DataPacket(clickedCellName, "SwapRequest", "Button Factory")
+                    );
+                    onToggleMove.Raise(
+                        this,
+                        new DataPacket(gameObject.transform.position, "ArrowVector")
+                    );
                     clicked = false;
                     rend.color = Color.white;
                     arrowDisplay.SetActive(false);
                 }
                 else if (clicked)
                 {
-                    onToggleMove.Raise(this, new DataPacket(gameObject.transform.position, "ArrowVector"));
+                    onToggleMove.Raise(
+                        this,
+                        new DataPacket(gameObject.transform.position, "ArrowVector")
+                    );
                     rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
                     held = true;
                     clicked = !clicked;
@@ -182,13 +194,14 @@ sealed class testButton : MonoBehaviour
     //     }
     // }
 
-    public void ToggleClicked(){
+    public void ToggleClicked()
+    {
         clicked = !clicked;
     }
 
     public void ReceiveDataPacket(Component sender, object data)
     {
-        DataPacket dPacket = (DataPacket) data;
+        DataPacket dPacket = (DataPacket)data;
         if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
         {
             object incomingData = dPacket.GetData();
@@ -197,7 +210,7 @@ sealed class testButton : MonoBehaviour
             {
                 selectMoveMode = !selectMoveMode;
                 clickedCellName = sender.name;
-                clickedVector = (Vector3) incomingData;
+                clickedVector = (Vector3)incomingData;
                 arrowVector = new Vector3(
                     gameObject.transform.position.x
                         + (clickedVector.x - gameObject.transform.position.x) / 2,
@@ -216,8 +229,10 @@ sealed class testButton : MonoBehaviour
                                 )
                         )
                 );
-            } else if (dataLabel.Equals("CharacterData")){
-                characterRepresentative = (testHero) incomingData;
+            }
+            else if (dataLabel.Equals("CharacterData"))
+            {
+                characterRepresentative = (testHero)incomingData;
             }
         }
     }

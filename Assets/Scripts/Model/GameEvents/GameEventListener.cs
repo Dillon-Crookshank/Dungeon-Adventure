@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class CustomGameEvent : UnityEvent<Component, object> {}
+public class CustomGameEvent : UnityEvent<Component, object> { }
 
 public class GameEventListener : MonoBehaviour
 {
@@ -12,15 +12,18 @@ public class GameEventListener : MonoBehaviour
 
     public CustomGameEvent response;
 
-    public void OnEnable(){
+    public void OnEnable()
+    {
         gameEvent.RegisterListener(this);
     }
 
-    public void OnDisable(){
+    public void OnDisable()
+    {
         gameEvent.DeregisterListener(this);
     }
 
-    public void OnEventRaised(Component sender, object data){
+    public void OnEventRaised(Component sender, object data)
+    {
         response.Invoke(sender, data);
     }
 }
