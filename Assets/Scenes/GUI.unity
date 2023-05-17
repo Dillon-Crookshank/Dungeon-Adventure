@@ -377,6 +377,7 @@ GameObject:
   - component: {fileID: 787817676}
   - component: {fileID: 787817678}
   - component: {fileID: 787817679}
+  - component: {fileID: 787817680}
   m_Layer: 0
   m_Name: Save
   m_TagString: Untagged
@@ -492,6 +493,34 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &787817680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787817675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 787817678}
+        m_TargetAssemblyTypeName: saveButton, Assembly-CSharp
+        m_MethodName: HandleFile
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &824474666
 GameObject:
   m_ObjectHideFlags: 0
