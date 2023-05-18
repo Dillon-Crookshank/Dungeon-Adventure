@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// The Controller to the Dungeon Adventure Game. **Must atach this script to a 
+/// The Controller to the Dungeon Adventure Game. **Must attach this script to a GameObject initialized in the Unity Editor**
 /// </summary>
 public class DungeonController : MonoBehaviour {
     /// <summary>
@@ -56,7 +56,7 @@ public class DungeonController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Shows the entire map at once. Everytime you press enter, it generates a new dungeon.
+    /// Shows the entire map at once. Every time you press enter, it generates a new dungeon.
     /// </summary>
     private void DebugMapView() {
         myMapView.UnfocusAll();

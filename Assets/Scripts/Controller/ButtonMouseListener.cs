@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// A behavior class that adds the color changing fuctionality to the UButton.
+/// A behavior class that adds the color changing functionality to the UButton.
 /// </summary>
 public class ButtonMouseListener : MonoBehaviour {
     /// <summary>

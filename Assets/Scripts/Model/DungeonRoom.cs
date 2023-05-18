@@ -7,11 +7,6 @@ using System;
 public class DungeonRoom
 {   
     /// <summary>
-    /// A static variable used to make unique ID's for each new room.
-    /// </summary>
-    private static int currentID = 0;
-    
-    /// <summary>
     /// The cached hashcode of the room.
     /// </summary>
     private int myHash;
@@ -22,7 +17,7 @@ public class DungeonRoom
     private int myID;
 
     /// <summary>
-    /// The x-coordiante of the room.
+    /// The x-coordinate of the room.
     /// </summary>
     private float myX;
 
@@ -75,7 +70,6 @@ public class DungeonRoom
     /// <param name="theH"> The height of the room. </param>
     public DungeonRoom(float theX, float theY, float theW, float theH)
     {
-        myID = currentID++;
         myX = theX;
         myY = theY;
         myW = theW;
@@ -103,7 +97,7 @@ public class DungeonRoom
      }
 
     /// <summary>
-    /// An accessor for the unique room ID number.
+    /// An accessor for the room ID number.
     /// </summary>
     /// <returns> The ID number of the room. </returns>
     public int GetID() {
@@ -111,9 +105,17 @@ public class DungeonRoom
     }
 
     /// <summary>
+    /// A mutator for the room ID number.
+    /// </summary>
+    /// <returns> The ID number of the room. </returns>
+    public void SetID(int theID) {
+        myID = theID;
+    }
+
+    /// <summary>
     /// An accessor for the x-coordinate of the room.
     /// </summary>
-    /// <returns> The x-coordiante of the room. </returns>
+    /// <returns> The x-coordinate of the room. </returns>
     public float GetX()
     {
         return myX;
@@ -161,9 +163,9 @@ public class DungeonRoom
     }
 
     /// <summary>
-    /// A predicate function to check if the room stil contains uncollected loot.
+    /// A predicate function to check if the room still contains uncollected loot.
     /// </summary>
-    /// <returns> True if the room stil contains loot. False otherwise. </returns>
+    /// <returns> True if the room still contains loot. False otherwise. </returns>
     public bool HasLoot()
     {
         return myLoot.Peek() != null;

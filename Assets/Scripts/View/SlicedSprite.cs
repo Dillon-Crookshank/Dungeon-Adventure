@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// An instanceable unity button. By default, the button turns blue when hovering over, turns green when left-clicking, and turns red when right-clicking.
+/// An instantiable unity button. By default, the button turns blue when hovering over, turns green when left-clicking, and turns red when right-clicking.
 /// </summary>
 public class SlicedSprite {
     /// <summary>
@@ -73,7 +73,7 @@ public class SlicedSprite {
     }
 
     /// <summary>
-    /// Lets you add a Monobehaviour script to the button for added functionality.
+    /// Lets you add a MonoBehaviour script to the button for added functionality.
     /// </summary>
     /// <param name="theComponent"> The type of the MonoBehavior script. </param>
     public void AddComponent(System.Type theComponent) {

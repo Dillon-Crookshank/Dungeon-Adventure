@@ -54,7 +54,7 @@ public class MapView {
     /// </summary>
     /// <param name="theRoom"> The DungeonRoom to be focused. </param>
     public void SetSecondaryFocus(DungeonRoom theRoom) {
-        //Create the SlicedSprite if it dosen't exist yet
+        //Create the SlicedSprite if it doesn't exist yet
         if (!myRooms.ContainsKey(theRoom.GetID())) {
             myRooms.Add(
                 theRoom.GetID(),

@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// The observer to the listner. This observes each map room induvidualy. When a room is left-clicked, its hashcode is sent to the GameController for processing.
+/// The observer to the listener. This observes each map room individuals. When a room is left-clicked, its hashcode is sent to the GameController for processing.
 /// </summary>
 public class MapViewObserver : MonoBehaviour {
     /// <summary>
@@ -11,7 +11,7 @@ public class MapViewObserver : MonoBehaviour {
     private bool myLeftPressedFlag;
 
     /// <summary>
-    /// Called once, after the GameObject this script is atached to is initalized.
+    /// Called once, after the GameObject this script is attached to is initialized.
     /// </summary>
     public void Start() {
         myLeftPressedFlag = false;

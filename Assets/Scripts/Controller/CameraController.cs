@@ -62,7 +62,7 @@ public class CameraController {
     /// </summary>
     /// <param name="theName"> The name of the camera. </param>
     /// <param name="theOrigin"> The point where the Axis Bounds are centered about. </param>
-    /// <param name="theSizeBounds"> This is a (float, float) tuple, where the first entry is the minimum camera size, and the second entry is the maximum vcamera size, both in game units. </param>
+    /// <param name="theSizeBounds"> This is a (float, float) tuple, where the first entry is the minimum camera size, and the second entry is the maximum camera size, both in game units. </param>
     /// <param name="theAxisBounds"> This is a (float, float) tuple, where the first entry is the absolute maximum x-coordinate, and the second entry is the absolute maximum y-coordinate. </param>
     public CameraController(string theName, Vector3 theOrigin, (float, float) theSizeBounds, (float, float) theAxisBounds) {
         myCamera = GameObject.Find(theName);
@@ -125,7 +125,7 @@ public class CameraController {
     }
 
     /// <summary>
-    /// Helper method that converts the mouses position in pixel-space to world-space for draging functionality.
+    /// Helper method that converts the mouses position in pixel-space to world-space for dragging functionality.
     /// </summary>
     /// <returns> The coordinates of the mouse in world space. </returns>
     private Vector3 GetMouseInWorldSpace() {
@@ -179,7 +179,7 @@ public class CameraController {
 
         (myCamera.GetComponent<Camera>()).orthographicSize = size;
         
-        //Set the camera position to itself to automatcally clamp the coordinates to the new size
+        //Set the camera position to itself to automatically clamp the coordinates to the new size
         SetCameraPosition(GetCameraPosition());
     }
 
