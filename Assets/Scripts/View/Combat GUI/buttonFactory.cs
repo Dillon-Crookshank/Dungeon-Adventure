@@ -32,6 +32,7 @@ sealed class buttonFactory : MonoBehaviour
         party = new PlayerParty(h1);
         party.AddActor(h2);
         partyDictionary = party.GetPartyPositions();
+        
         int numObjects = buttonLabels.Length;
 
         Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
@@ -65,6 +66,7 @@ sealed class buttonFactory : MonoBehaviour
     }
 
     void Update(){
+        partyDictionary = party.GetPartyPositions();
         DataPacket dataSent;
         for (int i = 0; i < arrayOfObjects.Length; i++)
         {
@@ -113,8 +115,14 @@ sealed class buttonFactory : MonoBehaviour
         if (dPacket.GetLabel() == "SaveRequest"){
             Debug.Log("A save was requested");
             StringBuilder sb = new StringBuilder();
+            bool moreThanOne = false;
             for (int i = 1; i <= AbstractParty.MAX_PARTY_SIZE; i++){
                 if (partyDictionary.ContainsKey(i)){
+                    if (moreThanOne){
+                        sb.Append("\n");
+                    } else {
+                        moreThanOne = true;
+                    }
                     AbstractActor actor = partyDictionary[i];
                     sb.Append(i);
                     sb.Append(",");
@@ -129,40 +137,64 @@ sealed class buttonFactory : MonoBehaviour
                     sb.Append(actor.GetCurrentMana());
                     sb.Append(",");
                     sb.Append(actor.GetCombatInitiative());
-                    sb.Append("\n");
                 }
             }
             string sbResult = sb.ToString();
             Debug.Log(sbResult);
             changeFileRequest.Raise(this, new DataPacket(sbResult, "PartyData", "Save"));
         } else if (dPacket.GetLabel() == "LoadRequest"){
-            partyDictionary.Clear();
+            
             Debug.Log("A load was requested");
             string dPacketString = (string) dPacket.GetData();
             string[] dPacketPartyData = dPacketString.Split("\n");
+
+            bool stillLoadFlag = true;
+
+            Dictionary<int, AbstractActor> loadPartyDictionary = new Dictionary<int, AbstractActor>();
+
             foreach (string s in dPacketPartyData){
+                Debug.Log(s);
                 string[] heroData = s.Split(",");
-                if (checkValidHero(heroData)){
-                    partyDictionary.Add(
-                        Int32.Parse(heroData[0]), 
-                        new testHero(heroData[1],
-                        Double.Parse(heroData[2]),
-                        Double.Parse(heroData[3]),
-                        Double.Parse(heroData[4]), 
-                        Double.Parse(heroData[5]), 
-                        Int32.Parse(heroData[6])
-                        )
-                    );
+                testHero loadActor = checkValidHero(heroData);
+                if (loadActor != null && !(loadPartyDictionary.ContainsKey(Int32.Parse(heroData[0])))){
+                    loadPartyDictionary.Add(Int32.Parse(heroData[0]), loadActor);
+                } else {
+                    stillLoadFlag = false;
+                    break;
                 }
+            }
+            if (stillLoadFlag){
+
+                PlayerParty loadParty = null;
+                bool moreThanOne = false;
+                for (int i = 1; i <= 6; i++){
+                    if (loadPartyDictionary.ContainsKey(i)){
+                        if (!moreThanOne){
+                            moreThanOne = true;
+                            loadParty = new PlayerParty((testHero) loadPartyDictionary[i]);
+                        } else {
+                            loadParty.AddActor(loadPartyDictionary[i]);
+                        }
+                    }
+                }
+
+                party = loadParty;
             }
         }
     }
 
-    private bool checkValidHero(string[] hero){
+    private testHero checkValidHero(string[] hero){
+        Debug.Log(hero.Length);
         if (hero.Length != 7){
-            return false;
+            return null;
         } else {
-            return true;
+            double[] loadStats = new double[5];
+            for (int i = 2; i <= 6; i++){
+                if (!Double.TryParse(hero[i], out loadStats[i-2])){
+                    return null;
+                }
+            }
+            return new testHero(hero[1], loadStats[0], loadStats[1], loadStats[2], loadStats[3], (int) loadStats[4]);
         }
     }
 
