@@ -1,35 +1,86 @@
-using UnityEngine;
 using DefaultNamespace;
+using UnityEngine;
 
+/// <summary>
+/// Representation of a cell that can hold and display the data of a hero.
+/// </summary>
 sealed class testButton : MonoBehaviour
 {
     [Header("Events")]
-    
-    public GameEvent onToggleMove;
+    /// <summary>
+    /// The GameEvent called whenever a cell has been clicked on.
+    /// </summary>
+    public GameEvent onButtonClick;
 
+    /// <summary>
+    /// A reference to the arrow sprite that displays when prompting the user
+    /// to move their hero.
+    /// </summary>
     public GameObject arrowDisplay;
 
+    /// <summary>
+    /// A reference to testHero object being represented in the instance of the cell.
+    /// </summary>
     public testHero characterRepresentative;
 
+    /// <summary>
+    /// A vector representing the size of the arrow, when displayed.
+    /// </summary>
     private Vector2 arrowSize;
 
+    /// <summary>
+    /// A string ID of the cell that was clicked.
+    /// </summary>
     private string clickedCellName;
 
+    /// <summary>
+    /// A vector representing the location of the clicked cell.
+    /// </summary>
     private Vector3 clickedVector;
 
+    /// <summary>
+    /// A vector representing the location of the arrow.
+    /// </summary>
     private Vector3 arrowVector;
 
+    /// <summary>
+    /// A sprite array containing the different display states of a cell.
+    /// </summary>
     public Sprite[] spriteArray = new Sprite[2];
 
+    /// <summary>
+    /// A text mesh array containing the different text displays that show up as the hero's stats.
+    /// </summary>
     public TextMesh[] stats = new TextMesh[3];
 
+    /// <summary>
+    /// A reference to the area labelling the hero's name.
+    /// </summary>
     public GameObject labelArea;
 
-    bool hasHero = false;
-    bool selectMoveMode = false;
-    bool held = false;
-    bool clicked = false;
+    /// <summary>
+    /// Determines whether or not this cell holds a hero.
+    /// </summary>
+    private bool hasHero = false;
 
+    /// <summary>
+    /// Determines whether or not this cell is being evaluated for a hero translation or not.
+    /// </summary>
+    private bool selectMoveMode = false;
+
+    /// <summary>
+    /// Determines whether or not this cell is being held down by the mouse.
+    /// </summary>
+    private bool held = false;
+
+    /// <summary>
+    /// Determines whether or not this cell was selected as the hero to move to a new location.
+    /// </summary>
+    private bool clicked = false;
+
+    /// <summary>
+    /// A reference to the SpriteRenderer component of this object.
+    /// </summary>
     private SpriteRenderer rend;
 
     // Start is called before the first frame update
@@ -72,7 +123,7 @@ sealed class testButton : MonoBehaviour
                 // (First click) checking cell for character
                 if (hasHero)
                 {
-                    onToggleMove.Raise(
+                    onButtonClick.Raise(
                         this,
                         new DataPacket(gameObject.transform.position, "ArrowVector")
                     );
@@ -86,11 +137,11 @@ sealed class testButton : MonoBehaviour
                 // (Second click) checking clicked cell for empty
                 if (!hasHero)
                 {
-                    onToggleMove.Raise(
+                    onButtonClick.Raise(
                         this,
                         new DataPacket(clickedCellName, "SwapRequest", "Button Factory")
                     );
-                    onToggleMove.Raise(
+                    onButtonClick.Raise(
                         this,
                         new DataPacket(gameObject.transform.position, "ArrowVector")
                     );
@@ -100,7 +151,7 @@ sealed class testButton : MonoBehaviour
                 }
                 else if (clicked)
                 {
-                    onToggleMove.Raise(
+                    onButtonClick.Raise(
                         this,
                         new DataPacket(gameObject.transform.position, "ArrowVector")
                     );
@@ -157,47 +208,20 @@ sealed class testButton : MonoBehaviour
             rend.color = Color.yellow;
         }
     }
-
-    // public void ToggleSelectMove(Component sender, object data)
-    // {
-    //     if (data is Vector3)
-    //     {
-    //         clickedVector = (Vector3)data;
-    //         arrowVector = new Vector3(
-    //             gameObject.transform.position.x
-    //                 + (clickedVector.x - gameObject.transform.position.x) / 2,
-    //             gameObject.transform.position.y
-    //                 + (clickedVector.y - gameObject.transform.position.y) / 2,
-    //             -0.4f
-    //         );
-    //         selectMoveMode = !selectMoveMode;
-    //         if (clicked)
-    //         {
-    //             rend.color = Color.yellow;
-    //         }
-    //     }
-    //     else if (data is string)
-    //     {
-    //         string readableData = data.ToString();
-    //         if (readableData.Equals("Move attempt!"))
-    //         {
-    //             arrowDisplay.SetActive(false);
-    //             selectMoveMode = false;
-    //             if (this == sender || clicked)
-    //             {
-    //                 clicked = false;
-    //                 ToggleHasHero();
-    //                 rend.color = Color.white;
-    //             }
-    //         }
-    //     }
-    // }
-
+    /// <summary>
+    /// Toggles the 'clicked' variable.
+    /// </summary>
     public void ToggleClicked()
     {
         clicked = !clicked;
     }
 
+    /// <summary>
+    /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
+    /// Can be expanded upon to include more behaviors.
+    /// </summary>
+    /// <param name="sender"> The component that sent the DataPacket. </param>
+    /// <param name="data"> The object (DataPacket) held. </param>
     public void ReceiveDataPacket(Component sender, object data)
     {
         DataPacket dPacket = (DataPacket)data;
@@ -234,15 +258,5 @@ sealed class testButton : MonoBehaviour
                 characterRepresentative = (testHero)incomingData;
             }
         }
-    }
-
-    public void ToggleHasHero()
-    {
-        hasHero = !hasHero;
-    }
-
-    public bool GetSelectMoveMode()
-    {
-        return selectMoveMode;
     }
 }

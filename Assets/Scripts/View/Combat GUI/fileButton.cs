@@ -1,10 +1,18 @@
 using UnityEngine;
-using DefaultNamespace;
-using System.Collections.Generic;
 
+/// <summary>
+/// An abstraction of a GUI button that handles file editing.
+/// </summary>
 abstract class fileButton : MonoBehaviour
 {
+    /// <summary>
+    /// A reference to the rectangular backing of the cell.
+    /// </summary>
     private SpriteRenderer rend;
+
+    /// <summary>
+    /// The GameEVent to be called whenever there is a file request.
+    /// </summary>
     public GameEvent fileChangeRequest;
 
     void Start()
@@ -13,6 +21,9 @@ abstract class fileButton : MonoBehaviour
         Debug.Log(rend != null);
     }
 
+    /// <summary>
+    /// Highlights the cell when hovered over, performs an action when clicked on.
+    /// </summary>
     void OnMouseOver()
     {
         rend.color = Color.green;
@@ -22,12 +33,13 @@ abstract class fileButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Dehighlights the cell when the mouse no longer hovers over it.
+    /// </summary>
     void OnMouseExit()
     {
         rend.color = Color.white;
     }
-
-    public void ReceiveDataPacket(Component sender, object data) { }
 
     public abstract void PressButton();
 }
