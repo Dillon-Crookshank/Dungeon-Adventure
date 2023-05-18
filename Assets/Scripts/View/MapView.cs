@@ -41,7 +41,7 @@ public class MapView {
     }
 
     /// <summary>
-    /// Sets the primary focused room. Does not override any existing PrimaryFocused rooms.
+    /// Sets the primary focused room. Does not override any existing PrimaryFocused rooms, you must reset them beforehand.
     /// </summary>
     /// <param name="theRoom"></param>
     public void SetPrimaryFocus(DungeonRoom theRoom) {

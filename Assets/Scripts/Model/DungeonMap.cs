@@ -154,7 +154,7 @@ internal class DungeonMap
             GenerateRandomGridRoom();
         }
 
-        //Clear the -1's from the grid
+        //Clear the -1's from the grid so we can properly use CheckGridSpace() with hallways
         for (int y = 0; y < Y_BOUND * 2; y++) {
             for (int x = 0; x < X_BOUND * 2; x++) {
                 if (myGrid[y, x] == -1) {
@@ -173,6 +173,7 @@ internal class DungeonMap
                 int index = myRand.Next(validHallways.Count);
                 int[] room = validHallways[index];
 
+                //Attempt to place the hallway
                 DrawHallway(room);
 
                 //Remove the hallway since we have either drawn it or determined that the hallway wouldn't fit with existing rooms
@@ -227,10 +228,8 @@ internal class DungeonMap
             return false;
         }
 
-        Log($"xMin: {xMin}, xMax: {xMax}, yMin: {yMin}, yMax: {yMax}");
 
-
-
+        //Check each element in the matrix within the given domain.
         for (int y = yMin; y <= yMax; y++) {
             for (int x = xMin; x <= xMax; x++) {
                 if (myGrid[y + Y_BOUND, x + X_BOUND] != 0) {
@@ -299,7 +298,7 @@ internal class DungeonMap
 
             if (y0 > -Y_BOUND && yMin - y0 > 1) {
                 //Possible hallway found!
-                validHallways.Add(new int[] {x, x, y0 + 1, yMin - 1, myGrid[y0 + Y_BOUND, x + X_BOUND] - 1, theIndex, 1});
+                validHallways.Add(new int[] {x, x, y0 + 1, yMin - 1, theIndex, myGrid[y0 + Y_BOUND, x + X_BOUND] - 1});
             }
 
             // +y-axis
@@ -307,7 +306,7 @@ internal class DungeonMap
 
             if (y1 != Y_BOUND && y1 - yMax > 1) {
                 //Possible hallway found!
-                validHallways.Add(new int[] {x, x,  yMax + 1, y1 - 1, myGrid[y1 + Y_BOUND, x + X_BOUND] - 1, theIndex, 0});
+                validHallways.Add(new int[] {x, x,  yMax + 1, y1 - 1, theIndex, myGrid[y1 + Y_BOUND, x + X_BOUND] - 1});
             }
         }
         for (int y = yMin; y <= yMax; y++) {
@@ -316,7 +315,7 @@ internal class DungeonMap
 
             if (x0 > -X_BOUND && xMin - x0 > 1) {
                 //Possible hallway found!
-                validHallways.Add(new int[] {x0 + 1, xMin - 1, y, y, myGrid[y + Y_BOUND, x0 + X_BOUND] - 1, theIndex, 3});
+                validHallways.Add(new int[] {x0 + 1, xMin - 1, y, y, theIndex, myGrid[y + Y_BOUND, x0 + X_BOUND] - 1});
             }
 
 
@@ -325,7 +324,7 @@ internal class DungeonMap
 
             if (x1 != X_BOUND && x1 - xMax > 1) {
                 //Possible hallway found!
-                validHallways.Add(new int[] {xMax + 1, x1 - 1, y, y, myGrid[y + Y_BOUND, x1 + X_BOUND] - 1, theIndex, 2});
+                validHallways.Add(new int[] {xMax + 1, x1 - 1, y, y, theIndex, myGrid[y + Y_BOUND, x1 + X_BOUND] - 1});
             }
         }
 
@@ -341,17 +340,23 @@ internal class DungeonMap
     private void DrawHallway(int[] theRoom) {
         //Check if the room connection was already made
         if (myAdjacencyList[theRoom[4]].myConnectedRooms.Contains(theRoom[5])) {
-            //Log(0);
             return;   
         } 
 
-        
         //Make sure that the hallway isn't too short.
         if (theRoom[0] == theRoom[1] && theRoom[2] == theRoom[3]) {
             return;
         }
 
-        
+        //Make sure that there is enough room for the hallway
+        if (!CheckGridSpace(theRoom[0], theRoom[1], theRoom[2], theRoom[3])) {
+            return;
+        }
+
+        if ((theRoom[0] == theRoom[1] && !CheckGridSpace(theRoom[0] - 1, theRoom[1] + 1, theRoom[2], theRoom[3]))
+            || (theRoom[2] == theRoom[3] && !CheckGridSpace(theRoom[0], theRoom[1], theRoom[2] - 1, theRoom[3] + 1))) {
+            return;
+        }
 
 
         //We begin to create the DungeonRoom instance inside the adjacency list./
