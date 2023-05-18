@@ -35,7 +35,7 @@ sealed class buttonFactory : MonoBehaviour
     /// A constant to reference a percentage of distance that the center of the button factory is placed from
     /// the center of the screen.
     /// </summary>
-    private const float DISTANCE_FROM_CENTER = 0.75f;
+    private const float DISTANCE_FROM_CENTER = 0.25f;
 
     /// <summary>
     /// A constant to reference the maximum number of cells in a party.

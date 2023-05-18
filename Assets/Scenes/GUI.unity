@@ -1113,6 +1113,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
     - target: {fileID: 4866356735138099923, guid: a9195b2bc4754434fa236e01951c68bd, type: 3}
+      propertyPath: onButtonClick
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
+    - target: {fileID: 4866356735138099923, guid: a9195b2bc4754434fa236e01951c68bd, type: 3}
       propertyPath: stats.Array.data[0]
       value: 
       objectReference: {fileID: 572864692}
@@ -1351,7 +1355,6 @@ MonoBehaviour:
   changeFileRequest: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
   templateSprite: {fileID: 1607023450}
   backgroundBasis: {fileID: 1803705462}
-  GridCenterOnBackgroundPercentage: 0.2
 --- !u!4 &1622406112
 Transform:
   m_ObjectHideFlags: 0
