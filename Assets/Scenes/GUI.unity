@@ -465,7 +465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 969efb82bbf76234ca65ff4a3932b03f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  file: {fileID: 4900000, guid: 64ee67c9b8a828447b8fb7e3bc56dfac, type: 3}
   fileChangeRequest: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
 --- !u!61 &787817679
 BoxCollider2D:
@@ -902,7 +901,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 037a84386f0376d48b209bd25a4a03ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  file: {fileID: 4900000, guid: 64ee67c9b8a828447b8fb7e3bc56dfac, type: 3}
   fileChangeRequest: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
 --- !u!212 &1141628377
 SpriteRenderer:
@@ -1349,7 +1347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 219fa021d965782408c7d321045af18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testingHeroInjection: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
+  GUIUpdate: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
   changeFileRequest: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
   templateSprite: {fileID: 1607023450}
   backgroundBasis: {fileID: 1803705462}
