@@ -4,7 +4,6 @@ using System.IO;
 
 class saveButton : fileButton
 {
-    private AbstractParty party;
     public override void PressButton()
     {
         fileChangeRequest.Raise(this, new DataPacket(null, "SaveRequest", "Button Factory"));

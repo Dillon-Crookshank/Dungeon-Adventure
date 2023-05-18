@@ -7,7 +7,7 @@ using System.Text;
 sealed class buttonFactory : MonoBehaviour
 {
     [Header("Events")]
-    public GameEvent testingHeroInjection;
+    public GameEvent GUIUpdate;
     public GameEvent changeFileRequest;
     public GameObject templateSprite;
     public GameObject backgroundBasis;
@@ -17,14 +17,9 @@ sealed class buttonFactory : MonoBehaviour
     private GameObject[] arrayOfObjects;
     private static Vector3[] positionVectors;
     private string[] buttonLabels = { "1", "2", "3", "4", "5", "6" };
-    private Vector2 centeringPoint;
-    private Vector2 gapBorder;
     private PlayerParty party;
     private Dictionary<int, AbstractActor> partyDictionary;
 
-    RectTransform rt;
-
-    // Start is called before the first frame update
     void Start()
     {
         testHero h1 = new testHero("Knight 1", 25, 3, 2, 10, 5);
@@ -56,7 +51,7 @@ sealed class buttonFactory : MonoBehaviour
             arrayOfObjects[i].transform.position = (positionVectors[i]);
             if (partyDictionary.ContainsKey(i + 1))
             {
-                testingHeroInjection.Raise(
+                GUIUpdate.Raise(
                     this,
                     new DataPacket(partyDictionary[i + 1], "CharacterData", arrayOfObjects[i].name)
                 );
@@ -76,7 +71,7 @@ sealed class buttonFactory : MonoBehaviour
             } else {
                 dataSent = new DataPacket(null, "CharacterData", arrayOfObjects[i].name);
             }
-            testingHeroInjection.Raise(
+            GUIUpdate.Raise(
                 this,
                 dataSent
             );
@@ -92,18 +87,6 @@ sealed class buttonFactory : MonoBehaviour
             int endPosition = Int32.Parse(sender.name);
             Debug.Log(startPosition + " / " + endPosition);
             arrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
-            // testingHeroInjection.Raise(
-            //     this,
-            //     new DataPacket(
-            //         partyDictionary[startPosition],
-            //         "CharacterData",
-            //         arrayOfObjects[endPosition - 1].name
-            //     )
-            // );
-            // testingHeroInjection.Raise(
-            //     this,
-            //     new DataPacket(null, "CharacterData", arrayOfObjects[startPosition - 1].name)
-            // );
             arrayOfObjects[startPosition - 1].GetComponent<testButton>().ToggleClicked();
             party.moveCharacter(endPosition, partyDictionary[startPosition]);
         }
@@ -230,17 +213,5 @@ sealed class buttonFactory : MonoBehaviour
             );
         }
         return returnSet;
-    }
-
-    public Vector3 getPositionVector(int index)
-    {
-        if (index > arrayOfObjects.Length)
-        {
-            throw new UnityException("Illegal position!");
-        }
-        else
-        {
-            return positionVectors[index];
-        }
     }
 }

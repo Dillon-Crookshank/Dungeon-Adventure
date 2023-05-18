@@ -4,8 +4,7 @@ using DefaultNamespace;
 sealed class testButton : MonoBehaviour
 {
     [Header("Events")]
-    public GameEvent onButtonClicked;
-
+    
     public GameEvent onToggleMove;
 
     public GameObject arrowDisplay;
