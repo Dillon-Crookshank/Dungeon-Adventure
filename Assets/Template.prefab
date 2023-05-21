@@ -99,6 +99,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onButtonClicked: {fileID: 11400000, guid: bd80a47046370b94996e96ed30da6b32, type: 2}
+  onToggleMove: {fileID: 0}
+  arrowDisplay: {fileID: 0}
+  spriteArray:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!61 &4866356735138099922
 BoxCollider2D:
   m_ObjectHideFlags: 0
