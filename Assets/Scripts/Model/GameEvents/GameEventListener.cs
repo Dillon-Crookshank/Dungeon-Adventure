@@ -3,27 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class CustomGameEvent : UnityEvent<Component, object> { }
+namespace DefaultNamespace {
+    [System.Serializable]
+    public class CustomGameEvent : UnityEvent<Component, object> { }
 
-public class GameEventListener : MonoBehaviour
-{
-    public GameEvent gameEvent;
-
-    public CustomGameEvent response;
-
-    public void OnEnable()
+    public class GameEventListener : MonoBehaviour
     {
-        gameEvent.RegisterListener(this);
-    }
+        public GameEvent gameEvent;
 
-    public void OnDisable()
-    {
-        gameEvent.DeregisterListener(this);
-    }
+        public CustomGameEvent response;
 
-    public void OnEventRaised(Component sender, object data)
-    {
-        response.Invoke(sender, data);
+        public void OnEnable()
+        {
+            gameEvent.RegisterListener(this);
+        }
+
+        public void OnDisable()
+        {
+            gameEvent.DeregisterListener(this);
+        }
+
+        public void OnEventRaised(Component sender, object data)
+        {
+            response.Invoke(sender, data);
+        }
     }
 }

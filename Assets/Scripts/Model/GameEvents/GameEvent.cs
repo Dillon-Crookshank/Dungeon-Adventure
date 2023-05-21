@@ -2,36 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Game Event")]
-public class GameEvent : ScriptableObject
-{
-    public List<GameEventListener> listeners = new List<GameEventListener>();
-
-    public void Raise(Component sender, DataPacket data)
+namespace DefaultNamespace {
+    [CreateAssetMenu(menuName = "Game Event")]
+    public class GameEvent : ScriptableObject
     {
-        foreach (GameEventListener listener in listeners)
+        public List<GameEventListener> listeners = new List<GameEventListener>();
+
+        public void Raise(Component sender, DataPacket data)
         {
-            if (
-                listener != sender
-                && (data.GetDestination() == null || data.GetDestination().Equals(listener.name))
-            )
-                listener.OnEventRaised(sender, data);
+            foreach (GameEventListener listener in listeners)
+            {
+                if (
+                    listener != sender
+                    && (data.GetDestination() == null || data.GetDestination().Equals(listener.name))
+                )
+                    listener.OnEventRaised(sender, data);
+            }
         }
-    }
 
-    public void RegisterListener(GameEventListener listener)
-    {
-        if (!listeners.Contains(listener))
+        public void RegisterListener(GameEventListener listener)
         {
-            listeners.Add(listener);
+            if (!listeners.Contains(listener))
+            {
+                listeners.Add(listener);
+            }
         }
-    }
 
-    public void DeregisterListener(GameEventListener listener)
-    {
-        if (listeners.Contains(listener))
+        public void DeregisterListener(GameEventListener listener)
         {
-            listeners.Remove(listener);
+            if (listeners.Contains(listener))
+            {
+                listeners.Remove(listener);
+            }
         }
     }
 }
