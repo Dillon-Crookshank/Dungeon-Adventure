@@ -55,7 +55,7 @@ sealed class buttonFactory : MonoBehaviour
     /// <summary>
     /// An array of strings to give the cell game objects names.
     /// </summary>
-    private string[] myButtonLabels = { "P1", "P2", "P3", "P4", "P5", "P6" };
+    private string[] myButtonLabels = { "1", "2", "3", "4", "5", "6" };
 
     /// <summary>
     /// A party for testing purposes.
@@ -152,6 +152,7 @@ sealed class buttonFactory : MonoBehaviour
         DataPacket dPacket = (DataPacket)data;
         if (dPacket.GetLabel() == "SwapRequest")
         {
+            Debug.Log((string)dPacket.GetData());
             int startPosition = Int32.Parse((string)dPacket.GetData());
             int endPosition = Int32.Parse(sender.name);
             Debug.Log(startPosition + " / " + endPosition);
