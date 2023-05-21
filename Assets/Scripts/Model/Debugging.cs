@@ -26,6 +26,9 @@ namespace DefaultNamespace
             {
                 Debug.Log(character.toString());
             }
+            PlayerCharacter testDatabase = accessDB.accessCharacterDatabase("warrior");
+            PlayerCharacter testError = accessDB.accessCharacterDatabase("error");
+            Debug.Log(testDatabase.toString());
         }
     }
 }
