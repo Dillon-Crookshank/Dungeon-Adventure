@@ -55,7 +55,7 @@ sealed class buttonFactory : MonoBehaviour
     /// <summary>
     /// An array of strings to give the cell game objects names.
     /// </summary>
-    private string[] myButtonLabels = { "1", "2", "3", "4", "5", "6" };
+    private string[] myButtonLabels = { "P1", "P2", "P3", "P4", "P5", "P6" };
 
     /// <summary>
     /// A party for testing purposes.
@@ -256,7 +256,6 @@ sealed class buttonFactory : MonoBehaviour
                         }
                     }
                 }
-
                 myTestParty = loadParty;
             }
         }
