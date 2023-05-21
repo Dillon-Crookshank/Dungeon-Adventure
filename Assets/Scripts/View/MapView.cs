@@ -40,6 +40,8 @@ public class MapView {
         myRooms = new Dictionary<int, SlicedSprite>();
     }
 
+    //Create a "SetIcon" method that takes a dungeonRoom, checks if an icon already exists on it, and sets/creates an icon based on the given sprite/state
+
     /// <summary>
     /// Sets the primary focused room. Does not override any existing PrimaryFocused rooms, you must reset them beforehand.
     /// </summary>

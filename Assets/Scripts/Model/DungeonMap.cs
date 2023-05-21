@@ -353,6 +353,7 @@ internal class DungeonMap
             return;
         }
 
+        //Make sure that the hallway isn't directly adjacent to an existing room
         if ((theRoom[0] == theRoom[1] && !CheckGridSpace(theRoom[0] - 1, theRoom[1] + 1, theRoom[2], theRoom[3]))
             || (theRoom[2] == theRoom[3] && !CheckGridSpace(theRoom[0], theRoom[1], theRoom[2] - 1, theRoom[3] + 1))) {
             return;
