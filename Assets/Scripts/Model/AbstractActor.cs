@@ -4,7 +4,7 @@ namespace DefaultNamespace
     /// An abstract representation of an Actor in the Dungeon Adventure.
     /// All enemies and player characters inherit from this class, and this defines
     /// basic behaviours and fields that are universal.
-    internal abstract class AbstractActor
+    public abstract class AbstractActor
     {
         /// <summary>
         /// A String representation of the Actor.
