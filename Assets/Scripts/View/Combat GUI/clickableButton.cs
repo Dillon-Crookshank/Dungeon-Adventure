@@ -4,7 +4,7 @@ using UnityEngine;
 /// An abstraction of a GUI button that handles file editing.
 /// </summary>
 namespace DefaultNamespace{
-    abstract class fileButton : MonoBehaviour
+    abstract class clickableButton : MonoBehaviour
     {
         /// <summary>
         /// A reference to the rectangular backing of the cell.
@@ -14,7 +14,7 @@ namespace DefaultNamespace{
         /// <summary>
         /// The GameEVent to be called whenever there is a file request.
         /// </summary>
-        public GameEvent fileChangeRequest;
+        public GameEvent onButtonClick;
 
         void Start()
         {

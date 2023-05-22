@@ -1,3 +1,4 @@
+using System;
 using DefaultNamespace;
 using UnityEngine;
 
@@ -17,6 +18,11 @@ sealed class testButton : MonoBehaviour
     /// to move their hero.
     /// </summary>
     public GameObject arrowDisplay;
+
+    /// <summary>
+    /// A reference to the bar sprite that represents a character's health.
+    /// </summary>
+    public GameObject healthBar;
 
     /// <summary>
     /// A reference to testHero object being represented in the instance of the cell.
@@ -56,6 +62,7 @@ sealed class testButton : MonoBehaviour
     /// <summary>
     /// A reference to the area labelling the hero's name.
     /// </summary>
+
     public GameObject statDisplays;
 
     /// <summary>
@@ -100,6 +107,10 @@ sealed class testButton : MonoBehaviour
             stats[0].text = "" + characterRepresentative.GetAttack();
             stats[1].text = "" + characterRepresentative.GetDefence();
             stats[2].text = "" + characterRepresentative.GetName();
+            float healthPercentage = (float) (characterRepresentative.GetCurrentHitpoints() / characterRepresentative.GetMaxHitpoints());
+            
+            healthBar.transform.localPosition = new Vector3(0f, (float)(healthPercentage - 1) / 2, -0.51f);
+            healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
         }
 
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
@@ -267,4 +278,15 @@ sealed class testButton : MonoBehaviour
             }
         }
     }
+
+    public void HandleDamage(Component sender, object data){
+        Debug.Log("We're getting something! -" + name);
+        DataPacket dPacket = (DataPacket) data;
+        int number = 0;
+        if (dPacket.GetLabel() == "DamageAmount" && characterRepresentative != null && Int32.TryParse((string) dPacket.GetData(), out number)){
+            Debug.Log("We're reading it! -" + name);
+            characterRepresentative.SetCurrentHitpoints(number);
+        }
+    }
+
 }

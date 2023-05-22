@@ -5,14 +5,14 @@ using UnityEngine;
 /// An representation of a GUI button that handles file saving.
 /// </summary>
 namespace DefaultNamespace {
-    class saveButton : fileButton
+    class saveButton : clickableButton
     {
         /// <summary>
         /// Requests a saved state of the party from the button factory.
         /// </summary>
         public override void PressButton()
         {
-            fileChangeRequest.Raise(this, new DataPacket(null, "SaveRequest", "Button Factory"));
+            onButtonClick.Raise(this, new DataPacket(null, "SaveRequest", "Button Factory"));
         }
 
         /// <summary>

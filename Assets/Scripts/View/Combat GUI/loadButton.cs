@@ -5,7 +5,7 @@ using UnityEngine;
 /// An representation of a GUI button that handles file loading.
 /// </summary>
 namespace DefaultNamespace {
-    class loadButton : fileButton
+    class loadButton : clickableButton
     {
         /// <summary>
         /// Handles sending a request to the Button Factory to load the party.
@@ -16,7 +16,7 @@ namespace DefaultNamespace {
             StreamReader reader = new StreamReader(path);
             string data = reader.ReadToEnd();
             reader.Close();
-            fileChangeRequest.Raise(this, new DataPacket(data, "LoadRequest", "Button Factory"));   
+            onButtonClick.Raise(this, new DataPacket(data, "LoadRequest", "Button Factory"));   
         }
     }
 }
