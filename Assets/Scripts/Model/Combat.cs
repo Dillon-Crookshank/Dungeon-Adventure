@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ namespace DefaultNamespace
     /// </summary>
     internal static class Combat
     {
-
 
         /// <summary>
         /// Takes a player party and an enemy party, and handles the logic for the combat between them.
@@ -32,20 +32,9 @@ namespace DefaultNamespace
                 turnCounter++;
                 foreach (AbstractActor character in characterList)
                 {
-                    {
-                        // set active character to selected character in index
-                        // await their action to go to next character
-                    }
+
                 }
 
-                if (!theEnemyParty.isAllAlive)
-                {
-                    // Congrats! You won!
-                }
-                else if (!thePlayerParty.isAllAlive)
-                {
-                    // You've been defeated...
-                }
             }
         }
 
@@ -77,6 +66,16 @@ namespace DefaultNamespace
 
             return characters;
         }
+
+        public static async Task TurnOver(Func<bool> isEndOfTurn)
+        {
+            while (!isEndOfTurn())
+            {
+                await Task.Delay(100);
+            }
+        }
+
+
 
     }
 }
