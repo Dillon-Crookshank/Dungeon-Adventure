@@ -19,7 +19,8 @@ namespace DefaultNamespace
             testEnemy enemy2 = new testEnemy("enemy2", 25, 5, 0, 10, 5);
             EnemyParty enemies = new EnemyParty(enemy);
             enemies.AddActor(enemy2);
-            List<AbstractActor> allChars = Combat.InitiativeRoll(player, enemies);
+            Combat encounter = new Combat();
+            List<AbstractActor> allChars = encounter.InitiativeRoll(player, enemies);
             Debug.Log(allChars.Count);
             allChars.Sort((x, y) => y.GetCombatInitiative() - x.GetCombatInitiative());
             foreach (AbstractActor character in allChars)

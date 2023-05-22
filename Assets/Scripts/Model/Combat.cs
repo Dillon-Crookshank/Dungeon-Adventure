@@ -9,19 +9,29 @@ namespace DefaultNamespace
     /// <summary>
     /// A static class for combat logic and simulation.
     /// </summary>
-    internal static class Combat
+    internal class Combat
     {
+
+        private int turnCounter;
+
+        private bool isEndOfTurn;
+
+        private List<AbstractActor> characterList;
+
+        private AbstractActor activeActor;
 
         /// <summary>
         /// Takes a player party and an enemy party, and handles the logic for the combat between them.
         /// </summary>
         /// <param name="thePlayerParty">The party of heroes.</param>
         /// <param name="theEnemyParty">The party of enemies.</param>
-        internal static void CombatEncounter(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        internal async void CombatEncounter(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
         {
-            int turnCounter = 0;
+            turnCounter = 0;
 
-            List<AbstractActor> characterList = InitiativeRoll(thePlayerParty, theEnemyParty);
+            isEndOfTurn = false;
+
+            characterList = InitiativeRoll(thePlayerParty, theEnemyParty);
 
             characterList.Sort((x, y) => y.GetCombatInitiative() - x.GetCombatInitiative());
 
@@ -32,7 +42,9 @@ namespace DefaultNamespace
                 turnCounter++;
                 foreach (AbstractActor character in characterList)
                 {
-
+                    activeActor = character;
+                    await TurnOver(isEndOfTurn);
+                    isEndOfTurn = false;
                 }
 
             }
@@ -46,7 +58,7 @@ namespace DefaultNamespace
         /// <param name="thePlayerParty">The party of heroes.</param>
         /// <param name="theEnemyParty">The party of enemies.</param>
         /// <returns></returns>
-        internal static List<AbstractActor> InitiativeRoll(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        internal List<AbstractActor> InitiativeRoll(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
         {
             Random rng = new Random();
 
@@ -67,15 +79,33 @@ namespace DefaultNamespace
             return characters;
         }
 
-        public static async Task TurnOver(Func<bool> isEndOfTurn)
+        private async Task TurnOver(bool isEndOfTurn)
         {
-            while (!isEndOfTurn())
+            while (!isEndOfTurn)
             {
                 await Task.Delay(100);
             }
         }
 
+        public AbstractActor GetActiveActor()
+        {
+            return activeActor;
+        }
 
+        public void EndTurn()
+        {
+            isEndOfTurn = true;
+        }
+
+        public int ActorIndex()
+        {
+            return activeActor.GetPartyPosition();
+        }
+
+        public bool isPlayer()
+        {
+            return (activeActor.GetType() == typeof(PlayerCharacter));
+        }
 
     }
 }
