@@ -12,7 +12,7 @@ namespace DefaultNamespace {
         /// </summary>
         public override void PressButton()
         {
-            onButtonClick.Raise(this, new DataPacket(null, "DamageAmount", "1"));
+            onButtonClick.Raise(this, new DataPacket("1", "DamageAmount"));
         }
     }
 }
