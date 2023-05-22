@@ -4,28 +4,35 @@ public class DataPacket
     private string myLabel;
     private string myDestination;
 
-    public DataPacket(object theData, string theLabel){
+    public DataPacket(in object theData, in string theLabel)
+    {
         GenerateData(theData, theLabel, null);
     }
-    public DataPacket(object theData, string theLabel, string theDestination){
+
+    public DataPacket(in object theData, in string theLabel, in string theDestination)
+    {
         GenerateData(theData, theLabel, theDestination);
     }
 
-    private void GenerateData(object theData, string theLabel, string theDestination){
+    private void GenerateData(in object theData, in string theLabel, in string theDestination)
+    {
         myData = theData;
         myLabel = theLabel;
         myDestination = theDestination;
     }
 
-    public object GetData(){
+    public object GetData()
+    {
         return myData;
     }
 
-    public string GetLabel(){
+    public string GetLabel()
+    {
         return myLabel;
     }
 
-    public string GetDestination(){
+    public string GetDestination()
+    {
         return myDestination;
     }
 }

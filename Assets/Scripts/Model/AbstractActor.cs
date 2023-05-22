@@ -205,7 +205,7 @@ namespace DefaultNamespace
         /// <returns>True if alive, false if dead.</returns>
         internal bool IsAlive()
         {
-            return isAlive;
+            return currentHitpoints > 0;
         }
 
 

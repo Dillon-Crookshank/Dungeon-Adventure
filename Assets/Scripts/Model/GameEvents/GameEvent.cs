@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DefaultNamespace
-{
-
+namespace DefaultNamespace {
     [CreateAssetMenu(menuName = "Game Event")]
     public class GameEvent : ScriptableObject
     {
@@ -14,7 +12,10 @@ namespace DefaultNamespace
         {
             foreach (GameEventListener listener in listeners)
             {
-                if (listener != sender && (data.GetDestination() == null || data.GetDestination().Equals(listener.name)))
+                if (
+                    listener != sender
+                    && (data.GetDestination() == null || data.GetDestination().Equals(listener.name))
+                )
                     listener.OnEventRaised(sender, data);
             }
         }
