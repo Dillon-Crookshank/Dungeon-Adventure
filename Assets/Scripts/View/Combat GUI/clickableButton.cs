@@ -19,7 +19,6 @@ namespace DefaultNamespace{
         void Start()
         {
             rend = gameObject.GetComponent<SpriteRenderer>();
-            Debug.Log(rend != null);
         }
 
         /// <summary>

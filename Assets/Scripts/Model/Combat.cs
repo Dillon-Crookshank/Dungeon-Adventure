@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using System.Collections;
 
 namespace DefaultNamespace
 {
@@ -9,7 +11,7 @@ namespace DefaultNamespace
     /// <summary>
     /// A static class for combat logic and simulation.
     /// </summary>
-    internal class Combat
+    internal class Combat : MonoBehaviour
     {
 
         private int turnCounter;
@@ -25,8 +27,9 @@ namespace DefaultNamespace
         /// </summary>
         /// <param name="thePlayerParty">The party of heroes.</param>
         /// <param name="theEnemyParty">The party of enemies.</param>
-        internal async void CombatEncounter(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        internal void CombatEncounter(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
         {
+            Debug.Log("Encounter started!");
             turnCounter = 0;
 
             isEndOfTurn = false;
@@ -35,18 +38,11 @@ namespace DefaultNamespace
 
             characterList.Sort((x, y) => y.GetCombatInitiative() - x.GetCombatInitiative());
 
-
-
             while (thePlayerParty.isAllAlive && theEnemyParty.isAllAlive)
             {
                 turnCounter++;
-                foreach (AbstractActor character in characterList)
-                {
-                    activeActor = character;
-                    await TurnOver(isEndOfTurn);
-                    isEndOfTurn = false;
-                }
-
+                StartCoroutine(TurnOver());
+                break;
             }
         }
 
@@ -60,7 +56,7 @@ namespace DefaultNamespace
         /// <returns></returns>
         internal List<AbstractActor> InitiativeRoll(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
         {
-            Random rng = new Random();
+            System.Random rng = new System.Random();
 
             List<AbstractActor> characters = new List<AbstractActor>();
 
@@ -79,13 +75,19 @@ namespace DefaultNamespace
             return characters;
         }
 
-        private async Task TurnOver(bool isEndOfTurn)
-        {
-            while (!isEndOfTurn)
+        private IEnumerator TurnOver(){
+            foreach (AbstractActor character in characterList)
             {
-                await Task.Delay(100);
+                activeActor = character;
+                Debug.Log("" + activeActor.ToString());
+                while (!isEndOfTurn){
+                    yield return new WaitForSeconds(0.1f);
+                }
+                isEndOfTurn = false;
             }
+            StopCoroutine(TurnOver());
         }
+
 
         public AbstractActor GetActiveActor()
         {

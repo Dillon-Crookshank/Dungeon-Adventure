@@ -365,7 +365,7 @@ namespace DefaultNamespace
         /// A string representation of the current status of the Actor.
         /// </summary>
         /// <returns>A string representation of the current status of the Actor.</returns>
-        internal string toString()
+        public override string ToString()
         {
             return "Information about this actor:" + "\nPosition: " + partyPosition +
             "\nName: " + name + "\nAttack: " + attack
