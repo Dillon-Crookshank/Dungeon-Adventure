@@ -4,7 +4,7 @@ namespace DefaultNamespace
     /// An abstract representation of an Actor in the Dungeon Adventure.
     /// All enemies and player characters inherit from this class, and this defines
     /// basic behaviours and fields that are universal.
-    public abstract class AbstractActor
+    internal abstract class AbstractActor
     {
         /// <summary>
         /// A String representation of the Actor.
@@ -67,11 +67,6 @@ namespace DefaultNamespace
         private int combatInitiative;
 
         /// <summary>
-        /// A boolean that represents whether the Actor is currently alive.
-        /// </summary>
-        private bool isAlive;
-
-        /// <summary>
         /// The position this Actor holds in the party.
         /// </summary>
         private int partyPosition;
@@ -87,8 +82,8 @@ namespace DefaultNamespace
         /// <param name="theDefence">The defence of the Actor.</param>
         /// <param name="theMana">The maximum mana of the Actor.</param>
         /// <param name="theInitiative">The initiative of the Actor.</param>
-        internal AbstractActor(string theName, double theHitpoints, double theAttack,
-         double theDefence, double theMana, int theInitiative)
+        internal AbstractActor(in string theName, in double theHitpoints, in double theAttack,
+         in double theDefence, in double theMana, in int theInitiative)
         {
             SetName(theName);
             SetMaxHitpoints(theHitpoints);
@@ -97,7 +92,6 @@ namespace DefaultNamespace
             SetMaxMana(theMana);
             SetInitiative(theInitiative);
             SetCombatInitiative(0);
-            isAlive = true;
         }
 
         /// <summary>
@@ -250,10 +244,6 @@ namespace DefaultNamespace
         internal void SetCurrentHitpoints(double theChange)
         {
             currentHitpoints += theChange;
-            if (currentHitpoints <= 0)
-            {
-                SetAlive(false);
-            }
         }
 
 
@@ -355,16 +345,6 @@ namespace DefaultNamespace
             combatInitiative += theChange;
         }
 
-
-        /// <summary>
-        /// Setter for the bool isAlive.
-        /// </summary>
-        /// <param name="aliveStatus">True if setting alive, false if setting dead.</param>
-        internal void SetAlive(bool aliveStatus)
-        {
-            isAlive = aliveStatus;
-        }
-
         /// <summary>
         /// Updates the locally stored partyPosition after a move has occurred.
         /// </summary>
@@ -391,7 +371,7 @@ namespace DefaultNamespace
             "\nName: " + name + "\nAttack: " + attack
             + "\nHitpoints: " + currentHitpoints + "/" + maxHitpoints + "\nDefence: " + defence
             + "\nMana: " + currentMana + "/" + maxMana + "\nInitiative: " + initiative + " + " +
-            (combatInitiative - initiative) + "\nAlive?: " + isAlive;
+            (combatInitiative - initiative) + "\nAlive?: " + IsAlive();
         }
 
 
