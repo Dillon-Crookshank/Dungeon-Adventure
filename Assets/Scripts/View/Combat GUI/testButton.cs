@@ -100,6 +100,7 @@ sealed class testButton : MonoBehaviour
 
     void Update()
     {
+        
         hasHero = (characterRepresentative != null);
 
         if (hasHero)
@@ -286,6 +287,11 @@ sealed class testButton : MonoBehaviour
         if (dPacket.GetLabel() == "DamageAmount" && characterRepresentative != null && Int32.TryParse((string) dPacket.GetData(), out number)){
             Debug.Log("We're reading it! -" + name);
             characterRepresentative.SetCurrentHitpoints(number);
+            if (characterRepresentative.IsAlive()){
+                rend.color = Color.white;
+            } else {
+                rend.color = new Color(0.5f, 0f, 0f, 1f);
+            }
         }
     }
 

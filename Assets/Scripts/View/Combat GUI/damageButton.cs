@@ -12,7 +12,6 @@ namespace DefaultNamespace {
         /// </summary>
         public override void PressButton()
         {
-            Debug.Log("That's a lot of damage!");
             onButtonClick.Raise(this, new DataPacket("-1", "DamageAmount"));
         }
     }
