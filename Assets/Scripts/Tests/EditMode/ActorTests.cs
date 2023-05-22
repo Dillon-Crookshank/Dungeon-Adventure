@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -21,6 +20,7 @@ namespace DefaultNamespace
             Assert.AreEqual(2, test.GetMaxMana());
             Assert.AreEqual(test.GetCurrentMana(), test.GetMaxMana());
             Assert.AreEqual(1, test.GetInitiative());
+            Assert.AreEqual(0, test.GetCombatInitiative());
             Assert.AreEqual(true, test.IsAlive());
 
         }
@@ -52,9 +52,26 @@ namespace DefaultNamespace
             test.SetInitiative(5);
             Assert.AreEqual(6, test.GetInitiative());
 
+            test.SetCombatInitiative(5);
+            Assert.AreEqual(5, test.GetCombatInitiative());
 
-            test.SetAlive(false);
-            Assert.AreEqual(false, test.IsAlive());
+            test.SetPartyPosition(1);
+            Assert.AreEqual(1, test.GetPartyPosition());
+
+        }
+
+        [Test]
+        public void EdgeCaseSetterTests()
+        {
+            // If SetterTests passes, then these setters work as expected under "normal" cases.
+            testHero test = new testHero("warrior", 25, 10, 5, 2, 1);
+
+            test.SetPartyPosition(1);
+            Assert.AreEqual(1, test.GetPartyPosition());
+            Assert.AreEqual(false, test.SetPartyPosition(7));
+            Assert.AreEqual(1, test.GetPartyPosition());
+
+
 
         }
 

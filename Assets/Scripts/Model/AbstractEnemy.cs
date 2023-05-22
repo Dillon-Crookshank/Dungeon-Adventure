@@ -26,8 +26,8 @@ namespace DefaultNamespace
         /// <param name="theDefence">The defence of the AbstractEnemy.</param>
         /// <param name="theMana">The maximum mana of the AbstractEnemy.</param>
         /// <param name="theInitiative">The initiative of the AbstractEnemy.</param>
-        internal AbstractEnemy(string theName, double theHitpoints, double theAttack,
-     double theDefence, double theMana, int theInitiative) : base(theName, theHitpoints, theAttack,
+        internal AbstractEnemy(in string theName, in double theHitpoints, in double theAttack,
+     in double theDefence, in double theMana, in int theInitiative) : base(theName, theHitpoints, theAttack,
      theDefence, theMana, theInitiative)
         {
             enemyRng = new Random();
