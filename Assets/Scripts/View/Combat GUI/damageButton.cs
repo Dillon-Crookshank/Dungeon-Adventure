@@ -8,7 +8,7 @@ namespace DefaultNamespace {
     class damageButton : clickableButton
     {
         /// <summary>
-        /// Requests a saved state of the party from the button factory.
+        /// Requests a health change of -1 on all heroes of the party.
         /// </summary>
         public override void PressButton()
         {
