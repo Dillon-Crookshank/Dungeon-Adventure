@@ -23,7 +23,6 @@ sealed class buttonFactory : MonoBehaviour
     GameEvent changeFileRequest;
 
     [Header("Important Sprites")]
-
     /// <summary>
     /// A reference to the Template object, upon which all hero cells are based upon.
     /// </summary>
@@ -268,7 +267,6 @@ sealed class buttonFactory : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// Checks if a given string array representation is a valid set of data.
     /// </summary>
@@ -291,12 +289,12 @@ sealed class buttonFactory : MonoBehaviour
                 }
             }
             return new testHero(
-                hero[1],            // Name
-                loadStats[0],       // HP
-                loadStats[1],       // Attack
-                loadStats[2],       // Defense
-                loadStats[3],       // Mana
-                (int)loadStats[4]   // Intiative
+                hero[1], // Name
+                loadStats[0], // HP
+                loadStats[1], // Attack
+                loadStats[2], // Defense
+                loadStats[3], // Mana
+                (int)loadStats[4] // Intiative
             );
         }
     }
@@ -307,7 +305,7 @@ sealed class buttonFactory : MonoBehaviour
     /// <param name="width"> The width of the cell. </param>
     /// <param name="length"> The length of the cell. </param>
     /// <returns> The array of position vectors. </returns>
-    
+
     private Vector3[] returnPositionVectors(float width, float length)
     {
         float backgroundCenterPoint = backgroundBasis.GetComponent<SpriteRenderer>().bounds.size.y;
@@ -341,6 +339,4 @@ sealed class buttonFactory : MonoBehaviour
         }
         return returnSet;
     }
-
-    
 }

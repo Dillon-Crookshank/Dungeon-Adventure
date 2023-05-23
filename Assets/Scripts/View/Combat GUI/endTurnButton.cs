@@ -4,7 +4,8 @@ using UnityEngine;
 /// <summary>
 /// An representation of a GUI button that handles file saving.
 /// </summary>
-namespace DefaultNamespace {
+namespace DefaultNamespace
+{
     class endTurnButton : clickableButton
     {
         /// <summary>
