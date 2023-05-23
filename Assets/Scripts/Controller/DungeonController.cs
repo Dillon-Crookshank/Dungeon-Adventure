@@ -85,7 +85,7 @@ public class DungeonController : MonoBehaviour {
         }
 
         //Use the index to update the model if the index is valid.
-        if (myMapModel.GetNthAdjacentRoom(i) != null) {
+        if (myMapModel.GetNthAdjacentRoom(i) != null) {          
             myMapModel.FocusNthAdjacentRoom(i);
         }
     }

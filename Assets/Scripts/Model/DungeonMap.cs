@@ -5,7 +5,7 @@ using static UnityEngine.Debug;
 /// <summary>
 /// The DungeonMap class is a collection of DungeonRooms held in a Graph, represented as an Adjacency List.
 /// </summary>
-internal class DungeonMap
+public class DungeonMap
 {
     /// <summary>
     /// The minimum side length of a room
@@ -356,6 +356,17 @@ internal class DungeonMap
         //Make sure that the hallway isn't directly adjacent to an existing room
         if ((theRoom[0] == theRoom[1] && !CheckGridSpace(theRoom[0] - 1, theRoom[1] + 1, theRoom[2], theRoom[3]))
             || (theRoom[2] == theRoom[3] && !CheckGridSpace(theRoom[0], theRoom[1], theRoom[2] - 1, theRoom[3] + 1))) {
+            return;
+        }
+
+        //Make sure that the hallway isn't too long
+        if (theRoom[1] - theRoom[0] > Y_BOUND || theRoom[3] - theRoom[2] > Y_BOUND) {
+            return;
+        }
+
+
+        //Make sure that, if this isn't the first hallway being drawn, that we aren't trying to draw a hallway into a hallway
+        if (myAdjacencyList[theRoom[4]].myAdjacentRooms.Count > 2 && (myAdjacencyList[theRoom[5]].myRoom.GetW() == 1.0f || myAdjacencyList[theRoom[5]].myRoom.GetH() == 1.0f)) {
             return;
         }
 

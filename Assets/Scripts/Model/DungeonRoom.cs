@@ -62,34 +62,26 @@ public class DungeonRoom
     private Stack<Object> myLoot;
 
     /// <summary>
-    /// Creates a new dungeon room with the given bounds.
+    /// **Unimplemented**
     /// </summary>
-    /// <param name="theX"> The x-coordinate of the room. </param>
-    /// <param name="theY"> The y-coordinate of the room. </param>
-    /// <param name="theW"> The width of the room. </param>
-    /// <param name="theH"> The height of the room. </param>
-    public DungeonRoom(float theX, float theY, float theW, float theH)
-    {
-        myX = theX;
-        myY = theY;
-        myW = theW;
-        myH = theH;
-
-        myGridXMin = 0;
-        myGridXMax = 0;
-        myGridYMin = 0;
-        myGridYMax = 0;
-    }
+    private Object myEnemyParty;
 
     /// <summary>
-    /// Creates a DungeonRoom Given integer bounds that are snapped to a grid. 
+    /// Creates a DungeonRoom Given an integer domain that is snapped to a grid. 
     /// </summary>
     /// <param name="theXMin"> The Lowest X-value of the DungeonRoom. </param>
     /// <param name="theXMax"> The Highest X-value of the DungeonRoom. </param>
     /// <param name="theYMin"> The Lowest Y-value of the DungeonRoom. </param>
     /// <param name="theYMax"> The Highest Y-value of the DungeonRoom. </param>
-    public DungeonRoom(int theXMin, int theXMax, int theYMin, int theYMax) 
-    : this((theXMin + theXMax) / 2.0f + 0.5f, (theYMin + theYMax) / 2.0f + 0.5f, Math.Abs(theXMin - theXMax) + 1.0f, Math.Abs(theYMin - theYMax) + 1.0f) {
+    public DungeonRoom(int theXMin, int theXMax, int theYMin, int theYMax) {
+        
+        //Calculate the game unit coordinates based on the given grid domain
+        myX = (theXMin + theXMax) / 2.0f + 0.5f;
+        myY = (theYMin + theYMax) / 2.0f + 0.5f;
+        myW = Math.Abs(theXMin - theXMax) + 1.0f;
+        myH = Math.Abs(theYMin - theYMax) + 1.0f;
+
+
         myGridXMin = theXMin;
         myGridXMax = theXMax;
         myGridYMin = theYMin;
@@ -149,29 +141,6 @@ public class DungeonRoom
     }
 
     /// <summary>
-    /// An accessor for the top of the Loot Stack. Pops the top of the stack once per method call, until none is left in the stack.
-    /// </summary>
-    /// <returns> The top of the loot stack. </returns>
-    public Object PopLoot()
-    {
-        if (myLoot == null || myLoot.Count == 0)
-        {
-            return null;
-        }
-
-        return myLoot.Pop();
-    }
-
-    /// <summary>
-    /// A predicate function to check if the room still contains uncollected loot.
-    /// </summary>
-    /// <returns> True if the room still contains loot. False otherwise. </returns>
-    public bool HasLoot()
-    {
-        return myLoot.Peek() != null;
-    }
-
-    /// <summary>
     /// Only used when initialized using the grid constraints method. Returns the minimum X grid constraint.
     /// </summary>
     /// <returns> Returns the minimum X grid constraint. </returns>
@@ -201,5 +170,36 @@ public class DungeonRoom
     /// <returns> Returns the maximum Y grid constraint. </returns>
     public int GetYMax() {
         return myGridYMax;
+    }
+
+    /// <summary>
+    /// An accessor for the top of the Loot Stack. Pops the top of the stack once per method call, until none is left in the stack.
+    /// </summary>
+    /// <returns> The top of the loot stack. </returns>
+    public Object PopLoot()
+    {
+        if (myLoot == null || myLoot.Count == 0)
+        {
+            return null;
+        }
+
+        return myLoot.Pop();
+    }
+
+    /// <summary>
+    /// A predicate function to check if the room still contains uncollected loot.
+    /// </summary>
+    /// <returns> True if the room still contains loot. False otherwise. </returns>
+    public bool HasLoot()
+    {
+        return myLoot.Count != 0;
+    }
+
+    /// <summary>
+    /// Returns a reference to the stored enemy party.
+    /// </summary>
+    /// <returns> A reference to the enemy party that is stored inside the dungeon room. </returns>
+    public Object GetEnemyParty() {
+        return myEnemyParty;
     }
 }

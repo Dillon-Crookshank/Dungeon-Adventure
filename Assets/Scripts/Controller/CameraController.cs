@@ -3,7 +3,7 @@ using System;
 
 
 /// <summary>
-/// A Controller class that lets you move a camera while keeping it within specified bounds.
+/// A Controller class that lets a user control a camera while keeping it within specified bounds.
 /// </summary>
 public class CameraController {
 
@@ -83,7 +83,7 @@ public class CameraController {
     /// </summary>
     public void UpdateCamera() {
         
-        DisplaceCameraSize(Input.mouseScrollDelta.y / 2);
+        DisplaceCameraSize(Input.mouseScrollDelta.y / -2);
 
         //If Left-Mouse is being held...
         if (Input.GetMouseButton(0)) {

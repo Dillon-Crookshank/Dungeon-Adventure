@@ -4,7 +4,7 @@ using System;
 /// <summary>
 /// The observer to the listener. This observes each map room individuals. When a room is left-clicked, its hashcode is sent to the GameController for processing.
 /// </summary>
-public class MapViewObserver : MonoBehaviour {
+public class MapObserver : MonoBehaviour {
     /// <summary>
     /// We use this flag to prevent 'Drag Clicks' from being registered as a valid click.
     /// </summary>
