@@ -27,7 +27,7 @@ namespace DefaultNamespace
         /// </summary>
         /// <param name="thePlayerParty">The party of heroes.</param>
         /// <param name="theEnemyParty">The party of enemies.</param>
-        internal void CombatEncounter(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        internal async void CombatEncounter(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
         {
             Debug.Log("Encounter started!");
             turnCounter = 0;
@@ -41,8 +41,13 @@ namespace DefaultNamespace
             while (thePlayerParty.isAllAlive && theEnemyParty.isAllAlive)
             {
                 turnCounter++;
-                StartCoroutine(TurnOver());
-                break;
+                foreach (AbstractActor character in characterList)
+                {
+                    activeActor = character;
+                    Debug.LogFormat("{0}, initiative: {1}", activeActor.GetName(), activeActor.GetCombatInitiative());
+                    await TurnOver(activeActor);
+                    isEndOfTurn = false;
+                }
             }
         }
 
@@ -75,17 +80,11 @@ namespace DefaultNamespace
             return characters;
         }
 
-        private IEnumerator TurnOver(){
-            foreach (AbstractActor character in characterList)
-            {
-                activeActor = character;
-                Debug.Log("" + activeActor.ToString());
-                while (!isEndOfTurn){
-                    yield return new WaitForSeconds(0.1f);
-                }
-                isEndOfTurn = false;
+        private async Task TurnOver(AbstractActor character){
+            while (!isEndOfTurn){
+                await Task.Delay(100);
             }
-            StopCoroutine(TurnOver());
+            await Task.Yield();
         }
 
 

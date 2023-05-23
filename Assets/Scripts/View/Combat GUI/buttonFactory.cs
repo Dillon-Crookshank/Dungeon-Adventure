@@ -13,29 +13,35 @@ sealed class buttonFactory : MonoBehaviour
     /// <summary>
     /// The GameEvent called whenever the GUI needs to update its cells.
     /// </summary>
-    public GameEvent GUIUpdate;
+    [SerializeField]
+    GameEvent GUIUpdate;
 
     /// <summary>
     /// The GameEvent called whenever the GUI needs to read in or send out a state of the party.
     /// </summary>
-    public GameEvent changeFileRequest;
+    [SerializeField]
+    GameEvent changeFileRequest;
 
+
+    [Header("Important Sprites")]
     /// <summary>
     /// A reference to the Template object, upon which all hero cells are based upon.
     /// </summary>
-    public GameObject templateSprite;
+    [SerializeField]
+    GameObject templateSprite;
 
     /// <summary>
     /// A reference to the background of the GUI, to accurately place the cells according
     /// to the DISTANCE_FROM_CENTER constant.
     /// </summary>
-    public GameObject backgroundBasis;
+    [SerializeField]
+    GameObject backgroundBasis;
 
     /// <summary>
     /// A constant to reference a percentage of distance that the center of the button factory is placed from
     /// the center of the screen.
     /// </summary>
-    private const float DISTANCE_FROM_CENTER = 0.25f;
+    private const float DISTANCE_FROM_CENTER = 0.3f;
 
     /// <summary>
     /// A constant to reference the maximum number of cells in a party.

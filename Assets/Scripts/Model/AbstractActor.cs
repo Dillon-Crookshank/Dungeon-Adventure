@@ -244,6 +244,11 @@ namespace DefaultNamespace
         internal void SetCurrentHitpoints(double theChange)
         {
             currentHitpoints += theChange;
+            if (currentHitpoints > maxHitpoints){
+                currentHitpoints = maxHitpoints;
+            } else if (currentHitpoints < 0){
+                currentHitpoints = 0;
+            }
         }
 
 

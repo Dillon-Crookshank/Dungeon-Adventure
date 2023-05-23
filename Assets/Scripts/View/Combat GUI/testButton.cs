@@ -11,23 +11,46 @@ sealed class testButton : MonoBehaviour
     /// <summary>
     /// The GameEvent called whenever a cell has been clicked on.
     /// </summary>
-    public GameEvent onButtonClick;
+    [SerializeField]
+    GameEvent onButtonClick;
 
     /// <summary>
     /// A reference to the arrow sprite that displays when prompting the user
     /// to move their hero.
     /// </summary>
-    public GameObject arrowDisplay;
+    [SerializeField]
+    GameObject arrowDisplay;
 
     /// <summary>
     /// A reference to the bar sprite that represents a character's health.
     /// </summary>
-    public GameObject healthBar;
+    [SerializeField]
+    GameObject healthBar;
 
     /// <summary>
     /// A reference to testHero object being represented in the instance of the cell.
     /// </summary>
-    public testHero characterRepresentative;
+    [SerializeField]
+    testHero characterRepresentative;
+
+    
+    /// <summary>
+    /// A sprite array containing the different display states of a cell.
+    /// </summary>
+    [SerializeField]
+    Sprite[] spriteArray = new Sprite[2];
+
+    /// <summary>
+    /// A text mesh array containing the different text displays that show up as the hero's stats.
+    /// </summary>
+    [SerializeField]
+    TextMesh[] stats = new TextMesh[3];
+
+    /// <summary>
+    /// A reference to the area labelling the hero's name.
+    /// </summary>
+    [SerializeField]
+    GameObject statDisplays;
 
     /// <summary>
     /// A vector representing the size of the arrow, when displayed.
@@ -48,22 +71,6 @@ sealed class testButton : MonoBehaviour
     /// A vector representing the location of the arrow.
     /// </summary>
     private Vector3 arrowVector;
-
-    /// <summary>
-    /// A sprite array containing the different display states of a cell.
-    /// </summary>
-    public Sprite[] spriteArray = new Sprite[2];
-
-    /// <summary>
-    /// A text mesh array containing the different text displays that show up as the hero's stats.
-    /// </summary>
-    public TextMesh[] stats = new TextMesh[3];
-
-    /// <summary>
-    /// A reference to the area labelling the hero's name.
-    /// </summary>
-
-    public GameObject statDisplays;
 
     /// <summary>
     /// Determines whether or not this cell holds a hero.
@@ -281,11 +288,9 @@ sealed class testButton : MonoBehaviour
     }
 
     public void HandleDamage(Component sender, object data){
-        Debug.Log("We're getting something! -" + name);
         DataPacket dPacket = (DataPacket) data;
         int number = 0;
         if (dPacket.GetLabel() == "DamageAmount" && characterRepresentative != null && Int32.TryParse((string) dPacket.GetData(), out number)){
-            Debug.Log("We're reading it! -" + name);
             characterRepresentative.SetCurrentHitpoints(number);
             if (characterRepresentative.IsAlive()){
                 rend.color = Color.white;

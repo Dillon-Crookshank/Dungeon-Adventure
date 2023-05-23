@@ -12,10 +12,9 @@ namespace DefaultNamespace{
         private SpriteRenderer rend;
 
         /// <summary>
-        /// The GameEVent to be called whenever there is a file request.
+        /// The GameEvent to be called whenever there is a file request.
         /// </summary>
-        public GameEvent onButtonClick;
-
+        public GameEvent onButtonClick {get;}
         void Start()
         {
             rend = gameObject.GetComponent<SpriteRenderer>();
