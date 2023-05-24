@@ -4,7 +4,7 @@ using UnityEngine;
 /// An abstraction of a GUI button that handles file editing.
 /// </summary>
 namespace DefaultNamespace{
-    abstract class fileButton : MonoBehaviour
+    public abstract class clickableButton : MonoBehaviour
     {
         /// <summary>
         /// A reference to the rectangular backing of the cell.
@@ -12,14 +12,12 @@ namespace DefaultNamespace{
         private SpriteRenderer rend;
 
         /// <summary>
-        /// The GameEVent to be called whenever there is a file request.
+        /// The GameEvent to be called whenever there is a file request.
         /// </summary>
-        public GameEvent fileChangeRequest;
-
+        public GameEvent onButtonClick;
         void Start()
         {
             rend = gameObject.GetComponent<SpriteRenderer>();
-            Debug.Log(rend != null);
         }
 
         /// <summary>
