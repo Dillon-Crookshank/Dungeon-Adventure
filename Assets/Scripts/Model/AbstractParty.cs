@@ -22,7 +22,7 @@ internal abstract class AbstractParty
     /// <summary>
     /// A Dictionary that contains the AbstractActors that make up the party, and their positions.
     /// </summary>
-    internal Dictionary<int, AbstractActor> partyPositions;
+    internal Dictionary<int, AbstractCharacter> partyPositions;
 
 
     /// <summary>
@@ -40,7 +40,7 @@ internal abstract class AbstractParty
     /// </summary>
     /// <param name="theActor">The Actor to be added to the party.</param>
     /// <returns>True if added successfully, false otherwise.</returns>
-    internal bool AddActor(AbstractActor theActor)
+    internal bool AddActor(AbstractCharacter theActor)
     {
         int key = 0;
         for (int i = 1; i <= MAX_PARTY_SIZE; i++)
@@ -56,7 +56,7 @@ internal abstract class AbstractParty
             return false;
         }
         partyPositions.Add(key, theActor);
-        theActor.SetPartyPosition(key);
+        theActor.PartyPosition = key;
         return true;
     }
 
@@ -64,7 +64,7 @@ internal abstract class AbstractParty
     /// Getter for the partyPositions Dictionary. 
     /// </summary>
     /// <returns>The AbstractActors in the party, mapped by the positions.</returns>
-    internal Dictionary<int, AbstractActor> GetPartyPositions()
+    internal Dictionary<int, AbstractCharacter> GetPartyPositions()
     {
         return partyPositions;
     }
@@ -75,14 +75,14 @@ internal abstract class AbstractParty
     /// <param name="thePosition">The party position the Actor is attempting to move to.</param>
     /// <param name="theActor">The Actor attempting to move.</param>
     /// <returns>True if move is successful, false otherwise.</returns>
-    internal bool moveCharacter(int thePosition, AbstractActor theActor)
+    internal bool moveCharacter(int thePosition, AbstractCharacter theActor)
     {
         if (thePosition < 1 || thePosition > 6 || partyPositions.ContainsKey(thePosition))
         {
             return false;
         }
-        partyPositions.Remove(theActor.GetPartyPosition());
-        theActor.SetPartyPosition(thePosition);
+        partyPositions.Remove(theActor.PartyPosition);
+        theActor.PartyPosition = thePosition;
         partyPositions.Add(thePosition, theActor);
         return true;
     }

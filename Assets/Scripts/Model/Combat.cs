@@ -3,7 +3,6 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
 namespace DefaultNamespace
 {
@@ -18,9 +17,9 @@ namespace DefaultNamespace
 
         private bool isEndOfTurn;
 
-        private List<AbstractActor> characterList;
+        private List<AbstractCharacter> characterList;
 
-        private AbstractActor activeActor;
+        private AbstractCharacter activeActor;
 
         /// <summary>
         /// Takes a player party and an enemy party, and handles the logic for the combat between them.
@@ -36,15 +35,15 @@ namespace DefaultNamespace
 
             characterList = InitiativeRoll(thePlayerParty, theEnemyParty);
 
-            characterList.Sort((x, y) => y.GetCombatInitiative() - x.GetCombatInitiative());
+            characterList.Sort((x, y) => y.CombatInitiative - x.CombatInitiative);
 
             while (thePlayerParty.isAllAlive && theEnemyParty.isAllAlive)
             {
                 turnCounter++;
-                foreach (AbstractActor character in characterList)
+                foreach (AbstractCharacter character in characterList)
                 {
                     activeActor = character;
-                    Debug.LogFormat("{0}, initiative: {1}", activeActor.GetName(), activeActor.GetCombatInitiative());
+                    Debug.LogFormat("{0}, initiative: {1}", activeActor.Name, activeActor.CombatInitiative);
                     await TurnOver(activeActor);
                     isEndOfTurn = false;
                 }
@@ -59,36 +58,38 @@ namespace DefaultNamespace
         /// <param name="thePlayerParty">The party of heroes.</param>
         /// <param name="theEnemyParty">The party of enemies.</param>
         /// <returns></returns>
-        internal List<AbstractActor> InitiativeRoll(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        internal List<AbstractCharacter> InitiativeRoll(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
         {
             System.Random rng = new System.Random();
 
-            List<AbstractActor> characters = new List<AbstractActor>();
+            List<AbstractCharacter> characters = new List<AbstractCharacter>();
 
-            foreach (AbstractActor actor in (thePlayerParty.GetPartyPositions().Values
+            foreach (AbstractCharacter actor in (thePlayerParty.GetPartyPositions().Values
             .Concat(theEnemyParty.GetPartyPositions().Values)))
             {
                 characters.Add(actor);
             }
 
 
-            foreach (AbstractActor actor in characters)
+            foreach (AbstractCharacter actor in characters)
             {
-                actor.SetCombatInitiative(actor.GetInitiative() + rng.Next(1, 20));
+                actor.CombatInitiative = (actor.Initiative + rng.Next(1, 20));
             }
 
             return characters;
         }
 
-        private async Task TurnOver(AbstractActor character){
-            while (!isEndOfTurn){
+        private async Task TurnOver(AbstractCharacter character)
+        {
+            while (!isEndOfTurn)
+            {
                 await Task.Delay(100);
             }
             await Task.Yield();
         }
 
 
-        public AbstractActor GetActiveActor()
+        public AbstractCharacter GetActiveActor()
         {
             return activeActor;
         }
@@ -100,7 +101,7 @@ namespace DefaultNamespace
 
         public int ActorIndex()
         {
-            return activeActor.GetPartyPosition();
+            return activeActor.PartyPosition;
         }
 
         public bool isPlayer()
