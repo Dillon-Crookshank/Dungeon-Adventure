@@ -1,8 +1,11 @@
 using System;
+using System.IO;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 /// <summary>
-/// The Controller to the Dungeon Adventure Game. **Must atach this script to a 
+/// The Controller to the Dungeon Adventure Game. **Must attach this script to a GameObject initialized in the Unity Editor**
 /// </summary>
 public class DungeonController : MonoBehaviour {
     /// <summary>
@@ -27,7 +30,7 @@ public class DungeonController : MonoBehaviour {
     /// The Start method is run once, after the DungeonController GameObject is initialized.
     /// </summary>
     public void Start() {
-        myMapCamera = new CameraController("Main Camera", new Vector3(0, 0, -1), (4.5f, 9.0f), (16.0f, 9.0f));
+        myMapCamera = new CameraController("Main Camera", new Vector3(0, 0, -1), (4.5f, 18.0f), (32.0f, 18.0f));
         myMapView = new MapView(new Vector2(0, 0), mySprites);
         myMapModel = new DungeonMap();
     }
@@ -38,6 +41,7 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     public void Update() {
         UpdateMapView();
+        //DebugMapView();
         myMapCamera.UpdateCamera();
     }
 
@@ -48,10 +52,93 @@ public class DungeonController : MonoBehaviour {
         //We call UnfocusAll to reset the mapView
         myMapView.UnfocusAll();
         myMapView.SetPrimaryFocus(myMapModel.GetFocusedRoom());
-        int i = 0;
-        do {
-            myMapView.SetSecondaryFocus(myMapModel.GetNthAdjacentRoom(i++));
-        } while (myMapModel.GetNthAdjacentRoom(i) != null);
+
+        for (int i = 0; myMapModel.GetNthAdjacentRoom(i) != null; i++) {
+            myMapView.SetSecondaryFocus(myMapModel.GetNthAdjacentRoom(i));
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
+            SerializeMap("myMap.bin", myMapModel);
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
+            myMapModel = DeserializeMap("myMap.bin");
+            myMapView.Clear();
+
+
+            for (int i = 0; myMapModel.GetNthRoom(i) != null; i++) {
+                if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
+                    myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Shows the entire map at once. Every time you press enter, it generates a new dungeon.
+    /// </summary>
+    private void DebugMapView() {
+        myMapView.UnfocusAll();
+
+        for (int i = 0; myMapModel.GetNthRoom(i) != null; i++) {
+            myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            myMapModel = new DungeonMap();
+            myMapView.Clear();
+            myMapView = new MapView(new Vector2(0, 0), mySprites);
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
+            SerializeMap("myMap.bin", myMapModel);
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
+            myMapModel = DeserializeMap("myMap.bin");
+            myMapView.Clear();
+
+
+            for (int i = 0; myMapModel.GetNthRoom(i) != null; i++) {
+                if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
+                    myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Saves the given DungeonMap to a file of the given name
+    /// </summary>
+    /// <param name="theFileName"> The name of the file that the map should be saved to. </param>
+    /// <param name="theMap"> The DungeonMap that should be saved. </param>
+    private void SerializeMap(String theFileName, DungeonMap theMap) {
+        IFormatter formatter = new BinaryFormatter();
+        Stream stream = new FileStream(theFileName, FileMode.Create, FileAccess.Write, FileShare.None);
+        formatter.Serialize(stream, theMap);
+        stream.Close();
+
+        Debug.Log("Map Serialized!");
+    }
+
+    /// <summary>
+    /// Returns the DungeonMap that was saved to the given file. Make sure you update
+    /// </summary>
+    /// <param name="theFileName"></param>
+    /// <returns></returns>
+    private DungeonMap DeserializeMap(String theFileName) {
+
+        IFormatter formatter = new BinaryFormatter();
+        Stream stream = new FileStream(theFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+        
+        //Save the map to a temp variable so we can close the file stream
+        DungeonMap tempMap = (DungeonMap) formatter.Deserialize(stream);
+        stream.Close();
+
+        Debug.Log("Map Deserialized!");
+
+        return tempMap;
     }
 
     /// <summary>
@@ -67,7 +154,7 @@ public class DungeonController : MonoBehaviour {
         }
 
         //Use the index to update the model if the index is valid.
-        if (myMapModel.GetNthAdjacentRoom(i) != null) {
+        if (myMapModel.GetNthAdjacentRoom(i) != null) {          
             myMapModel.FocusNthAdjacentRoom(i);
         }
     }

@@ -2,9 +2,9 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// A behavior class that adds the color changing fuctionality to the UButton.
+/// A behavior class that adds simple button behavior to a game object.
 /// </summary>
-public class ButtonMouseListener : MonoBehaviour {
+public class ButtonListener : MonoBehaviour {
     /// <summary>
     /// A flag to prevent 'Drag Clicking' with the left mouse button.
     /// </summary>
