@@ -1,13 +1,11 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 3c5d9d4122c31274f8f41d62619ac5bd
-=======
-guid: 28e13d5f0e603e540981f83f358f9c93
->>>>>>> Dillon
+guid: 037a84386f0376d48b209bd25a4a03ca
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - file: {instanceID: 0}
+  - changeText: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
