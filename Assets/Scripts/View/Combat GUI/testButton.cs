@@ -110,12 +110,12 @@ sealed class testButton : MonoBehaviour
 
         if (hasHero)
         {
-            stats[0].text = "" + characterRepresentative.GetAttack();
-            stats[1].text = "" + characterRepresentative.GetDefence();
-            stats[2].text = "" + characterRepresentative.GetName();
+            stats[0].text = "" + characterRepresentative.Attack;
+            stats[1].text = "" + characterRepresentative.Defence;
+            stats[2].text = "" + characterRepresentative.Name;
             float healthPercentage = (float)(
-                characterRepresentative.GetCurrentHitpoints()
-                / characterRepresentative.GetMaxHitpoints()
+                characterRepresentative.CurrentHitpoints
+                / characterRepresentative.MaxHitpoints
             );
 
             healthBar.transform.localPosition = new Vector3(
@@ -316,7 +316,7 @@ sealed class testButton : MonoBehaviour
             && Int32.TryParse((string)dPacket.GetData(), out number)
         )
         {
-            characterRepresentative.SetCurrentHitpoints(number);
+            characterRepresentative.CurrentHitpoints = number;
             if (characterRepresentative.IsAlive())
             {
                 rend.color = Color.white;

@@ -70,7 +70,7 @@ sealed class buttonFactory : MonoBehaviour
     /// <summary>
     /// A reference to the party's dictionary of positions, for testing purposes.
     /// </summary>
-    private Dictionary<int, AbstractActor> myTestPartyDictionary;
+    private Dictionary<int, AbstractCharacter> myTestPartyDictionary;
 
     /// <summary>
     /// Generates the cells and places two knights in their appropriate locations as a basis
@@ -194,20 +194,20 @@ sealed class buttonFactory : MonoBehaviour
                     {
                         moreThanOne = true;
                     }
-                    AbstractActor actor = myTestPartyDictionary[i];
+                    AbstractCharacter actor = myTestPartyDictionary[i];
                     sb.Append(i);
                     sb.Append(",");
-                    sb.Append(actor.GetName());
+                    sb.Append(actor.Name);
                     sb.Append(",");
-                    sb.Append(actor.GetCurrentHitpoints());
+                    sb.Append(actor.CurrentHitpoints);
                     sb.Append(",");
-                    sb.Append(actor.GetAttack());
+                    sb.Append(actor.Attack);
                     sb.Append(",");
-                    sb.Append(actor.GetDefence());
+                    sb.Append(actor.Defence);
                     sb.Append(",");
-                    sb.Append(actor.GetCurrentMana());
+                    sb.Append(actor.CurrentMana);
                     sb.Append(",");
-                    sb.Append(actor.GetCombatInitiative());
+                    sb.Append(actor.CombatInitiative);
                 }
             }
             string sbResult = sb.ToString();
@@ -222,8 +222,8 @@ sealed class buttonFactory : MonoBehaviour
 
             bool stillLoadFlag = true;
 
-            Dictionary<int, AbstractActor> loadPartyDictionary =
-                new Dictionary<int, AbstractActor>();
+            Dictionary<int, AbstractCharacter> loadPartyDictionary =
+                new Dictionary<int, AbstractCharacter>();
 
             foreach (string s in dPacketPartyData)
             {
