@@ -736,6 +736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51c27904a92acd94badadcbff28accee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onButtonClick: {fileID: 11400000, guid: a6a03ed84e7502245a67596c0e76c584, type: 2}
 --- !u!61 &677529468
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -965,6 +966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 969efb82bbf76234ca65ff4a3932b03f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onButtonClick: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
 --- !u!61 &787817679
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1486,6 +1488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 037a84386f0376d48b209bd25a4a03ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onButtonClick: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
 --- !u!212 &1141628377
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2022,6 +2025,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfc6bea7b1abb1a4e9fa97df5f853d60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onButtonClick: {fileID: 11400000, guid: af71a952bac8e3c45acc20a8856055de, type: 2}
 --- !u!1 &1607023450 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4866356735138099926, guid: a9195b2bc4754434fa236e01951c68bd, type: 3}
@@ -2535,6 +2539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 242675db1f8866c419d0b8e57b6a9095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onButtonClick: {fileID: 11400000, guid: a6a03ed84e7502245a67596c0e76c584, type: 2}
 --- !u!1 &1861758001
 GameObject:
   m_ObjectHideFlags: 0
