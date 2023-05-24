@@ -7,7 +7,7 @@ namespace DefaultNamespace
     /// An abstract representation of an Enemy.
     /// Includes a RNG and a lootTable.
     /// </summary>
-    internal abstract class AbstractEnemy : AbstractActor
+    internal abstract class AbstractEnemy : AbstractCharacter
     {
 
         /// <summary>

@@ -71,7 +71,7 @@ sealed class buttonFactory : MonoBehaviour
     /// <summary>
     /// A reference to the party's dictionary of positions, for testing purposes.
     /// </summary>
-    private Dictionary<int, AbstractActor> myTestPartyDictionary;
+    private Dictionary<int, AbstractCharacter> myTestPartyDictionary;
 
     /// <summary>
     /// Generates the cells and places two knights in their appropriate locations as a basis
@@ -195,20 +195,20 @@ sealed class buttonFactory : MonoBehaviour
                     {
                         moreThanOne = true;
                     }
-                    AbstractActor actor = myTestPartyDictionary[i];
+                    AbstractCharacter actor = myTestPartyDictionary[i];
                     sb.Append(i);
                     sb.Append(",");
-                    sb.Append(actor.GetName());
+                    sb.Append(actor.Name);
                     sb.Append(",");
-                    sb.Append(actor.GetCurrentHitpoints());
+                    sb.Append(actor.currentHitpoints);
                     sb.Append(",");
-                    sb.Append(actor.GetAttack());
+                    sb.Append(actor.attack);
                     sb.Append(",");
-                    sb.Append(actor.GetDefence());
+                    sb.Append(actor.defence);
                     sb.Append(",");
-                    sb.Append(actor.GetCurrentMana());
+                    sb.Append(actor.currentMana);
                     sb.Append(",");
-                    sb.Append(actor.GetCombatInitiative());
+                    sb.Append(actor.combatInitiative);
                 }
             }
             string sbResult = sb.ToString();
@@ -223,8 +223,8 @@ sealed class buttonFactory : MonoBehaviour
 
             bool stillLoadFlag = true;
 
-            Dictionary<int, AbstractActor> loadPartyDictionary =
-                new Dictionary<int, AbstractActor>();
+            Dictionary<int, AbstractCharacter> loadPartyDictionary =
+                new Dictionary<int, AbstractCharacter>();
 
             foreach (string s in dPacketPartyData)
             {
@@ -307,7 +307,7 @@ sealed class buttonFactory : MonoBehaviour
     /// <param name="width"> The width of the cell. </param>
     /// <param name="length"> The length of the cell. </param>
     /// <returns> The array of position vectors. </returns>
-    
+
     private Vector3[] returnPositionVectors(float width, float length)
     {
         float backgroundCenterPoint = backgroundBasis.GetComponent<SpriteRenderer>().bounds.size.y;
@@ -342,5 +342,5 @@ sealed class buttonFactory : MonoBehaviour
         return returnSet;
     }
 
-    
+
 }

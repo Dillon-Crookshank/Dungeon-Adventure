@@ -33,7 +33,7 @@ sealed class testButton : MonoBehaviour
     [SerializeField]
     testHero characterRepresentative;
 
-    
+
     /// <summary>
     /// A sprite array containing the different display states of a cell.
     /// </summary>
@@ -107,16 +107,16 @@ sealed class testButton : MonoBehaviour
 
     void Update()
     {
-        
+
         hasHero = (characterRepresentative != null);
 
         if (hasHero)
         {
-            stats[0].text = "" + characterRepresentative.GetAttack();
-            stats[1].text = "" + characterRepresentative.GetDefence();
-            stats[2].text = "" + characterRepresentative.GetName();
-            float healthPercentage = (float) (characterRepresentative.GetCurrentHitpoints() / characterRepresentative.GetMaxHitpoints());
-            
+            stats[0].text = "" + characterRepresentative.attack;
+            stats[1].text = "" + characterRepresentative.defence;
+            stats[2].text = "" + characterRepresentative.Name;
+            float healthPercentage = (float)(characterRepresentative.currentHitpoints / characterRepresentative.maxHitpoints);
+
             healthBar.transform.localPosition = new Vector3(0f, (float)(healthPercentage - 1) / 2, -0.51f);
             healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
         }
@@ -127,11 +127,13 @@ sealed class testButton : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (name != "Template"){
+        if (name != "Template")
+        {
             // Click on cell
             if (Input.GetMouseButtonDown(0))
             {
-                if (characterRepresentative != null && characterRepresentative.IsAlive() || characterRepresentative == null){
+                if (characterRepresentative != null && characterRepresentative.IsAlive() || characterRepresentative == null)
+                {
                     // Checking to see if clicking a cell should select it or cause a character to be moved
                     if (!selectMoveMode)
                     {
@@ -188,12 +190,15 @@ sealed class testButton : MonoBehaviour
             }
             else if (hasHero || selectMoveMode)
             {
-                if (characterRepresentative == null || characterRepresentative.IsAlive()){
+                if (characterRepresentative == null || characterRepresentative.IsAlive())
+                {
                     rend.color = Color.green;
-                } else {
+                }
+                else
+                {
                     rend.color = Color.red;
                 }
-                
+
 
                 if (selectMoveMode && !clicked)
                 {
@@ -224,11 +229,14 @@ sealed class testButton : MonoBehaviour
         }
         if (!clicked)
         {
-            if (characterRepresentative != null && characterRepresentative.IsAlive() || characterRepresentative == null){
+            if (characterRepresentative != null && characterRepresentative.IsAlive() || characterRepresentative == null)
+            {
                 rend.color = Color.white;
-            } else {
+            }
+            else
+            {
                 rend.color = new Color(0.5f, 0f, 0f, 1f);
-            }   
+            }
         }
         else
         {
@@ -287,14 +295,19 @@ sealed class testButton : MonoBehaviour
         }
     }
 
-    public void HandleDamage(Component sender, object data){
-        DataPacket dPacket = (DataPacket) data;
+    public void HandleDamage(Component sender, object data)
+    {
+        DataPacket dPacket = (DataPacket)data;
         int number = 0;
-        if (dPacket.GetLabel() == "DamageAmount" && characterRepresentative != null && Int32.TryParse((string) dPacket.GetData(), out number)){
-            characterRepresentative.SetCurrentHitpoints(number);
-            if (characterRepresentative.IsAlive()){
+        if (dPacket.GetLabel() == "DamageAmount" && characterRepresentative != null && Int32.TryParse((string)dPacket.GetData(), out number))
+        {
+            characterRepresentative.currentHitpoints = (number);
+            if (characterRepresentative.IsAlive())
+            {
                 rend.color = Color.white;
-            } else {
+            }
+            else
+            {
                 rend.color = new Color(0.5f, 0f, 0f, 1f);
             }
         }
