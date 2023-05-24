@@ -10,11 +10,11 @@ namespace DefaultNamespace
     /// </summary>
     public class accessDB : MonoBehaviour
     {
-        internal static PlayerCharacter accessCharacterDatabase(string theType)
+        internal static PlayerCharacter accessCharacterDatabase(string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
-            dbCommandReadValues.CommandText = "SELECT * FROM actorTemplates;";
+            dbCommandReadValues.CommandText = "SELECT * FROM characterTemplates;";
             IDataReader dataReader = dbCommandReadValues.ExecuteReader();
             // specify which entry to grab
             {
@@ -22,7 +22,7 @@ namespace DefaultNamespace
                 while (dataReader.Read())
                 {
 
-                    if (dataReader.GetString(0) == theType.ToLower())
+                    if (dataReader.GetString(0) == theClass.ToLower())
                     {
                         PlayerCharacter character = new PlayerCharacter(dataReader.GetString(0), dataReader.GetFloat(1),
                         dataReader.GetFloat(2), dataReader.GetFloat(3), dataReader.GetFloat(4), dataReader.GetInt32(5));
@@ -30,7 +30,7 @@ namespace DefaultNamespace
                         return character;
                     }
                 }
-                throw new System.Exception("PlayerCharacter " + theType + " not found.");
+                throw new System.Exception("PlayerCharacter " + theClass + " not found.");
             }
 
         }
