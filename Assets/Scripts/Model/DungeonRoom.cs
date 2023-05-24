@@ -4,6 +4,7 @@ using System;
 /// <summary>
 /// This class represents a dungeon room, with fields such as the bounds of the room, or loot within the room.
 /// </summary>
+[Serializable]
 public class DungeonRoom
 {   
     /// <summary>
@@ -55,6 +56,11 @@ public class DungeonRoom
     /// Only used when initialized using the grid constraints method. This holds the maximum Y grid constraint.
     /// </summary>
     private int myGridYMax;
+
+    /// <summary>
+    /// Used to determine if the room has been 'seen' by the user party.
+    /// </summary>
+    private bool mySeenFlag;
 
     /// <summary>
     /// **Unimplemented**
@@ -170,6 +176,21 @@ public class DungeonRoom
     /// <returns> Returns the maximum Y grid constraint. </returns>
     public int GetYMax() {
         return myGridYMax;
+    }
+
+    /// <summary>
+    /// An accessor for the seen flag. True if the user party has seen the room. To see a room, you must be at least adjacent to the room.
+    /// </summary>
+    /// <returns> True if the user has 'seen' the dungeon room. </returns>
+    public bool GetSeenFlag() {
+        return mySeenFlag;
+    }
+
+    /// <summary>
+    /// A mutator for the seen flag. True if the user party has seen the room. To see a room, you must be at least adjacent to the room.
+    /// </summary>
+    public void SetSeenFlag(bool theSeenFlag) {
+        mySeenFlag = theSeenFlag;
     }
 
     /// <summary>

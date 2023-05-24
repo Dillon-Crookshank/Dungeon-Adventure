@@ -5,6 +5,7 @@ using static UnityEngine.Debug;
 /// <summary>
 /// The DungeonMap class is a collection of DungeonRooms held in a Graph, represented as an Adjacency List.
 /// </summary>
+[Serializable]
 public class DungeonMap
 {
     /// <summary>
@@ -58,6 +59,7 @@ public class DungeonMap
     /// <summary>
     /// A nested class, used as the building block of the adjacency list.
     /// </summary>
+    [Serializable]
     private class GraphEntry {
         /// <summary>
         /// The dungeon room within this slot of the adjacency list.
@@ -143,6 +145,10 @@ public class DungeonMap
         }
 
         myFocusedRoom = myFocusedRoom.myAdjacentRooms[index];
+
+        foreach (GraphEntry entry in myFocusedRoom.myAdjacentRooms) {
+            entry.myRoom.SetSeenFlag(true);
+        }
     }
 
     /// <summary>
@@ -183,6 +189,12 @@ public class DungeonMap
 
         //Place initial focus on the room that was generated first.
         myFocusedRoom = myAdjacencyList[0];
+
+        myFocusedRoom.myRoom.SetSeenFlag(true);
+
+        foreach (GraphEntry entry in myFocusedRoom.myAdjacentRooms) {
+            entry.myRoom.SetSeenFlag(true);
+        }
     }
 
     /// <summary>

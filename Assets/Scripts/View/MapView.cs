@@ -103,6 +103,9 @@ public class MapView {
         foreach (int id in myIcons.Keys) {
             myIcons[id].Destroy();
         }
+
+        myRooms = new Dictionary<int, TiledSprite>();
+        myIcons = new Dictionary<int, TiledSprite>();
     }
 
     /// <summary>
