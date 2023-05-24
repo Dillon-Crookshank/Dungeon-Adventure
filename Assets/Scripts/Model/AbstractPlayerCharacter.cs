@@ -23,8 +23,8 @@ namespace DefaultNamespace
         /// <param name="theDefence">The defence of the AbstractPlayerCharacter.</param>
         /// <param name="theMana">The maximum mana of the AbstractPlayerCharacter.</param>
         /// <param name="theInitiative">The initiative of the AbstractPlayerCharacter.</param>
-        internal AbstractPlayerCharacter(string theName, double theHitpoints, double theAttack,
-     double theDefence, double theMana, int theInitiative) : base(theName, theHitpoints, theAttack,
+        internal AbstractPlayerCharacter(in string theClass, in double theHitpoints, in double theAttack,
+     in double theDefence, in double theMana, in int theInitiative) : base(theClass, theHitpoints, theAttack,
      theDefence, theMana, theInitiative)
         {
             experience = 0.0;

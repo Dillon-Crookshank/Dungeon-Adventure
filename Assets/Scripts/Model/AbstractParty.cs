@@ -56,7 +56,7 @@ internal abstract class AbstractParty
             return false;
         }
         partyPositions.Add(key, theActor);
-        theActor.partyPosition = key;
+        theActor.PartyPosition = key;
         return true;
     }
 
@@ -81,8 +81,8 @@ internal abstract class AbstractParty
         {
             return false;
         }
-        partyPositions.Remove(theActor.partyPosition);
-        theActor.partyPosition = thePosition;
+        partyPositions.Remove(theActor.PartyPosition);
+        theActor.PartyPosition = thePosition;
         partyPositions.Add(thePosition, theActor);
         return true;
     }

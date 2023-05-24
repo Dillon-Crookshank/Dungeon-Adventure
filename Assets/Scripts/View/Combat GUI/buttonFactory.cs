@@ -200,15 +200,15 @@ sealed class buttonFactory : MonoBehaviour
                     sb.Append(",");
                     sb.Append(actor.Name);
                     sb.Append(",");
-                    sb.Append(actor.currentHitpoints);
+                    sb.Append(actor.CurrentHitpoints);
                     sb.Append(",");
-                    sb.Append(actor.attack);
+                    sb.Append(actor.Attack);
                     sb.Append(",");
-                    sb.Append(actor.defence);
+                    sb.Append(actor.Defence);
                     sb.Append(",");
-                    sb.Append(actor.currentMana);
+                    sb.Append(actor.CurrentMana);
                     sb.Append(",");
-                    sb.Append(actor.combatInitiative);
+                    sb.Append(actor.CombatInitiative);
                 }
             }
             string sbResult = sb.ToString();

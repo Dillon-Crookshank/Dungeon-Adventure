@@ -35,7 +35,7 @@ namespace DefaultNamespace
 
             characterList = InitiativeRoll(thePlayerParty, theEnemyParty);
 
-            characterList.Sort((x, y) => y.combatInitiative - x.combatInitiative);
+            characterList.Sort((x, y) => y.CombatInitiative - x.CombatInitiative);
 
             while (thePlayerParty.isAllAlive && theEnemyParty.isAllAlive)
             {
@@ -43,7 +43,7 @@ namespace DefaultNamespace
                 foreach (AbstractCharacter character in characterList)
                 {
                     activeActor = character;
-                    Debug.LogFormat("{0}, initiative: {1}", activeActor.Name, activeActor.combatInitiative);
+                    Debug.LogFormat("{0}, initiative: {1}", activeActor.Name, activeActor.CombatInitiative);
                     await TurnOver(activeActor);
                     isEndOfTurn = false;
                 }
@@ -73,7 +73,7 @@ namespace DefaultNamespace
 
             foreach (AbstractCharacter actor in characters)
             {
-                actor.combatInitiative = (actor.initiative + rng.Next(1, 20));
+                actor.CombatInitiative = (actor.Initiative + rng.Next(1, 20));
             }
 
             return characters;
@@ -101,7 +101,7 @@ namespace DefaultNamespace
 
         public int ActorIndex()
         {
-            return activeActor.partyPosition;
+            return activeActor.PartyPosition;
         }
 
         public bool isPlayer()

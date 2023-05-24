@@ -25,8 +25,8 @@ namespace DefaultNamespace
             {
                 return false;
             }
-            double theDamage = Math.Max(1, attack - theTarget.defence);
-            theTarget.currentHitpoints = (-1 * theDamage);
+            double theDamage = Math.Max(1, Attack - theTarget.Defence);
+            theTarget.CurrentHitpoints = (-1 * theDamage);
             return true;
         }
 
@@ -40,13 +40,13 @@ namespace DefaultNamespace
             {
                 return false;
             }
-            if (currentMana < 5)
+            if (CurrentMana < 5)
             {
                 return false;
             }
-            currentMana = -5;
-            double theDamage = Math.Max(1, 2 * (attack - (theTarget.defence / 2)));
-            theTarget.currentHitpoints = (-1 * theDamage);
+            CurrentMana = -5;
+            double theDamage = Math.Max(1, 2 * (Attack - (theTarget.Defence / 2)));
+            theTarget.CurrentHitpoints = (-1 * theDamage);
             return true;
         }
 
