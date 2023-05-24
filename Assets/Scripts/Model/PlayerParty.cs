@@ -8,7 +8,7 @@ namespace DefaultNamespace
 
         internal PlayerParty(AbstractPlayerCharacter theHero)
         {
-            partyPositions = new Dictionary<int, AbstractActor>();
+            partyPositions = new Dictionary<int, AbstractCharacter>();
             AddActor(theHero);
             isAllAlive = true;
         }

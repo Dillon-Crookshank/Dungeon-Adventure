@@ -18,15 +18,15 @@ namespace DefaultNamespace
         /// A basic attack that simply takes deals the attack value - theTargets 
         /// defence value as damage, with a minimum of 1.0.
         /// </summary>
-        /// <param name="theTarget">The <see cref"AbstractActor"/> being targeted with this attack.</param>
-        private bool basicAttack(AbstractActor theTarget)
+        /// <param name="theTarget">The <see cref"AbstractCharacter"/> being targeted with this attack.</param>
+        private bool basicAttack(AbstractCharacter theTarget)
         {
             if (theTarget.GetType() == typeof(AbstractEnemy))
             {
                 return false;
             }
-            double theDamage = Math.Max(1, GetAttack() - theTarget.GetDefence());
-            theTarget.SetCurrentHitpoints(-1 * theDamage);
+            double theDamage = Math.Max(1, attack - theTarget.defence);
+            theTarget.currentHitpoints = (-1 * theDamage);
             return true;
         }
 
@@ -40,13 +40,13 @@ namespace DefaultNamespace
             {
                 return false;
             }
-            if (GetCurrentMana() < 5)
+            if (currentMana < 5)
             {
                 return false;
             }
-            SetCurrentMana(-5);
-            double theDamage = Math.Max(1, 2 * (GetAttack() - (theTarget.GetDefence() / 2)));
-            theTarget.SetCurrentHitpoints(-1 * theDamage);
+            currentMana = -5;
+            double theDamage = Math.Max(1, 2 * (attack - (theTarget.defence / 2)));
+            theTarget.currentHitpoints = (-1 * theDamage);
             return true;
         }
 

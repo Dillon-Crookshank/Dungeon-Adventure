@@ -1,7 +1,7 @@
 namespace DefaultNamespace
 {
 
-    internal class PlayerCharacter : AbstractActor
+    internal class PlayerCharacter : AbstractCharacter
     {
 
         /// <summary>
