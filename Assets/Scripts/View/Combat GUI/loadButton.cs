@@ -15,10 +15,6 @@ namespace DefaultNamespace
         /// </summary>
         public override void PressButton()
         {
-            // string path = Application.persistentDataPath + "/test.txt";
-            // StreamReader reader = new StreamReader(path);
-            // string data = reader.ReadToEnd();
-            // reader.Close();
             onButtonClick.Raise(this, new DataPacket(DeserializeParty("testParty.bin"), "LoadRequest", "Button Factory"));
         }
 
