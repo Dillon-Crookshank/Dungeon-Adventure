@@ -78,10 +78,12 @@ sealed class buttonFactory : MonoBehaviour
     /// </summary>
     void Start()
     {
-        testHero h1 = new testHero("Knight 1", 25, 3, 2, 10, 5);
-        testHero h2 = new testHero("Knight 2", 25, 7, 9, 10, 5);
+        testHero h1 = new testHero("3hp", 3, 3, 2, 10, 5);
+        testHero h2 = new testHero("25hp", 25, 7, 9, 10, 5);
+        testHero h3 = new testHero("10hp", 10, 7, 9, 10, 5);
         myTestParty = new PlayerParty(h1);
         myTestParty.AddActor(h2);
+        myTestParty.AddActor(h3);
         myTestPartyDictionary = myTestParty.GetPartyPositions();
 
         Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
@@ -180,91 +182,12 @@ sealed class buttonFactory : MonoBehaviour
         if (dPacket.GetLabel() == "SaveRequest")
         {
             Debug.Log("A save was requested");
-            // StringBuilder sb = new StringBuilder();
-            // bool moreThanOne = false;
-            // for (int i = 1; i <= AbstractParty.MAX_PARTY_SIZE; i++)
-            // {
-            //     if (myTestPartyDictionary.ContainsKey(i))
-            //     {
-            //         if (moreThanOne)
-            //         {
-            //             sb.Append("\n");
-            //         }
-            //         else
-            //         {
-            //             moreThanOne = true;
-            //         }
-            //         AbstractCharacter actor = myTestPartyDictionary[i];
-            //         sb.Append(i);
-            //         sb.Append(",");
-            //         sb.Append(actor.Name);
-            //         sb.Append(",");
-            //         sb.Append(actor.CurrentHitpoints);
-            //         sb.Append(",");
-            //         sb.Append(actor.Attack);
-            //         sb.Append(",");
-            //         sb.Append(actor.Defence);
-            //         sb.Append(",");
-            //         sb.Append(actor.CurrentMana);
-            //         sb.Append(",");
-            //         sb.Append(actor.CombatInitiative);
-            //     }
-            // }
-            // string sbResult = sb.ToString();
-            // Debug.Log(sbResult);
             changeFileRequest.Raise(this, new DataPacket(myTestParty, "PartyData", "Save"));
         }
         else if (dPacket.GetLabel() == "LoadRequest")
         {
             Debug.Log("A load was requested");
             myTestParty = (PlayerParty) dPacket.GetData();
-            // string dPacketString = (string)dPacket.GetData();
-            // string[] dPacketPartyData = dPacketString.Split("\n");
-
-            // bool stillLoadFlag = true;
-
-            // Dictionary<int, AbstractCharacter> loadPartyDictionary =
-            //     new Dictionary<int, AbstractCharacter>();
-
-            // foreach (string s in dPacketPartyData)
-            // {
-            //     Debug.Log(s);
-            //     string[] heroData = s.Split(",");
-            //     testHero loadActor = checkValidHero(heroData);
-            //     if (
-            //         loadActor != null
-            //         && !(loadPartyDictionary.ContainsKey(Int32.Parse(heroData[0])))
-            //     )
-            //     {
-            //         loadPartyDictionary.Add(Int32.Parse(heroData[0]), loadActor);
-            //     }
-            //     else
-            //     {
-            //         stillLoadFlag = false;
-            //         break;
-            //     }
-            // }
-            // if (stillLoadFlag)
-            // {
-            //     PlayerParty loadParty = null;
-            //     bool moreThanOne = false;
-            //     for (int i = 1; i <= 6; i++)
-            //     {
-            //         if (loadPartyDictionary.ContainsKey(i))
-            //         {
-            //             if (!moreThanOne)
-            //             {
-            //                 moreThanOne = true;
-            //                 loadParty = new PlayerParty((testHero)loadPartyDictionary[i]);
-            //             }
-            //             else
-            //             {
-            //                 loadParty.AddActor(loadPartyDictionary[i]);
-            //             }
-            //         }
-            //     }
-            //     myTestParty = loadParty;
-            // }
         }
     }
 
