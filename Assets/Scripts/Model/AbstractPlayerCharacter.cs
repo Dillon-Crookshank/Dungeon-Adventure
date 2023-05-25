@@ -1,6 +1,8 @@
+using System;
+
 namespace DefaultNamespace
 {
-
+    [Serializable]
     internal abstract class AbstractPlayerCharacter : AbstractCharacter
     {
 

@@ -1,9 +1,12 @@
+using System;
+
 namespace DefaultNamespace
 {
 
     /// An abstract representation of an Character in the Dungeon Adventure.
     /// All enemies and player characters inherit from this class, and this defines
     /// basic behaviours and fields that are universal.
+    [Serializable]
     internal abstract class AbstractCharacter
     {
 

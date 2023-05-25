@@ -180,90 +180,91 @@ sealed class buttonFactory : MonoBehaviour
         if (dPacket.GetLabel() == "SaveRequest")
         {
             Debug.Log("A save was requested");
-            StringBuilder sb = new StringBuilder();
-            bool moreThanOne = false;
-            for (int i = 1; i <= AbstractParty.MAX_PARTY_SIZE; i++)
-            {
-                if (myTestPartyDictionary.ContainsKey(i))
-                {
-                    if (moreThanOne)
-                    {
-                        sb.Append("\n");
-                    }
-                    else
-                    {
-                        moreThanOne = true;
-                    }
-                    AbstractCharacter actor = myTestPartyDictionary[i];
-                    sb.Append(i);
-                    sb.Append(",");
-                    sb.Append(actor.Name);
-                    sb.Append(",");
-                    sb.Append(actor.CurrentHitpoints);
-                    sb.Append(",");
-                    sb.Append(actor.Attack);
-                    sb.Append(",");
-                    sb.Append(actor.Defence);
-                    sb.Append(",");
-                    sb.Append(actor.CurrentMana);
-                    sb.Append(",");
-                    sb.Append(actor.CombatInitiative);
-                }
-            }
-            string sbResult = sb.ToString();
-            Debug.Log(sbResult);
-            changeFileRequest.Raise(this, new DataPacket(sbResult, "PartyData", "Save"));
+            // StringBuilder sb = new StringBuilder();
+            // bool moreThanOne = false;
+            // for (int i = 1; i <= AbstractParty.MAX_PARTY_SIZE; i++)
+            // {
+            //     if (myTestPartyDictionary.ContainsKey(i))
+            //     {
+            //         if (moreThanOne)
+            //         {
+            //             sb.Append("\n");
+            //         }
+            //         else
+            //         {
+            //             moreThanOne = true;
+            //         }
+            //         AbstractCharacter actor = myTestPartyDictionary[i];
+            //         sb.Append(i);
+            //         sb.Append(",");
+            //         sb.Append(actor.Name);
+            //         sb.Append(",");
+            //         sb.Append(actor.CurrentHitpoints);
+            //         sb.Append(",");
+            //         sb.Append(actor.Attack);
+            //         sb.Append(",");
+            //         sb.Append(actor.Defence);
+            //         sb.Append(",");
+            //         sb.Append(actor.CurrentMana);
+            //         sb.Append(",");
+            //         sb.Append(actor.CombatInitiative);
+            //     }
+            // }
+            // string sbResult = sb.ToString();
+            // Debug.Log(sbResult);
+            changeFileRequest.Raise(this, new DataPacket(myTestParty, "PartyData", "Save"));
         }
         else if (dPacket.GetLabel() == "LoadRequest")
         {
             Debug.Log("A load was requested");
-            string dPacketString = (string)dPacket.GetData();
-            string[] dPacketPartyData = dPacketString.Split("\n");
+            myTestParty = (PlayerParty) dPacket.GetData();
+            // string dPacketString = (string)dPacket.GetData();
+            // string[] dPacketPartyData = dPacketString.Split("\n");
 
-            bool stillLoadFlag = true;
+            // bool stillLoadFlag = true;
 
-            Dictionary<int, AbstractCharacter> loadPartyDictionary =
-                new Dictionary<int, AbstractCharacter>();
+            // Dictionary<int, AbstractCharacter> loadPartyDictionary =
+            //     new Dictionary<int, AbstractCharacter>();
 
-            foreach (string s in dPacketPartyData)
-            {
-                Debug.Log(s);
-                string[] heroData = s.Split(",");
-                testHero loadActor = checkValidHero(heroData);
-                if (
-                    loadActor != null
-                    && !(loadPartyDictionary.ContainsKey(Int32.Parse(heroData[0])))
-                )
-                {
-                    loadPartyDictionary.Add(Int32.Parse(heroData[0]), loadActor);
-                }
-                else
-                {
-                    stillLoadFlag = false;
-                    break;
-                }
-            }
-            if (stillLoadFlag)
-            {
-                PlayerParty loadParty = null;
-                bool moreThanOne = false;
-                for (int i = 1; i <= 6; i++)
-                {
-                    if (loadPartyDictionary.ContainsKey(i))
-                    {
-                        if (!moreThanOne)
-                        {
-                            moreThanOne = true;
-                            loadParty = new PlayerParty((testHero)loadPartyDictionary[i]);
-                        }
-                        else
-                        {
-                            loadParty.AddActor(loadPartyDictionary[i]);
-                        }
-                    }
-                }
-                myTestParty = loadParty;
-            }
+            // foreach (string s in dPacketPartyData)
+            // {
+            //     Debug.Log(s);
+            //     string[] heroData = s.Split(",");
+            //     testHero loadActor = checkValidHero(heroData);
+            //     if (
+            //         loadActor != null
+            //         && !(loadPartyDictionary.ContainsKey(Int32.Parse(heroData[0])))
+            //     )
+            //     {
+            //         loadPartyDictionary.Add(Int32.Parse(heroData[0]), loadActor);
+            //     }
+            //     else
+            //     {
+            //         stillLoadFlag = false;
+            //         break;
+            //     }
+            // }
+            // if (stillLoadFlag)
+            // {
+            //     PlayerParty loadParty = null;
+            //     bool moreThanOne = false;
+            //     for (int i = 1; i <= 6; i++)
+            //     {
+            //         if (loadPartyDictionary.ContainsKey(i))
+            //         {
+            //             if (!moreThanOne)
+            //             {
+            //                 moreThanOne = true;
+            //                 loadParty = new PlayerParty((testHero)loadPartyDictionary[i]);
+            //             }
+            //             else
+            //             {
+            //                 loadParty.AddActor(loadPartyDictionary[i]);
+            //             }
+            //         }
+            //     }
+            //     myTestParty = loadParty;
+            // }
         }
     }
 

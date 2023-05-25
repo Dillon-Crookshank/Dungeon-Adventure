@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using DefaultNamespace;
@@ -5,6 +6,7 @@ using DefaultNamespace;
 /// <summary>
 /// An abstract class representing a party of AbstractActors.
 /// </summary>
+[Serializable]
 internal abstract class AbstractParty
 {
 

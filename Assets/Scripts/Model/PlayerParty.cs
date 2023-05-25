@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace DefaultNamespace
 {
-
+    [Serializable]
     internal class PlayerParty : AbstractParty
     {
 

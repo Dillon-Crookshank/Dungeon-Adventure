@@ -108,11 +108,12 @@ sealed class testButton : MonoBehaviour
     {
         hasHero = (characterRepresentative != null);
 
-        if (hasHero)
+        if (hasHero && name != "Template")
         {
             stats[0].text = "" + characterRepresentative.Attack;
             stats[1].text = "" + characterRepresentative.Defence;
             stats[2].text = "" + characterRepresentative.Name;
+            
             float healthPercentage = (float)(
                 characterRepresentative.CurrentHitpoints
                 / characterRepresentative.MaxHitpoints

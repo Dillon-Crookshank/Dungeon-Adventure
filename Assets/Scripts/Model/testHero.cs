@@ -3,6 +3,7 @@ using System;
 namespace DefaultNamespace
 {
 
+    [Serializable]
     internal class testHero : AbstractPlayerCharacter
     {
 
