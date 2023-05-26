@@ -40,8 +40,8 @@ public class DungeonController : MonoBehaviour {
     /// The Update method is called once per frame while the DungeonController GameObject is active.
     /// </summary>
     public void Update() {
-        UpdateMapView();
-        //DebugMapView();
+        //UpdateMapView();
+        DebugMapView();
         myMapCamera.UpdateCamera();
     }
 
@@ -55,6 +55,10 @@ public class DungeonController : MonoBehaviour {
 
         for (int i = 0; myMapModel.GetNthAdjacentRoom(i) != null; i++) {
             myMapView.SetSecondaryFocus(myMapModel.GetNthAdjacentRoom(i));
+
+            if (myMapModel.GetNthAdjacentRoom(i).GetEnemyFlag()) {
+                myMapView.GiveIcon(myMapModel.GetNthAdjacentRoom(i), mySprites[3]);
+            }
         }
 
 
@@ -64,10 +68,11 @@ public class DungeonController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
             myMapModel = DeserializeMap("myMap.bin");
+            
+            //Fix the map view accordingly
             myMapView.Clear();
 
-
-            for (int i = 0; myMapModel.GetNthRoom(i) != null; i++) {
+            for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
                 if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
                     myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
                 }
@@ -81,8 +86,12 @@ public class DungeonController : MonoBehaviour {
     private void DebugMapView() {
         myMapView.UnfocusAll();
 
-        for (int i = 0; myMapModel.GetNthRoom(i) != null; i++) {
+        for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
             myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
+
+            if (myMapModel.GetNthRoom(i).GetEnemyFlag()) {
+                myMapView.GiveIcon(myMapModel.GetNthRoom(i), mySprites[3]);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Return)) {
@@ -100,7 +109,7 @@ public class DungeonController : MonoBehaviour {
             myMapView.Clear();
 
 
-            for (int i = 0; myMapModel.GetNthRoom(i) != null; i++) {
+            for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
                 if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
                     myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
                 }
@@ -147,15 +156,10 @@ public class DungeonController : MonoBehaviour {
     /// <param name="theID"> The ID of the DungeonRoom that the Primary Focus of the map should be set to.</param>
     public void MapViewListener(int theID) {
         //We use the ID to look through the adjacent rooms until we find a matching ID
-        int i = 0;
-        while ( myMapModel.GetNthAdjacentRoom(i) != null
-            && theID != myMapModel.GetNthAdjacentRoom(i).GetID()) {
-            i++;
-        }
-
-        //Use the index to update the model if the index is valid.
-        if (myMapModel.GetNthAdjacentRoom(i) != null) {          
-            myMapModel.FocusNthAdjacentRoom(i);
+        for (int i = 0; myMapModel.GetNthAdjacentRoom(i) != null; i++) {
+            if (theID == myMapModel.GetNthAdjacentRoom(i).GetID()) {
+                myMapModel.FocusNthAdjacentRoom(i);
+            }
         }
     }
 }

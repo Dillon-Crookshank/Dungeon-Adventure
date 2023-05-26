@@ -13,7 +13,7 @@ public class DungeonRoom
     private int myHash;
 
     /// <summary>
-    /// The unique ID number of the room.
+    /// The unique ID number of the room. This number usually directly correlates with the index of this room inside a collection.
     /// </summary>
     private int myID;
 
@@ -63,14 +63,9 @@ public class DungeonRoom
     private bool mySeenFlag;
 
     /// <summary>
-    /// **Unimplemented**
+    /// Used to determine if an enemy party exists in this room.
     /// </summary>
-    private Stack<Object> myLoot;
-
-    /// <summary>
-    /// **Unimplemented**
-    /// </summary>
-    private Object myEnemyParty;
+    private bool myEnemyFlag;
 
     /// <summary>
     /// Creates a DungeonRoom Given an integer domain that is snapped to a grid. 
@@ -95,7 +90,7 @@ public class DungeonRoom
      }
 
     /// <summary>
-    /// An accessor for the room ID number.
+    /// An accessor for the room ID number.  This number usually directly correlates with the index of this room inside a collection.
     /// </summary>
     /// <returns> The ID number of the room. </returns>
     public int GetID() {
@@ -103,7 +98,7 @@ public class DungeonRoom
     }
 
     /// <summary>
-    /// A mutator for the room ID number.
+    /// A mutator for the room ID number.  This number usually directly correlates with the index of this room inside a collection.
     /// </summary>
     /// <returns> The ID number of the room. </returns>
     public void SetID(int theID) {
@@ -194,33 +189,17 @@ public class DungeonRoom
     }
 
     /// <summary>
-    /// An accessor for the top of the Loot Stack. Pops the top of the stack once per method call, until none is left in the stack.
+    /// An accessor for the enemy flag.
     /// </summary>
-    /// <returns> The top of the loot stack. </returns>
-    public Object PopLoot()
-    {
-        if (myLoot == null || myLoot.Count == 0)
-        {
-            return null;
-        }
-
-        return myLoot.Pop();
+    /// <returns> True if an enemy exists inside the room; false otherwise. </returns>
+    public bool GetEnemyFlag() {
+        return myEnemyFlag;
     }
 
     /// <summary>
-    /// A predicate function to check if the room still contains uncollected loot.
+    /// A mutator for the enemy flag.
     /// </summary>
-    /// <returns> True if the room still contains loot. False otherwise. </returns>
-    public bool HasLoot()
-    {
-        return myLoot.Count != 0;
-    }
-
-    /// <summary>
-    /// Returns a reference to the stored enemy party.
-    /// </summary>
-    /// <returns> A reference to the enemy party that is stored inside the dungeon room. </returns>
-    public Object GetEnemyParty() {
-        return myEnemyParty;
+    public void SetEnemyFlag(in bool theEnemyFlag) {
+        myEnemyFlag = theEnemyFlag;
     }
 }
