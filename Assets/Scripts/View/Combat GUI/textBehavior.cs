@@ -6,9 +6,10 @@ sealed class textBehavior : MonoBehaviour
 
     public void ReceiveDataPacket(Component sender, object data)
     {
-        DataPacket dPacket = (DataPacket) data;
-        if (dPacket.GetLabel() == "NewTextString"){
-            textMesh.text = ((string) dPacket.GetData());
+        DataPacket dPacket = (DataPacket)data;
+        if (dPacket.GetLabel() == "NewTextString")
+        {
+            textMesh.text = ((string)dPacket.GetData());
         }
     }
 }

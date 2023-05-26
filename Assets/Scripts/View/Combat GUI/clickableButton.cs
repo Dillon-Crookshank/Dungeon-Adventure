@@ -3,7 +3,8 @@ using UnityEngine;
 /// <summary>
 /// An abstraction of a GUI button that handles file editing.
 /// </summary>
-namespace DefaultNamespace{
+namespace DefaultNamespace
+{
     public abstract class clickableButton : MonoBehaviour
     {
         /// <summary>
@@ -15,6 +16,7 @@ namespace DefaultNamespace{
         /// The GameEvent to be called whenever there is a file request.
         /// </summary>
         public GameEvent onButtonClick;
+
         void Start()
         {
             rend = gameObject.GetComponent<SpriteRenderer>();

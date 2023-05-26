@@ -1,9 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// An instanceable unity button. By default, the button turns blue when hovering over, turns green when left-clicking, and turns red when right-clicking.
+/// An instantiable unity button. By default, the button turns blue when hovering over, turns green when left-clicking, and turns red when right-clicking.
 /// </summary>
-public class SlicedSprite {
+public class TiledSprite {
     /// <summary>
     /// The underlying GameObject of the button.
     /// </summary>
@@ -16,14 +16,14 @@ public class SlicedSprite {
     /// <param name="theSprite"> The initial Sprite of the button. The Sprite must be 9-sliced. </param>
     /// <param name="thePosition"> The Position of the button, centered on the button. </param>
     /// <param name="theSize"> The size of the button. </param>
-    public SlicedSprite(string theName, Sprite theSprite, Vector3 thePosition, Vector2 theSize) {
+    public TiledSprite(string theName, Sprite theSprite, Vector3 thePosition, Vector2 theSize) {
         myObject = new GameObject(
             theName,
             typeof(SpriteRenderer),
             typeof(BoxCollider2D)
         );
 
-        (myObject.GetComponent<SpriteRenderer>()).drawMode = SpriteDrawMode.Sliced;
+        (myObject.GetComponent<SpriteRenderer>()).drawMode = SpriteDrawMode.Tiled;
         myObject.transform.localScale = new Vector3(1, 1, 0);
 
         SetSprite(theSprite);
@@ -73,10 +73,17 @@ public class SlicedSprite {
     }
 
     /// <summary>
-    /// Lets you add a Monobehaviour script to the button for added functionality.
+    /// Lets you add a MonoBehaviour script to the button for added functionality.
     /// </summary>
     /// <param name="theComponent"> The type of the MonoBehavior script. </param>
     public void AddComponent(System.Type theComponent) {
         myObject.AddComponent(theComponent);
+    }
+
+    /// <summary>
+    /// Destroys the underlying game object.
+    /// </summary>
+    public void Destroy() {
+        GameObject.Destroy(myObject);
     }
 }
