@@ -53,7 +53,7 @@ namespace DefaultNamespace
         /// A heavier attack that uses 5 mana, deals twice the damage, and ignores half the targets armor.
         /// </summary>
         /// <param name="theTarget"></param>
-        internal void heavyAttack(AbstractEnemy theTarget)
+        internal void heavyAttack(EnemyCharacter theTarget)
         {
             if (CurrentMana < 5.0)
             {

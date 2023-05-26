@@ -78,12 +78,12 @@ sealed class buttonFactory : MonoBehaviour
     /// </summary>
     void Start()
     {
-        testHero h1 = new testHero("3hp", 3, 3, 2, 10, 5);
-        testHero h2 = new testHero("25hp", 25, 7, 9, 10, 5);
-        testHero h3 = new testHero("10hp", 10, 7, 9, 10, 5);
+        PlayerCharacter h1 = new PlayerCharacter("3hp", 3, 3, 2, 10, 5);
+        PlayerCharacter h2 = new PlayerCharacter("25hp", 25, 7, 9, 10, 5);
+        PlayerCharacter h3 = new PlayerCharacter("10hp", 10, 7, 9, 10, 5);
         myTestParty = new PlayerParty(h1);
-        myTestParty.AddActor(h2);
-        myTestParty.AddActor(h3);
+        myTestParty.AddCharacter(h2);
+        myTestParty.AddCharacter(h3);
         myTestPartyDictionary = myTestParty.GetPartyPositions();
 
         Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
@@ -187,7 +187,7 @@ sealed class buttonFactory : MonoBehaviour
         else if (dPacket.GetLabel() == "LoadRequest")
         {
             Debug.Log("A load was requested");
-            myTestParty = (PlayerParty) dPacket.GetData();
+            myTestParty = (PlayerParty)dPacket.GetData();
         }
     }
 
@@ -195,7 +195,7 @@ sealed class buttonFactory : MonoBehaviour
     /// Checks if a given string array representation is a valid set of data.
     /// </summary>
     /// <param name="hero"> The array representation of the hero. </param>
-    private testHero checkValidHero(string[] hero)
+    private PlayerCharacter checkValidHero(string[] hero)
     {
         Debug.Log(hero.Length);
         if (hero.Length != 7)
@@ -212,7 +212,7 @@ sealed class buttonFactory : MonoBehaviour
                     return null;
                 }
             }
-            return new testHero(
+            return new PlayerCharacter(
                 hero[1], // Name
                 loadStats[0], // HP
                 loadStats[1], // Attack
