@@ -30,7 +30,7 @@ public class MapObserver : MonoBehaviour {
 
             //We isolate the hashcode from the name so we can send it to the GameController.
             int ID = Int32.Parse((this.name.Split(':'))[1]);
-            (GameObject.FindWithTag("GameController")).SendMessage("MapViewListener", ID);
+            (GameObject.Find("Dungeon Controller")).SendMessage("MapViewListener", ID);
         }
     }
 }

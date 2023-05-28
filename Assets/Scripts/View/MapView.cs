@@ -46,6 +46,40 @@ public class MapView {
         myIcons = new Dictionary<int, TiledSprite>();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="theRoom"></param>
+    /// <param name="theSprite"></param>
+    public void GiveSprite(DungeonRoom theRoom, Sprite theSprite) {
+        //Create the TiledSprite if it doesn't exist yet
+        if (!myRooms.ContainsKey(theRoom.GetID())) {
+            myRooms.Add(
+                theRoom.GetID(),
+                new TiledSprite(
+                    $"Room:{theRoom.GetID()}",
+                    theSprite,
+                    new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, 0),
+                    new Vector2(theRoom.GetW(), theRoom.GetH())
+                )
+            );
+
+            //Add observer and listener scripts to add UI functionality
+            myRooms[theRoom.GetID()].AddComponent(typeof(MapObserver));
+            myRooms[theRoom.GetID()].AddComponent(typeof(ButtonListener));
+        }
+        else {
+            //If the room already exists, just update it's sprite
+            myRooms[theRoom.GetID()].SetSprite(theSprite);
+        }
+    }
+
+    public void GiveAllSprite(Sprite theSprite) {
+        foreach (TiledSprite button in myRooms.Values) {
+            button.SetSprite(theSprite);
+        }
+    }
+
     //Create a "SetIcon" method that takes a dungeonRoom, checks if an icon already exists on it, and sets/creates an icon based on the given sprite/state
 
     /// <summary>
@@ -95,7 +129,7 @@ public class MapView {
     /// <summary>
     /// Destroys every view component in the map
     /// </summary>
-    public void Clear() {
+    public void ClearMap() {
         foreach (int id in myRooms.Keys) {
             myRooms[id].Destroy();
         }
@@ -121,7 +155,7 @@ public class MapView {
                 new TiledSprite(
                     $"Icon:{theRoom.GetID()}",
                     theIcon,
-                    new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, 0),
+                    new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, -0.1f),
                     new Vector2(1, 1)
                 )
             );

@@ -14,7 +14,28 @@ public class DungeonController : MonoBehaviour {
     [SerializeField]
     private Sprite[] mySprites;
 
-    private CameraController myMapCamera;
+    /// <summary>
+    /// A GameObject reference to the map camera. **Must initialize by using the Unity Editor**.
+    /// </summary>
+    [SerializeField]
+    private GameObject myMapCamera;
+
+    /// <summary>
+    /// A GameObject reference to the main menu camera. **Must initialize by using the Unity Editor**.
+    /// </summary>
+    [SerializeField]
+    private GameObject myMenuCamera;
+
+    /// <summary>
+    /// A GameObject reference to the combat camera. **Must initialize by using the Unity Editor**.
+    /// </summary>
+    [SerializeField]
+    private GameObject myCombatCamera;
+
+    /// <summary>
+    /// The controller to the map camera. Allows for the camera to move and zoom while respecting bounds.
+    /// </summary>
+    private CameraController myMapCameraController;
 
     /// <summary>
     /// The View component that displays the Map.
@@ -30,9 +51,12 @@ public class DungeonController : MonoBehaviour {
     /// The Start method is run once, after the DungeonController GameObject is initialized.
     /// </summary>
     public void Start() {
-        myMapCamera = new CameraController("Main Camera", new Vector3(0, 0, -1), (4.5f, 18.0f), (32.0f, 18.0f));
-        myMapView = new MapView(new Vector2(0, 0), mySprites);
+        myMapCameraController = new CameraController(myMapCamera, myMapCamera.transform.localPosition, (4.5f, 18.0f), (32.0f, 18.0f));
+        myMapView = new MapView(myMapCamera.transform.localPosition, mySprites);
         myMapModel = new DungeonMap();
+
+        myMapCamera.SetActive(false);
+        myCombatCamera.SetActive(true);
     }
 
 
@@ -40,21 +64,36 @@ public class DungeonController : MonoBehaviour {
     /// The Update method is called once per frame while the DungeonController GameObject is active.
     /// </summary>
     public void Update() {
-        //UpdateMapView();
-        DebugMapView();
-        myMapCamera.UpdateCamera();
+        UpdateMapView();
+        //DebugMapView();
+        myMapCameraController.UpdateCamera();
+
+        if (Input.GetKeyDown(KeyCode.Keypad1)) {
+            myMapCamera.SetActive(true);
+            myCombatCamera.SetActive(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad2)) {
+            myMapCamera.SetActive(false);
+            myCombatCamera.SetActive(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad3)) {
+            
+        }
     }
 
     /// <summary>
     /// Called once per frame to keep the MapView up to date with the MapModel.
     /// </summary>
     private void UpdateMapView() {
-        //We call UnfocusAll to reset the mapView
-        myMapView.UnfocusAll();
-        myMapView.SetPrimaryFocus(myMapModel.GetFocusedRoom());
+        myMapView.GiveAllSprite(mySprites[2]);
 
+        myMapView.GiveSprite(myMapModel.GetFocusedRoom(), mySprites[0]);
+
+        //Look at each adjacent room and give them the secondary focus sprite
         for (int i = 0; myMapModel.GetNthAdjacentRoom(i) != null; i++) {
-            myMapView.SetSecondaryFocus(myMapModel.GetNthAdjacentRoom(i));
+            myMapView.GiveSprite(myMapModel.GetNthAdjacentRoom(i), mySprites[1]);
 
             if (myMapModel.GetNthAdjacentRoom(i).GetEnemyFlag()) {
                 myMapView.GiveIcon(myMapModel.GetNthAdjacentRoom(i), mySprites[3]);
@@ -69,12 +108,11 @@ public class DungeonController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
             myMapModel = DeserializeMap("myMap.bin");
             
-            //Fix the map view accordingly
-            myMapView.Clear();
-
+            //Fix the map view
+            myMapView.ClearMap();
             for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
                 if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
-                    myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
+                    myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
                 }
             }
         }
@@ -84,10 +122,8 @@ public class DungeonController : MonoBehaviour {
     /// Shows the entire map at once. Every time you press enter, it generates a new dungeon.
     /// </summary>
     private void DebugMapView() {
-        myMapView.UnfocusAll();
-
         for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
-            myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
+            myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
 
             if (myMapModel.GetNthRoom(i).GetEnemyFlag()) {
                 myMapView.GiveIcon(myMapModel.GetNthRoom(i), mySprites[3]);
@@ -96,8 +132,8 @@ public class DungeonController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Return)) {
             myMapModel = new DungeonMap();
-            myMapView.Clear();
-            myMapView = new MapView(new Vector2(0, 0), mySprites);
+            myMapView.ClearMap();
+            //myMapView = new MapView(new Vector2(0, 0), mySprites);
         }
 
         if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
@@ -106,12 +142,12 @@ public class DungeonController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
             myMapModel = DeserializeMap("myMap.bin");
-            myMapView.Clear();
+            myMapView.ClearMap();
 
 
             for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
                 if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
-                    myMapView.SetSecondaryFocus(myMapModel.GetNthRoom(i));
+                    myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
                 }
             }
         }

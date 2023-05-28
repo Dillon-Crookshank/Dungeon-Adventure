@@ -64,8 +64,18 @@ public class CameraController {
     /// <param name="theOrigin"> The point where the Axis Bounds are centered about. </param>
     /// <param name="theSizeBounds"> This is a (float, float) tuple, where the first entry is the minimum camera size, and the second entry is the maximum camera size, both in game units. </param>
     /// <param name="theAxisBounds"> This is a (float, float) tuple, where the first entry is the absolute maximum x-coordinate, and the second entry is the absolute maximum y-coordinate. </param>
-    public CameraController(string theName, Vector3 theOrigin, (float, float) theSizeBounds, (float, float) theAxisBounds) {
-        myCamera = GameObject.Find(theName);
+    public CameraController(string theName, Vector3 theOrigin, (float, float) theSizeBounds, (float, float) theAxisBounds) 
+        : this(GameObject.Find(theName), theOrigin, theSizeBounds, theAxisBounds) {}
+
+    /// <summary>
+    /// Creates a new camera controller. Does not create a Camera GameObject. You must create the camera in the Unity Editor first.
+    /// </summary>
+    /// <param name="theCamera"> The game object reference of the camera. </param>
+    /// <param name="theOrigin"> The point where the Axis Bounds are centered about. </param>
+    /// <param name="theSizeBounds"> This is a (float, float) tuple, where the first entry is the minimum camera size, and the second entry is the maximum camera size, both in game units. </param>
+    /// <param name="theAxisBounds"> This is a (float, float) tuple, where the first entry is the absolute maximum x-coordinate, and the second entry is the absolute maximum y-coordinate. </param>
+    public CameraController(GameObject theCamera, Vector3 theOrigin, (float, float) theSizeBounds, (float, float) theAxisBounds) {
+        myCamera = theCamera;
 
         myOrigin = theOrigin;
 
@@ -82,6 +92,10 @@ public class CameraController {
     /// Put inside GameController.Update(). Where input is checked and the camera is moved.
     /// </summary>
     public void UpdateCamera() {
+        //Don't do anything if the camera isn't active
+        if (!myCamera.activeSelf) {
+            return;
+        }
         
         DisplaceCameraSize(Input.mouseScrollDelta.y / -2);
 
@@ -137,7 +151,7 @@ public class CameraController {
     /// Returns the position of the camera.
     /// </summary>
     /// <returns> The position of the camera. </returns>
-    public Vector3 GetCameraPosition() {
+    private Vector3 GetCameraPosition() {
         return myCamera.transform.localPosition;
     }
 
@@ -145,7 +159,7 @@ public class CameraController {
     /// Changes the position of the camera. The given point is clamped to values such that the specified camera bounds are respected after the change in position.
     /// </summary>
     /// <param name="thePosition"> The new position of the camera. </param>
-    public void SetCameraPosition(Vector3 thePosition) {
+    private void SetCameraPosition(Vector3 thePosition) {
         //Clamp the values to keep the camera within the proper bounds
         float y = Math.Clamp(thePosition.y, -myYBound + GetCameraSize() + myOrigin.y, myYBound - GetCameraSize() + myOrigin.y);
         float x = Math.Clamp(thePosition.x, -myXBound + (GetCameraSize() / ASPECT_Y * ASPECT_X)  + myOrigin.x, myXBound - (GetCameraSize() / ASPECT_Y * ASPECT_X)  + myOrigin.x);
@@ -157,7 +171,7 @@ public class CameraController {
     /// Applies the given displacement vector to the cameras position.
     /// </summary>
     /// <param name="theDelta"> The vector displacement that should be applied to the camera, </param>
-    public void DisplaceCameraPosition(Vector3 theDelta) {
+    private void DisplaceCameraPosition(Vector3 theDelta) {
         SetCameraPosition(GetCameraPosition() + theDelta);
     }
 
@@ -165,7 +179,7 @@ public class CameraController {
     /// Returns the size of the camera. The size corresponds to the cameras half-height. See Camera.size in the Unity Docs for more info.
     /// </summary>
     /// <returns> The size of the camera. The size corresponds to the cameras half-height. See Camera.size in the Unity Docs for more info.</returns>
-    public float GetCameraSize() {
+    private float GetCameraSize() {
         return (myCamera.GetComponent<Camera>()).orthographicSize;
     }
 
@@ -173,7 +187,7 @@ public class CameraController {
     /// Sets the size of the camera to the given value. The size corresponds to the cameras half-height. See Camera.size in the Unity Docs for more info.
     /// </summary>
     /// <param name="theSize"> The new size of the camera. </param>
-    public void SetCameraSize(float theSize) {
+    private void SetCameraSize(float theSize) {
         //Clamp the size to the specified bounds.
         float size = Math.Clamp(theSize, myMinSize, myMaxSize);
 
@@ -187,14 +201,14 @@ public class CameraController {
     /// Displaces the cameras size by the given delta value.
     /// </summary>
     /// <param name="theDelta"> The amount that the size of the camera should be changed. </param>
-    public void DisplaceCameraSize(float theDelta) {
+    private void DisplaceCameraSize(float theDelta) {
         SetCameraSize(GetCameraSize() + theDelta);
     }
 
     /// <summary>
     /// Sets the cameras position to the specified origin, and sets the cameras size to the specified maximum.
     /// </summary>
-    public void ResetCamera() {
+    private void ResetCamera() {
         SetCameraPosition(myOrigin);
         SetCameraSize(myMaxSize);
     }
