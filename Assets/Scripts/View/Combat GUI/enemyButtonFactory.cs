@@ -7,7 +7,7 @@ using System.Text;
 /// <summary>
 /// A class to generate usuable cells to move heroes within.
 /// </summary>
-sealed class buttonFactory : MonoBehaviour
+sealed class enemyButtonFactory : MonoBehaviour
 {
     [Header("Events")]
     /// <summary>
@@ -16,15 +16,9 @@ sealed class buttonFactory : MonoBehaviour
     [SerializeField]
     GameEvent GUIUpdate;
 
-    /// <summary>
-    /// The GameEvent called whenever the GUI needs to read in or send out a state of the party.
-    /// </summary>
-    [SerializeField]
-    GameEvent changeFileRequest;
-
     [Header("Important Sprites")]
     /// <summary>
-    /// A reference to the Template object, upon which all hero cells are based upon.
+    /// A reference to the Template object, upon which all enemy cells are based upon.
     /// </summary>
     [SerializeField]
     GameObject templateSprite;
@@ -40,7 +34,7 @@ sealed class buttonFactory : MonoBehaviour
     /// A constant to reference a percentage of distance that the center of the button factory is placed from
     /// the center of the screen.
     /// </summary>
-    private const float DISTANCE_FROM_CENTER = 0.25f;
+    private const float DISTANCE_FROM_CENTER = -0.25f;
 
     /// <summary>
     /// A constant to reference the maximum number of cells in a party.
@@ -60,17 +54,17 @@ sealed class buttonFactory : MonoBehaviour
     /// <summary>
     /// An array of strings to give the cell game objects names.
     /// </summary>
-    private string[] myButtonLabels = { "P1", "P2", "P3", "P4", "P5", "P6" };
+    private string[] myButtonLabels = { "E1", "E2", "E3", "E4", "E5", "E6" };
 
     /// <summary>
     /// A party for testing purposes.
     /// </summary>
-    private PlayerParty myTestParty;
+    private EnemyParty myEnemyParty;
 
     /// <summary>
     /// A reference to the party's dictionary of positions, for testing purposes.
     /// </summary>
-    private Dictionary<int, AbstractCharacter> myTestPartyDictionary;
+    private Dictionary<int, AbstractCharacter> myEnemyPartyDictionary;
 
     /// <summary>
     /// Generates the cells and places two knights in their appropriate locations as a basis
@@ -78,11 +72,11 @@ sealed class buttonFactory : MonoBehaviour
     /// </summary>
     void Start()
     {
-        testHero h1 = new testHero("Knight 1", 25, 3, 2, 10, 5);
-        testHero h2 = new testHero("Knight 2", 25, 7, 9, 10, 5);
-        myTestParty = new PlayerParty(h1);
-        myTestParty.AddActor(h2);
-        myTestPartyDictionary = myTestParty.GetPartyPositions();
+        testEnemy h1 = new testEnemy("Skeleton 1", 25, 3, 2, 10, 5);
+        testEnemy h2 = new testEnemy("Skeleton 2", 25, 7, 9, 10, 5);
+        myEnemyParty = new EnemyParty(h1);
+        myEnemyParty.AddActor(h2);
+        myEnemyPartyDictionary = myEnemyParty.GetPartyPositions();
 
         Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
         Vector3 scaleSize = new Vector3(
@@ -106,12 +100,12 @@ sealed class buttonFactory : MonoBehaviour
             myArrayOfObjects[i].transform.localScale = scaleSize;
             myArrayOfObjects[i].name = myButtonLabels[i];
             myArrayOfObjects[i].transform.position = (myPositionVectors[i]);
-            if (myTestPartyDictionary.ContainsKey(i + 1))
+            if (myEnemyPartyDictionary.ContainsKey(i + 1))
             {
                 GUIUpdate.Raise(
                     this,
                     new DataPacket(
-                        myTestPartyDictionary[i + 1],
+                        myEnemyPartyDictionary[i + 1],
                         "CharacterData",
                         myArrayOfObjects[i].name
                     )
@@ -122,20 +116,20 @@ sealed class buttonFactory : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the GUI every frame to correlate to the current positioning of each hero.
+    /// Updates the GUI every frame to correlate to the current positioning of each enemy.
     /// </summary>
     void Update()
     {
-        myTestPartyDictionary = myTestParty.GetPartyPositions();
+        myEnemyPartyDictionary = myEnemyParty.GetPartyPositions();
         DataPacket dataSent;
         for (int i = 0; i < MAX_PARTY_SIZE; i++)
         {
             char index = myArrayOfObjects[i].name[myArrayOfObjects[i].name.Length - 1];
             int value = index - '0';
-            if (myTestPartyDictionary.ContainsKey(value))
+            if (myEnemyPartyDictionary.ContainsKey(value))
             {
                 dataSent = new DataPacket(
-                    myTestPartyDictionary[value],
+                    myEnemyPartyDictionary[value],
                     "CharacterData",
                     myArrayOfObjects[i].name
                 );
@@ -159,47 +153,24 @@ sealed class buttonFactory : MonoBehaviour
         DataPacket dPacket = (DataPacket)data;
         if (dPacket.GetLabel() == "SwapRequest")
         {
-            string label = (string) dPacket.GetData();
-            Debug.Log(label.Substring(label.Length - 1));
-            int startPosition = Int32.Parse(label.Substring(label.Length - 1));
-            int endPosition = Int32.Parse(sender.name.Substring(sender.name.Length - 1));
-            Debug.Log(startPosition + " / " + endPosition);
+            // Debug.Log((string)dPacket.GetData());
+            int startPosition = Int32.Parse((string)dPacket.GetData());
+            int endPosition = Int32.Parse(sender.name);
+            // Debug.Log(startPosition + " / " + endPosition);
             myArrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
-            myArrayOfObjects[startPosition - 1].GetComponent<testButton>().ToggleClicked();
-            myTestParty.moveCharacter(endPosition, myTestPartyDictionary[startPosition]);
-        }
-    }
-
-    /// <summary>
-    /// Handles saving and loading parties.
-    /// Can be expanded upon to include more behaviors.
-    /// </summary>
-    /// <param name="sender"> The component that sent the DataPacket. </param>
-    /// <param name="data"> The object (DataPacket) held. </param>
-    public void HandleFileRequest(Component sender, object data)
-    {
-        DataPacket dPacket = (DataPacket)data;
-
-        if (dPacket.GetLabel() == "SaveRequest")
-        {
-            Debug.Log("A save was requested");
-            changeFileRequest.Raise(this, new DataPacket(myTestParty, "PartyData", "Save"));
-        }
-        else if (dPacket.GetLabel() == "LoadRequest")
-        {
-            Debug.Log("A load was requested");
-            myTestParty = (PlayerParty) dPacket.GetData();
+            myArrayOfObjects[startPosition - 1].GetComponent<enemyCell>().ToggleClicked();
+            myEnemyParty.moveCharacter(endPosition, myEnemyPartyDictionary[startPosition]);
         }
     }
 
     /// <summary>
     /// Checks if a given string array representation is a valid set of data.
     /// </summary>
-    /// <param name="hero"> The array representation of the hero. </param>
-    private testHero checkValidHero(string[] hero)
+    /// <param name="enemy"> The array representation of the enemy. </param>
+    private testEnemy checkValidEnemy(string[] enemy)
     {
-        Debug.Log(hero.Length);
-        if (hero.Length != 7)
+        Debug.Log(enemy.Length);
+        if (enemy.Length != 7)
         {
             return null;
         }
@@ -208,13 +179,13 @@ sealed class buttonFactory : MonoBehaviour
             double[] loadStats = new double[5];
             for (int i = 2; i <= 6; i++)
             {
-                if (!Double.TryParse(hero[i], out loadStats[i - 2]))
+                if (!Double.TryParse(enemy[i], out loadStats[i - 2]))
                 {
                     return null;
                 }
             }
-            return new testHero(
-                hero[1], // Name
+            return new testEnemy(
+                enemy[1], // Name
                 loadStats[0], // HP
                 loadStats[1], // Attack
                 loadStats[2], // Defense

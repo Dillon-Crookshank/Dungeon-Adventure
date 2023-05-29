@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Representation of a cell that can hold and display the data of a hero.
 /// </summary>
-sealed class testButton : MonoBehaviour
+sealed class enemyCell : MonoBehaviour
 {
     [Header("Events")]
     /// <summary>
@@ -100,6 +100,7 @@ sealed class testButton : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(name + ": " + (characterRepresentative != null));
         arrowDisplay.SetActive(false);
         rend = gameObject.GetComponent<SpriteRenderer>();
     }
@@ -108,7 +109,7 @@ sealed class testButton : MonoBehaviour
     {
         hasHero = (characterRepresentative != null);
 
-        if (hasHero && name != "Template")
+        if (hasHero && name != "EnemyTemplate")
         {
             stats[0].text = "" + characterRepresentative.Attack;
             stats[1].text = "" + characterRepresentative.Defence;
@@ -133,99 +134,22 @@ sealed class testButton : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (name != "Template")
-        {
-            // Click on cell
-            if (Input.GetMouseButtonDown(0))
+        if (selectMoveMode && !clicked)
             {
-                if (
-                    characterRepresentative != null && characterRepresentative.IsAlive()
-                    || characterRepresentative == null
-                )
-                {
-                    // Checking to see if clicking a cell should select it or cause a character to be moved
-                    if (!selectMoveMode)
-                    {
-                        // (First click) checking cell for character
-                        if (hasHero)
-                        {
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(gameObject.transform.position, "ArrowVector")
-                            );
-                            rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
-                            held = true;
-                            clicked = !clicked;
-                        }
-                    }
-                    else
-                    {
-                        // (Second click) checking clicked cell for empty
-                        if (!hasHero)
-                        {
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(clickedCellName, "SwapRequest", "Button Factory")
-                            );
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(gameObject.transform.position, "ArrowVector")
-                            );
-                            clicked = false;
-                            rend.color = Color.white;
-                            arrowDisplay.SetActive(false);
-                        }
-                        else if (clicked)
-                        {
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(gameObject.transform.position, "ArrowVector")
-                            );
-                            rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
-                            held = true;
-                            clicked = !clicked;
-                        }
-                    }
-                }
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                held = false;
-            }
+                arrowDisplay.SetActive(true);
+                arrowDisplay.transform.position = arrowVector;
+                arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
 
-            if (held)
-            {
-                rend.color = new Color(0.0f, 0.5f, 0.0f);
-            }
-            else if (hasHero || selectMoveMode)
-            {
-                if (characterRepresentative == null || characterRepresentative.IsAlive())
-                {
-                    rend.color = Color.green;
-                }
-                else
+                // Obtains the new rotation values by calling LookAt to obtain new Z and W values.
+                arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
+                float newZ = arrowDisplay.transform.rotation.z;
+                float newW = arrowDisplay.transform.rotation.w;
+                arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
+                if (hasHero)
                 {
                     rend.color = Color.red;
                 }
-
-                if (selectMoveMode && !clicked)
-                {
-                    arrowDisplay.SetActive(true);
-                    arrowDisplay.transform.position = arrowVector;
-                    arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
-
-                    // Obtains the new rotation values by calling LookAt to obtain new Z and W values.
-                    arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
-                    float newZ = arrowDisplay.transform.rotation.z;
-                    float newW = arrowDisplay.transform.rotation.w;
-                    arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
-                    if (hasHero)
-                    {
-                        rend.color = Color.red;
-                    }
-                }
             }
-        }
     }
 
     void OnMouseExit()
@@ -270,7 +194,7 @@ sealed class testButton : MonoBehaviour
     /// <param name="sender"> The component that sent the DataPacket. </param>
     /// <param name="data"> The object (DataPacket) held. </param>
     public void ReceiveDataPacket(Component sender, object data)
-    {
+    {   
         DataPacket dPacket = (DataPacket)data;
         if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
         {
@@ -302,6 +226,7 @@ sealed class testButton : MonoBehaviour
             }
             else if (dataLabel.Equals("CharacterData"))
             {
+                // Debug.Log(incomingData);
                 characterRepresentative = (AbstractCharacter)incomingData;
             }
         }
