@@ -7,7 +7,7 @@ namespace DefaultNamespace
     /// An abstract representation of an Enemy.
     /// Includes a RNG and a lootTable.
     /// </summary>
-    internal abstract class AbstractEnemy : AbstractCharacter
+    internal class EnemyCharacter : AbstractCharacter
     {
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace DefaultNamespace
         /// <param name="theDefence">The defence of the AbstractEnemy.</param>
         /// <param name="theMana">The maximum mana of the AbstractEnemy.</param>
         /// <param name="theInitiative">The initiative of the AbstractEnemy.</param>
-        internal AbstractEnemy(in string theClass, in double theHitpoints, in double theAttack,
+        internal EnemyCharacter(in string theClass, in double theHitpoints, in double theAttack,
      in double theDefence, in double theMana, in int theInitiative) : base(theClass, theHitpoints, theAttack,
      theDefence, theMana, theInitiative)
         {
