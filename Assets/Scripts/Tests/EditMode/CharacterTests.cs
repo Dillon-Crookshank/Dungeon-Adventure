@@ -88,12 +88,12 @@ namespace DefaultNamespace
             PlayerCharacter localCleric = new PlayerCharacter("cleric", 75, 10, 5, 20, 0);
 
 
-            PlayerCharacter databaseWarrior = accessDB.accessCharacterDatabase("warrior");
-            PlayerCharacter databaseBarbarian = accessDB.accessCharacterDatabase("barbarian");
-            PlayerCharacter databaseArcher = accessDB.accessCharacterDatabase("archer");
-            PlayerCharacter databaseRogue = accessDB.accessCharacterDatabase("rogue");
-            PlayerCharacter databaseWizard = accessDB.accessCharacterDatabase("wizard");
-            PlayerCharacter databaseCleric = accessDB.accessCharacterDatabase("cleric");
+            PlayerCharacter databaseWarrior = accessDB.PlayerDatabaseConstructor("warrior");
+            PlayerCharacter databaseBarbarian = accessDB.PlayerDatabaseConstructor("barbarian");
+            PlayerCharacter databaseArcher = accessDB.PlayerDatabaseConstructor("archer");
+            PlayerCharacter databaseRogue = accessDB.PlayerDatabaseConstructor("rogue");
+            PlayerCharacter databaseWizard = accessDB.PlayerDatabaseConstructor("wizard");
+            PlayerCharacter databaseCleric = accessDB.PlayerDatabaseConstructor("cleric");
 
             Assert.AreEqual(localWarrior.ToString(), databaseWarrior.ToString());
             Assert.AreEqual(localBarbarian.ToString(), databaseBarbarian.ToString());
@@ -101,6 +101,25 @@ namespace DefaultNamespace
             Assert.AreEqual(localRogue.ToString(), databaseRogue.ToString());
             Assert.AreEqual(localWizard.ToString(), databaseWizard.ToString());
             Assert.AreEqual(localCleric.ToString(), databaseCleric.ToString());
+        }
+
+        [Test]
+        public void BasicAttackTests()
+        {
+            PlayerCharacter testWarrior = new PlayerCharacter("warrior", 100, 20, 20, 10, 0);
+            EnemyCharacter testEnemy = new EnemyCharacter("goblin", 100, 20, 20, 10, 0);
+
+            Assert.AreEqual(true, testWarrior.BasicAttack(testEnemy));
+            Assert.AreEqual(testEnemy.CurrentHitpoints, 99);
+        }
+
+        [Test]
+        public void BuffDatabaseTests()
+        {
+            PlayerCharacter testWarrior = new PlayerCharacter("warrior", 100, 20, 20, 10, 0);
+
+            Assert.AreEqual(2, testWarrior.Buff());
+            Assert.AreEqual(26, testWarrior.Attack);
         }
 
     }

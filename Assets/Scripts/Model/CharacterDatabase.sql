@@ -24,7 +24,7 @@
 -- mana REAL NOT NULL,
 -- initiative INTEGER NOT NULL);
 
-INSERT INTO enemyTemplates(class, hitpoints, attack, defence, mana, initiative)
+--INSERT INTO enemyTemplates(class, hitpoints, attack, defence, mana, initiative)
 -- VALUES ("skeleton", 50, 10, 10, 10, 5);
 -- VALUES ("zombie", 100, 5, 5, 10, 0);
 -- VALUES ("goblin", 30, 10, 5, 10, 10);
@@ -32,3 +32,14 @@ INSERT INTO enemyTemplates(class, hitpoints, attack, defence, mana, initiative)
 -- VALUES ("skeleton archer", 40, 15, 5, 10, 5);
 -- VALUES ("necromancer", 60, 5, 5, 25, 5);
 -- VALUES ("goblin archer", 40, 10, 0, 10, 10);
+
+-- CREATE TABLE buffTemplates(
+-- class TEXT NOT NULL PRIMARY KEY,
+-- buffName TEXT NOT NULL,
+-- duration INTEGER NOT NULL,
+-- statModified TEXT NOT NULL,
+-- manaCost INTEGER NOT NULL,
+-- percentage REAL NOT NULL);
+
+INSERT INTO buffTemplates(class, buffName, duration, statModified, manaCost, percentage)
+VALUES ("warrior", "focus", 2, "attack", 5, 0.30);
