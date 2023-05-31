@@ -52,13 +52,13 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     public void Start() {
         myMapCameraController = new CameraController(myMapCamera, myMapCamera.transform.localPosition, (4.5f, 18.0f), (32.0f, 18.0f));
-        myMapView = new MapView(myMapCamera.transform.localPosition, mySprites);
+        myMapView = new MapView(myMapCamera.transform.localPosition);
         myMapModel = new DungeonMap();
 
         myMapCamera.SetActive(false);
-        myCombatCamera.SetActive(true);
+        myCombatCamera.SetActive(false);
+        myMenuCamera.SetActive(true);
     }
-
 
     /// <summary>
     /// The Update method is called once per frame while the DungeonController GameObject is active.
@@ -69,17 +69,15 @@ public class DungeonController : MonoBehaviour {
         myMapCameraController.UpdateCamera();
 
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            myMapCamera.SetActive(true);
-            myCombatCamera.SetActive(false);
+            SwitchToMainMenu();
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2)) {
-            myMapCamera.SetActive(false);
-            myCombatCamera.SetActive(true);
+            SwitchToCombat();
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            
+            SwitchToMap();
         }
     }
 
@@ -99,58 +97,6 @@ public class DungeonController : MonoBehaviour {
                 myMapView.GiveIcon(myMapModel.GetNthAdjacentRoom(i), mySprites[3]);
             }
         }
-
-
-        if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
-            SerializeMap("myMap.bin", myMapModel);
-        }
-
-        if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
-            myMapModel = DeserializeMap("myMap.bin");
-            
-            //Fix the map view
-            myMapView.ClearMap();
-            for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
-                if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
-                    myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Shows the entire map at once. Every time you press enter, it generates a new dungeon.
-    /// </summary>
-    private void DebugMapView() {
-        for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
-            myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
-
-            if (myMapModel.GetNthRoom(i).GetEnemyFlag()) {
-                myMapView.GiveIcon(myMapModel.GetNthRoom(i), mySprites[3]);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            myMapModel = new DungeonMap();
-            myMapView.ClearMap();
-            //myMapView = new MapView(new Vector2(0, 0), mySprites);
-        }
-
-        if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
-            SerializeMap("myMap.bin", myMapModel);
-        }
-
-        if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
-            myMapModel = DeserializeMap("myMap.bin");
-            myMapView.ClearMap();
-
-
-            for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
-                if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
-                    myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
-                }
-            }
-        }
     }
 
     /// <summary>
@@ -158,21 +104,19 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     /// <param name="theFileName"> The name of the file that the map should be saved to. </param>
     /// <param name="theMap"> The DungeonMap that should be saved. </param>
-    private void SerializeMap(String theFileName, DungeonMap theMap) {
+    private void SerializeMap(in String theFileName, in DungeonMap theMap) {
         IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(theFileName, FileMode.Create, FileAccess.Write, FileShare.None);
         formatter.Serialize(stream, theMap);
         stream.Close();
-
-        Debug.Log("Map Serialized!");
     }
 
     /// <summary>
     /// Returns the DungeonMap that was saved to the given file. Make sure you update
     /// </summary>
-    /// <param name="theFileName"></param>
-    /// <returns></returns>
-    private DungeonMap DeserializeMap(String theFileName) {
+    /// <param name="theFileName"> The name of the file that the dungeon map is located in. </param>
+    /// <returns> The deserialized dungeon map. </returns>
+    private DungeonMap DeserializeMap(in String theFileName) {
 
         IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(theFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -181,22 +125,99 @@ public class DungeonController : MonoBehaviour {
         DungeonMap tempMap = (DungeonMap) formatter.Deserialize(stream);
         stream.Close();
 
-        Debug.Log("Map Deserialized!");
-
         return tempMap;
+    }
+
+    /// <summary>
+    /// Saves the game to a specific file. Will override any previous saves.
+    /// </summary>
+    public void SaveGame() {
+        SerializeMap("myMap.bin", myMapModel);
+
+        //Add stuff to save enemy party queue and user party here
+    }
+
+    /// <summary>
+    /// Loads the game from existing files. If the files do not exist, a new game is created.
+    /// </summary>
+    public void LoadGame() {
+        //Check if a game file exists; If not, load a new game
+
+        myMapModel = DeserializeMap("myMap.bin");
+        myMapView.ClearMap();
+
+        for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
+            if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
+                myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
+
+                if (myMapModel.GetNthRoom(i).GetEnemyFlag()) {
+                    myMapView.GiveIcon(myMapModel.GetNthRoom(i), mySprites[3]);
+                }
+            }
+        }
+
+        //Add stuff to deserialize enemy party queue and user party here
+    }
+
+    /// <summary>
+    /// Switches the active camera to the main menu camera.
+    /// </summary>
+    public void SwitchToMainMenu() {
+        myMapCamera.SetActive(false);
+        myCombatCamera.SetActive(false);
+        myMenuCamera.SetActive(true);
+    }
+
+    /// <summary>
+    /// Switches the active camera to the combat camera.
+    /// </summary>
+    public void SwitchToCombat() {
+        myMapCamera.SetActive(false);
+        myCombatCamera.SetActive(true);
+        myMenuCamera.SetActive(false);
+    }
+
+    /// <summary>
+    /// Switches the active camera to the map camera.
+    /// </summary>
+    public void SwitchToMap() {
+        myMapCamera.SetActive(true);
+        myCombatCamera.SetActive(false);
+        myMenuCamera.SetActive(false);
+    }
+
+    /// <summary>
+    /// Exits the game application. This is ignored when called while in the editor.
+    /// </summary>
+    public void QuitGame() {
+        Application.Quit();
     }
 
     /// <summary>
     /// Called by the MapView whenever a valid adjacent room was left-clicked.
     /// </summary>
-    /// <param name="theID"> The ID of the DungeonRoom that the Primary Focus of the map should be set to.</param>
+    /// <param name="theID"> The ID of the DungeonRoom that the Focus of the map should be set to.</param>
     public void MapViewListener(int theID) {
         //We use the ID to look through the adjacent rooms until we find a matching ID
         for (int i = 0; myMapModel.GetNthAdjacentRoom(i) != null; i++) {
             if (theID == myMapModel.GetNthAdjacentRoom(i).GetID()) {
                 myMapModel.FocusNthAdjacentRoom(i);
+
+                if (myMapModel.GetFocusedRoom().GetEnemyFlag()) {
+                    //Pull from enemy party queue and initialize combat here
+
+                    SwitchToCombat();
+                }
             }
         }
+    }
+
+    /// <summary>
+    /// Called when the user clicks the 'continue' button in the main menu
+    /// </summary>
+    public void ContinueGame() {
+        LoadGame();
+        SwitchToMap();
     }
 }
 

@@ -74,7 +74,7 @@ public class DungeonRoom
     /// <param name="theXMax"> The Highest X-value of the DungeonRoom. </param>
     /// <param name="theYMin"> The Lowest Y-value of the DungeonRoom. </param>
     /// <param name="theYMax"> The Highest Y-value of the DungeonRoom. </param>
-    public DungeonRoom(int theXMin, int theXMax, int theYMin, int theYMax) {
+    public DungeonRoom(in int theXMin, in int theXMax, in int theYMin, in int theYMax) {
         
         //Calculate the game unit coordinates based on the given grid domain
         myX = (theXMin + theXMax) / 2.0f + 0.5f;
@@ -184,7 +184,7 @@ public class DungeonRoom
     /// <summary>
     /// A mutator for the seen flag. True if the user party has seen the room. To see a room, you must be at least adjacent to the room.
     /// </summary>
-    public void SetSeenFlag(bool theSeenFlag) {
+    public void SetSeenFlag(in bool theSeenFlag) {
         mySeenFlag = theSeenFlag;
     }
 
