@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEngine;
 using NUnit.Framework;
 
@@ -10,7 +11,7 @@ namespace DefaultNamespace
     {
 
         [Test]
-        public void ConstructorTests()
+        public void ConstructorTest()
         {
             PlayerCharacter test = new PlayerCharacter("warrior", 25, 10, 5, 2, 1);
             Assert.AreEqual("warrior", test.Name);
@@ -77,21 +78,48 @@ namespace DefaultNamespace
         }
 
         [Test]
-        public void DatabaseTest()
+        public void CharacterDatabaseTest()
         {
-            PlayerCharacter databaseTest1 = accessDB.accessCharacterDatabase("warrior");
-            Debug.Log(databaseTest1);
-            PlayerCharacter databaseTest2 = accessDB.accessCharacterDatabase("barbarian");
-            Debug.Log(databaseTest2);
-            PlayerCharacter databaseTest3 = accessDB.accessCharacterDatabase("archer");
-            Debug.Log(databaseTest3);
-            PlayerCharacter databaseTest4 = accessDB.accessCharacterDatabase("rogue");
-            Debug.Log(databaseTest4);
-            PlayerCharacter databaseTest5 = accessDB.accessCharacterDatabase("wizard");
-            Debug.Log(databaseTest5);
-            PlayerCharacter databaseTest6 = accessDB.accessCharacterDatabase("cleric");
-            Debug.Log(databaseTest6);
+            PlayerCharacter localWarrior = new PlayerCharacter("warrior", 100, 20, 20, 10, 0);
+            PlayerCharacter localBarbarian = new PlayerCharacter("barbarian", 150, 25, 0, 10, 5);
+            PlayerCharacter localArcher = new PlayerCharacter("archer", 80, 20, 10, 15, 10);
+            PlayerCharacter localRogue = new PlayerCharacter("rogue", 60, 30, 0, 10, 15);
+            PlayerCharacter localWizard = new PlayerCharacter("wizard", 50, 15, 0, 25, 5);
+            PlayerCharacter localCleric = new PlayerCharacter("cleric", 75, 10, 5, 20, 0);
 
+
+            PlayerCharacter databaseWarrior = accessDB.PlayerDatabaseConstructor("warrior");
+            PlayerCharacter databaseBarbarian = accessDB.PlayerDatabaseConstructor("barbarian");
+            PlayerCharacter databaseArcher = accessDB.PlayerDatabaseConstructor("archer");
+            PlayerCharacter databaseRogue = accessDB.PlayerDatabaseConstructor("rogue");
+            PlayerCharacter databaseWizard = accessDB.PlayerDatabaseConstructor("wizard");
+            PlayerCharacter databaseCleric = accessDB.PlayerDatabaseConstructor("cleric");
+
+            Assert.AreEqual(localWarrior.ToString(), databaseWarrior.ToString());
+            Assert.AreEqual(localBarbarian.ToString(), databaseBarbarian.ToString());
+            Assert.AreEqual(localArcher.ToString(), databaseArcher.ToString());
+            Assert.AreEqual(localRogue.ToString(), databaseRogue.ToString());
+            Assert.AreEqual(localWizard.ToString(), databaseWizard.ToString());
+            Assert.AreEqual(localCleric.ToString(), databaseCleric.ToString());
+        }
+
+        [Test]
+        public void BasicAttackTests()
+        {
+            PlayerCharacter testWarrior = new PlayerCharacter("warrior", 100, 20, 20, 10, 0);
+            EnemyCharacter testEnemy = new EnemyCharacter("goblin", 100, 20, 20, 10, 0);
+
+            Assert.AreEqual(true, testWarrior.BasicAttack(testEnemy));
+            Assert.AreEqual(testEnemy.CurrentHitpoints, 99);
+        }
+
+        [Test]
+        public void BuffDatabaseTests()
+        {
+            PlayerCharacter testWarrior = new PlayerCharacter("warrior", 100, 20, 20, 10, 0);
+
+            Assert.AreEqual(2, testWarrior.Buff());
+            Assert.AreEqual(26, testWarrior.Attack);
         }
 
     }

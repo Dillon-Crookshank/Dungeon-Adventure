@@ -4,10 +4,10 @@ using DefaultNamespace;
 internal class EnemyParty : AbstractParty
 {
 
-    internal EnemyParty(AbstractEnemy theEnemy)
+    internal EnemyParty(EnemyCharacter theEnemy)
     {
         partyPositions = new Dictionary<int, AbstractCharacter>();
-        AddActor(theEnemy);
+        AddCharacter(theEnemy);
         isAllAlive = true;
     }
 

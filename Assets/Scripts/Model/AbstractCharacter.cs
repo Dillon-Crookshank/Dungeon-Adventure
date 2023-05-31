@@ -208,6 +208,52 @@ namespace DefaultNamespace
         }
 
         /// <summary>
+        /// A basic attack that simply takes deals the attack value - theTargets 
+        /// defence value as damage, with a minimum of 1.0.
+        /// </summary>
+        /// <param name="theTarget">The <see cref"AbstractCharacter"/> being targeted with this attack.</param>
+        internal bool BasicAttack(AbstractCharacter theTarget)
+        {
+            double theDamage = (Math.Max(1, Attack - theTarget.Defence));
+            theTarget.CurrentHitpoints = (-1 * theDamage);
+            return true;
+        }
+
+        internal int Defend()
+        {
+            Defence *= 2;
+            return 1;
+        }
+
+        internal int Buff()
+        {
+            string statModified = accessDB.BuffDatabaseStatModified(CharacterClass);
+
+            switch (statModified)
+            {
+                case "attack":
+                    if (CurrentMana < accessDB.BuffDatabaseManaCost(CharacterClass))
+                    {
+                        return 0;
+                    }
+                    Attack = accessDB.BuffDatabasePercentage(CharacterClass) * Attack;
+                    CurrentMana = (-accessDB.BuffDatabaseManaCost(CharacterClass));
+                    return accessDB.BuffDatabaseDuration(CharacterClass);
+                case "defence":
+                    if (CurrentMana < accessDB.BuffDatabaseManaCost(CharacterClass))
+                    {
+                        return 0;
+                    }
+                    Defence = accessDB.BuffDatabasePercentage(CharacterClass) * Defence;
+                    CurrentMana = (-accessDB.BuffDatabaseManaCost(CharacterClass));
+                    return accessDB.BuffDatabaseDuration(CharacterClass);
+            }
+
+
+            return accessDB.BuffDatabaseDuration(CharacterClass);
+        }
+
+        /// <summary>
         /// A string representation of the current status of the Character.
         /// </summary>
         /// <returns>A string representation of the current status of the Character.</returns>
@@ -221,5 +267,4 @@ namespace DefaultNamespace
         }
 
     }
-
 }

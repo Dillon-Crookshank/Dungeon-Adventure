@@ -31,7 +31,7 @@ sealed class testButton : MonoBehaviour
     /// A reference to testHero object being represented in the instance of the cell.
     /// </summary>
     [SerializeField]
-    AbstractCharacter characterRepresentative;
+    PlayerCharacter characterRepresentative;
 
     /// <summary>
     /// A sprite array containing the different display states of a cell.
@@ -113,7 +113,7 @@ sealed class testButton : MonoBehaviour
             stats[0].text = "" + characterRepresentative.Attack;
             stats[1].text = "" + characterRepresentative.Defence;
             stats[2].text = "" + characterRepresentative.Name;
-            
+
             float healthPercentage = (float)(
                 characterRepresentative.CurrentHitpoints
                 / characterRepresentative.MaxHitpoints
@@ -302,7 +302,7 @@ sealed class testButton : MonoBehaviour
             }
             else if (dataLabel.Equals("CharacterData"))
             {
-                characterRepresentative = (AbstractCharacter)incomingData;
+                characterRepresentative = (PlayerCharacter)incomingData;
             }
         }
     }
