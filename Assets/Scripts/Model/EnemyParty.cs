@@ -11,6 +11,12 @@ internal class EnemyParty : AbstractParty
         isAllAlive = true;
     }
 
+    internal EnemyParty()
+    {
+        partyPositions = new Dictionary<int, AbstractCharacter>();
+        isAllAlive = true;
+    }
+
 
 
 }

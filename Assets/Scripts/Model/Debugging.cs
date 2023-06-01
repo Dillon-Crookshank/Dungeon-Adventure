@@ -19,7 +19,7 @@ namespace DefaultNamespace
             EnemyCharacter enemy2 = new EnemyCharacter("enemy2", 25, 5, 0, 10, 5);
             EnemyParty enemies = new EnemyParty(enemy);
             enemies.AddCharacter(enemy2);
-            gameObject.GetComponent<Combat>().CombatEncounter(player, enemies);
+            EnemyPartyQueue test = new EnemyPartyQueue();
         }
     }
 }
