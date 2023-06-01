@@ -360,7 +360,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -825,7 +825,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -1539,7 +1539,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -2315,7 +2315,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -2594,7 +2594,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -2832,7 +2832,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -2943,7 +2943,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -3276,7 +3276,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -4435,7 +4435,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -5082,7 +5082,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -5321,7 +5321,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -5590,7 +5590,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 60
+  m_FontSize: 70
   m_FontStyle: 3
   m_RichText: 1
   m_Font: {fileID: 0}
