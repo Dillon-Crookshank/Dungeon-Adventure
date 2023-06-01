@@ -117,6 +117,7 @@ namespace DefaultNamespace {
                 myArrayOfObjects[i].transform.position = (myPositionVectors[i]);
                 if (myTestPartyDictionary.ContainsKey(i + 1))
                 {
+                    
                     GUIUpdate.Raise(
                         this,
                         new DataPacket(
@@ -127,7 +128,6 @@ namespace DefaultNamespace {
                     );
                 }
             }
-            int randomIndex = UnityEngine.Random.Range(0, MAX_PARTY_SIZE);
         }
 
         /// <summary>

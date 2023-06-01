@@ -71,6 +71,8 @@ sealed class enemyCell : MonoBehaviour
     /// </summary>
     private Vector3 arrowVector;
 
+    private string behaviorString;
+
     /// <summary>
     /// Determines whether or not this cell holds a hero.
     /// </summary>
@@ -90,6 +92,8 @@ sealed class enemyCell : MonoBehaviour
     /// Determines whether or not this cell was selected as the hero to move to a new location.
     /// </summary>
     private bool clicked = false;
+
+    private bool isSelectableByAction = false;
 
     /// <summary>
     /// A reference to the SpriteRenderer component of this object.
@@ -111,8 +115,9 @@ sealed class enemyCell : MonoBehaviour
 
         if (hasHero && name != "EnemyTemplate")
         {
-            stats[0].text = "" + characterRepresentative.Attack;
-            stats[1].text = "" + characterRepresentative.Defence;
+            // stats[0].text = "" + characterRepresentative.Attack;
+            stats[0].text = "";
+            stats[1].text = "" + characterRepresentative.CurrentHitpoints;
             stats[2].text = "" + characterRepresentative.Name;
             
             float healthPercentage = (float)(
@@ -134,22 +139,29 @@ sealed class enemyCell : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (selectMoveMode && !clicked)
-            {
-                arrowDisplay.SetActive(true);
-                arrowDisplay.transform.position = arrowVector;
-                arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
+        if (isSelectableByAction)
+        {
+            arrowDisplay.SetActive(true);
+            arrowDisplay.transform.position = arrowVector;
+            arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
 
-                // Obtains the new rotation values by calling LookAt to obtain new Z and W values.
-                arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
-                float newZ = arrowDisplay.transform.rotation.z;
-                float newW = arrowDisplay.transform.rotation.w;
-                arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
-                if (hasHero)
-                {
-                    rend.color = Color.red;
+            // Obtains the new rotation values by calling LookAt to obtain new Z and W values.
+            arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
+            float newZ = arrowDisplay.transform.rotation.z;
+            float newW = arrowDisplay.transform.rotation.w;
+            arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
+            if (hasHero)
+            {
+                rend.color = Color.red;
+            }
+            if (Input.GetMouseButtonDown(0)){ 
+                GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
+                Debug.Log("We are attacking " + name);
+                for (int i = 1; i <= 6; i++){
+                    GameObject.Find("E" + i).SendMessage("setBehaviorString", "");
                 }
             }
+        }
     }
 
     void OnMouseExit()
@@ -252,5 +264,14 @@ sealed class enemyCell : MonoBehaviour
                 rend.color = new Color(0.5f, 0f, 0f, 1f);
             }
         }
+    }
+
+    public AbstractCharacter GetCharacterRepresentative(){
+        return characterRepresentative;
+    }
+
+    public void setBehaviorString(string theBehavior){
+        behaviorString = theBehavior;
+        isSelectableByAction = (theBehavior != "");
     }
 }

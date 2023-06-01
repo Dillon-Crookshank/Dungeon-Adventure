@@ -19,7 +19,6 @@ namespace DefaultNamespace
         [SerializeField]
         string displayDescription;
 
-
         void OnMouseOver(){
             onButtonHover.Raise(this, new DataPacket(displayHeader, "NewTextString", "ActionHeader"));
             onButtonHover.Raise(this, new DataPacket(displayDescription, "NewTextString", "ActionDescription"));
@@ -42,7 +41,7 @@ namespace DefaultNamespace
         /// </summary>
         public override void PressButton()
         {
-            onButtonClick.Raise(this, new DataPacket(name, "ActionName", "Model"));
+            Debug.Log(name + " pressed");
         }
 
         public void SetDescription(in string theDescription) {

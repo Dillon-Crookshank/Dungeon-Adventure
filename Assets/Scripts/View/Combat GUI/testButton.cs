@@ -110,8 +110,9 @@ sealed class testButton : MonoBehaviour
 
         if (hasHero && name != "Template")
         {
-            stats[0].text = "" + characterRepresentative.Attack;
-            stats[1].text = "" + characterRepresentative.Defence;
+            // stats[0].text = "" + characterRepresentative.Attack;
+            stats[0].text = "";
+            stats[1].text = "" + characterRepresentative.CurrentHitpoints;
             stats[2].text = "" + characterRepresentative.Name;
 
             float healthPercentage = (float)(
@@ -305,6 +306,10 @@ sealed class testButton : MonoBehaviour
                 characterRepresentative = (PlayerCharacter)incomingData;
             }
         }
+    }
+
+    public AbstractCharacter GetCharacterRepresentative(){
+        return characterRepresentative;
     }
 
     public void HandleDamage(Component sender, object data)

@@ -243,7 +243,11 @@ public class DungeonController : MonoBehaviour {
         SwitchToMap();
     }
 
-    
+    void DeliverBasicAttack(AbstractCharacter theTarget){
+        GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveActor().Name) + " attacks " + theTarget.Name + "!");
+        myCombatModel.GetActiveActor().BasicAttack(theTarget);
+        myCombatModel.EndTurn();
+    }
 }
 
 }
