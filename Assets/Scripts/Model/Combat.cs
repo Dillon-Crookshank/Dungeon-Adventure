@@ -56,8 +56,11 @@ namespace DefaultNamespace
                     
                     if (!isPlayer()) {
                         //Select random move
-                        myActiveCharacter.BasicAttack((myPlayerParty.GetPartyPositions())[1]);
-
+                        if (myActiveCharacter.IsAlive()){
+                            await Task.Delay(500);
+                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myActiveCharacter.Name) + " attacks " + (myPlayerParty.GetPartyPositions())[1].Name + "!");
+                            myActiveCharacter.BasicAttack((myPlayerParty.GetPartyPositions())[1]);
+                        }
                         isEndOfTurn = true;
                     }
 
