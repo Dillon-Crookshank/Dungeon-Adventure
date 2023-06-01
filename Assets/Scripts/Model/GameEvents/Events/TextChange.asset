@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3153a250855141409906f4afde08cb6, type: 3}
-  m_Name: ReadyForMove
+  m_Name: TextChange
   m_EditorClassIdentifier: 
   listeners: []

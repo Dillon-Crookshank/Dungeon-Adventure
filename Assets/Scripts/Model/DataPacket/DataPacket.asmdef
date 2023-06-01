@@ -1,9 +1,7 @@
 {
     "name": "DataPacket",
     "rootNamespace": "",
-    "references": [
-        "GUID:2d22c56d6e6bb414baf18ba1b410ed22"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

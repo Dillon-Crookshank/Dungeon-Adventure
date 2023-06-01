@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+
 using static UnityEngine.Debug;
 
 /// <summary>
@@ -36,6 +37,16 @@ public class DungeonMap
     private const int ROOM_ATTEMPTS = 100;
 
     /// <summary>
+    /// The minimum number of rooms that the algorithm expects to be traversable. If an isolated section of the map has less rooms than this, it is deleted.
+    /// </summary>
+    private const int EXPECTED_VOLUME = 50;
+
+    /// <summary>
+    /// The number of enemy rooms that are placed in the map.
+    /// </summary>
+    private const int ENEMY_AMOUNT = 16;
+
+    /// <summary>
     /// Random number generator used within the dungeon generating algorithm
     /// </summary>
     private static Random myRand = new Random();
@@ -43,7 +54,7 @@ public class DungeonMap
     /// <summary>
     /// The underlying adjacency list of the class.
     /// </summary>
-    private List<GraphEntry> myAdjacencyList;
+    private List<GraphNode> myAdjacencyList;
 
     /// <summary>
     /// A 2D array used to help with hallway generation. Rooms are placed on the grid and hallways are created using a simple path-finding algorithm.
@@ -54,13 +65,13 @@ public class DungeonMap
     /// The GraphEntry that contains the room that is currently being focused.
     /// The focused room is the room where the user's party currently resides.
     /// </summary>
-    private GraphEntry myFocusedRoom;
+    private GraphNode myFocusedRoom;
 
     /// <summary>
     /// A nested class, used as the building block of the adjacency list.
     /// </summary>
     [Serializable]
-    private class GraphEntry {
+    private class GraphNode {
         /// <summary>
         /// The dungeon room within this slot of the adjacency list.
         /// </summary>
@@ -69,21 +80,21 @@ public class DungeonMap
         /// <summary>
         /// The list of adjacent rooms.
         /// </summary>
-        public List<GraphEntry> myAdjacentRooms;
+        public List<GraphNode> myAdjacentRooms;
         
         /// <summary>
         /// Used with hallway generation. When 2 rooms are connected by a hallway, their indices are noted in here so that the same hallway isn't drawn twice.
         /// </summary>
-        public List<int> myConnectedRooms;
+        public List<DungeonRoom> myConnectedRooms;
 
         /// <summary>
         /// A constructor that initializes given a room. **The adjacent rooms list needs to be initialized manually**
         /// </summary>
         /// <param name="theRoom"> The room in the GraphEntry. </param>
-        public GraphEntry(in DungeonRoom theRoom) {
+        public GraphNode(in DungeonRoom theRoom) {
             myRoom = theRoom;
-            myAdjacentRooms = new List<GraphEntry>();
-            myConnectedRooms = new List<int>();
+            myAdjacentRooms = new List<GraphNode>();
+            myConnectedRooms = new List<DungeonRoom>();
         }
     }
 
@@ -91,7 +102,7 @@ public class DungeonMap
     /// Initializes a unique DungeonMap.
     /// </summary>
     public DungeonMap() {
-        myAdjacencyList = new List<GraphEntry>();
+        myAdjacencyList = new List<GraphNode>();
         myGrid = new int[Y_BOUND * 2, X_BOUND * 2];
         
         GenerateDungeon(); 
@@ -112,7 +123,7 @@ public class DungeonMap
     /// </summary>
     /// <param name="theIndex"> The index of the adjacent room. If out of bounds, a null reference is returned. </param>
     /// <returns> The Nth adjacent room of the focused room. If N is out of bounds, a null reference is returned. </returns>
-    public DungeonRoom GetNthAdjacentRoom(int theIndex)
+    public DungeonRoom GetNthAdjacentRoom(in int theIndex)
     {
         if (theIndex < 0 || theIndex >= myFocusedRoom.myAdjacentRooms.Count) {
             return null;
@@ -126,7 +137,7 @@ public class DungeonMap
     /// </summary>
     /// <param name="theIndex"> The index of the room in the base adjacency list. If out of bounds, a null reference is returned. </param>
     /// <returns> The Nth room in the adjacency list. If N is out of bounds, a nul reference is returned. </returns>
-    public DungeonRoom GetNthRoom(int theIndex) {
+    public DungeonRoom GetNthRoom(in int theIndex) {
         if (theIndex < 0 || theIndex >= myAdjacencyList.Count) {
             return null;
         }
@@ -137,16 +148,48 @@ public class DungeonMap
     /// <summary>
     /// Using the same index from GetNthAdjacentRoom, the method switches the focused room to the given adjacent room index.
     /// </summary>
-    /// <param name="index"> The index of the adjacent room that the new focused room should be set to. </param>
-    public void FocusNthAdjacentRoom(int index)
+    /// <param name="index"> The index of the adjacent room that should be focused. </param>
+    public void FocusNthAdjacentRoom(in int index)
     {
+        //Make sure that the index is valid
         if (index < 0 || index >= myFocusedRoom.myAdjacentRooms.Count) {
             return;
         }
 
         myFocusedRoom = myFocusedRoom.myAdjacentRooms[index];
 
-        foreach (GraphEntry entry in myFocusedRoom.myAdjacentRooms) {
+        //Mark any adjacent rooms as 'seen'
+        foreach (GraphNode entry in myFocusedRoom.myAdjacentRooms) {
+            entry.myRoom.SetSeenFlag(true);
+        }
+    }
+
+    /// <summary>
+    /// Returns the number of rooms that are in the map.
+    /// </summary>
+    /// <returns> The number of rooms in the map. </returns>
+    public int GetRoomCount() {
+        return myAdjacencyList.Count;
+    }
+
+    /// <summary>
+    /// Focuses the Nth room in the adjacency list.
+    /// </summary>
+    /// <param name="index"> The index of the room that should be focused. </param>
+    public void FocusNthRoom(in int index) {
+        //Make sure that the index is valid
+        if (index < 0 || index >= myAdjacencyList.Count) {
+            return;
+        }
+
+        myFocusedRoom = myAdjacencyList[index];
+
+        //Since this one can be arbitrarily selected, we don't know if the focused room has already been marked as 'seen'
+        myFocusedRoom.myRoom.SetSeenFlag(true);
+
+
+        //Mark any adjacent rooms as 'seen'
+        foreach (GraphNode entry in myFocusedRoom.myAdjacentRooms) {
             entry.myRoom.SetSeenFlag(true);
         }
     }
@@ -169,8 +212,9 @@ public class DungeonMap
             }
         }
 
-        //Iterate through each room and place every valid hallway.
+        
         int size = myAdjacencyList.Count;
+        //Iterate through each room and place every valid hallway.
         for (int i = 0; i < size; i++) {
             List<int[]> validHallways = GetValidHallways(i);
 
@@ -187,14 +231,18 @@ public class DungeonMap
             }
         }
 
-        //Place initial focus on the room that was generated first.
-        myFocusedRoom = myAdjacencyList[0];
+        size -= RemoveIsolatedRooms();
+        FocusNthRoom(0);
 
-        myFocusedRoom.myRoom.SetSeenFlag(true);
-
-        foreach (GraphEntry entry in myFocusedRoom.myAdjacentRooms) {
-            entry.myRoom.SetSeenFlag(true);
+        //Randomly fill the dungeon with enemies
+        for (int n = 0; n < ENEMY_AMOUNT;) {
+            int index = myRand.Next(1, size);
+            if (!myAdjacencyList[index].myRoom.GetEnemyFlag()) {
+                myAdjacencyList[index].myRoom.SetEnemyFlag(true);
+                n++;
+            }
         }
+
     }
 
     /// <summary>
@@ -216,7 +264,7 @@ public class DungeonMap
         yMax = yMin + h;
 
         if (CheckGridSpace(xMin, xMax, yMin, yMax)) {
-            myAdjacencyList.Add(new GraphEntry(new DungeonRoom(xMin, xMax, yMin, yMax)));
+            myAdjacencyList.Add(new GraphNode(new DungeonRoom(xMin, xMax, yMin, yMax)));
             myAdjacencyList[myAdjacencyList.Count - 1].myRoom.SetID(myAdjacencyList.Count - 1);
             StampRoomOnGrid(myAdjacencyList.Count, xMin, xMax, yMin, yMax);
         }
@@ -231,7 +279,7 @@ public class DungeonMap
     /// <param name="yMax"> The maximum y-coordinate of the domain. </param>
     /// <param name="tolerance"> The minimum grid value needed to have the specified domain be invalid. For example: -1 for regular rooms and 1 for hallways. </param>
     /// <returns> True if the room can fit in the map. False otherwise. </returns>
-    private bool CheckGridSpace(int xMin, int xMax, int yMin, int yMax) {
+    private bool CheckGridSpace(in int xMin, in int xMax, in int yMin, in int yMax) {
         //Make sure that any of the input isn't out of bounds
         if ((xMin < -X_BOUND || xMin >= X_BOUND) 
             || (xMax < -X_BOUND || xMax >= X_BOUND) 
@@ -239,7 +287,6 @@ public class DungeonMap
             || (yMax < -Y_BOUND || yMax >= Y_BOUND)) {
             return false;
         }
-
 
         //Check each element in the matrix within the given domain.
         for (int y = yMin; y <= yMax; y++) {
@@ -254,14 +301,14 @@ public class DungeonMap
     }
 
     /// <summary>
-    /// Given the Grid constraints of an existing room, this method 'stamps' the rooms 'shadow' on a matrix, so that the CheckGridSpace() method knows it exists.
+    /// Given the Grid constraints of an existing room, this method 'stamps' the rooms shadow on the matrix 'myGrid', so that the CheckGridSpace() method knows it exists.
     /// </summary>
     /// <param name="theIndex"> The index of the DungeonRoom in the adjacency list. </param>
     /// <param name="xMin"> The minimum x-coordinate of the domain. </param>
     /// <param name="xMax"> The maximum x-coordinate of the domain. </param>
     /// <param name="yMin"> The minimum y-coordinate of the domain. </param>
     /// <param name="yMax"> The maximum y-coordinate of the domain. </param>
-    private void StampRoomOnGrid(int theIndex, int xMin, int xMax, int yMin, int yMax) {
+    private void StampRoomOnGrid(in int theIndex, in int xMin, in int xMax, in int yMin, in int yMax) {
         for (int y = yMin; y <= yMax; y++) {
             for (int x = xMin; x <= xMax; x++) {
                 myGrid[y + Y_BOUND, x + X_BOUND] = theIndex;
@@ -291,7 +338,7 @@ public class DungeonMap
     /// </summary>
     /// <param name="theIndex"> The index of the DungeonRoom in the adjacency list. </param>
     /// <returns> Returns a list of valid hallways. </returns>
-    private List<int[]> GetValidHallways(int theIndex) {
+    private List<int[]> GetValidHallways(in int theIndex) {
         DungeonRoom room0 = myAdjacencyList[theIndex].myRoom;
         
         //Get the domain of the room
@@ -346,15 +393,15 @@ public class DungeonMap
 
     /// <summary>
     /// This method is meant to interface with GetValidHallways(...) returned list of int[].
-    /// Will not draw the hallway if it is directly adjacent to another room/hallway or if the room connection was already made with another hallway
+    /// Preforms checks, and will fail to draw the hallway if any of these checks are failed.
     /// </summary>
     /// <param name="theRoom"> An int[] from the list returned from GetValidHallways(...). </param>
-    private void DrawHallway(int[] theRoom) {
+    private void DrawHallway(in int[] theRoom) {
         //Check if the room connection was already made
-        if (myAdjacencyList[theRoom[4]].myConnectedRooms.Contains(theRoom[5])) {
+        if (myAdjacencyList[theRoom[4]].myConnectedRooms.Contains(myAdjacencyList[theRoom[5]].myRoom)) {
             return;   
         } 
-
+        
         //Make sure that the hallway isn't too short.
         if (theRoom[0] == theRoom[1] && theRoom[2] == theRoom[3]) {
             return;
@@ -375,7 +422,7 @@ public class DungeonMap
         if (theRoom[1] - theRoom[0] > Y_BOUND || theRoom[3] - theRoom[2] > Y_BOUND) {
             return;
         }
-
+        
 
         //Make sure that, if this isn't the first hallway being drawn, that we aren't trying to draw a hallway into a hallway
         if (myAdjacencyList[theRoom[4]].myAdjacentRooms.Count > 2 && (myAdjacencyList[theRoom[5]].myRoom.GetW() == 1.0f || myAdjacencyList[theRoom[5]].myRoom.GetH() == 1.0f)) {
@@ -384,7 +431,7 @@ public class DungeonMap
 
 
         //We begin to create the DungeonRoom instance inside the adjacency list./
-        myAdjacencyList.Add(new GraphEntry(new DungeonRoom(theRoom[0], theRoom[1], theRoom[2], theRoom[3])));
+        myAdjacencyList.Add(new GraphNode(new DungeonRoom(theRoom[0], theRoom[1], theRoom[2], theRoom[3])));
         myAdjacencyList[myAdjacencyList.Count - 1].myRoom.SetID(myAdjacencyList.Count - 1);
 
         //We now initialize the graph connections
@@ -392,8 +439,8 @@ public class DungeonMap
         myAdjacencyList[theRoom[5]].myAdjacentRooms.Add(myAdjacencyList[myAdjacencyList.Count - 1]);
         myAdjacencyList[myAdjacencyList.Count - 1].myAdjacentRooms.Add(myAdjacencyList[theRoom[4]]);
         myAdjacencyList[myAdjacencyList.Count - 1].myAdjacentRooms.Add(myAdjacencyList[theRoom[5]]);
-        myAdjacencyList[theRoom[4]].myConnectedRooms.Add(theRoom[5]);
-        myAdjacencyList[theRoom[5]].myConnectedRooms.Add(theRoom[4]);
+        myAdjacencyList[theRoom[4]].myConnectedRooms.Add(myAdjacencyList[theRoom[5]].myRoom);
+        myAdjacencyList[theRoom[5]].myConnectedRooms.Add(myAdjacencyList[theRoom[4]].myRoom);
 
         //We 'stamp' the hallway to the grid matrix so that hallways in the future can connect to it
         if (theRoom[0] == theRoom[1]) {
@@ -418,7 +465,7 @@ public class DungeonMap
     /// <param name="theDeltaX"> This value can either be -1, 0, or 1. </param>
     /// <param name="theDeltaY"> This value can either be -1, 0, or 1. </param>
     /// <returns> The ending point of the hallway. </returns>
-    private (int, int) PathFindHallway(int theX, int theY, int theDeltaX, int theDeltaY) {
+    private (int, int) PathFindHallway(in int theX, in int theY, in int theDeltaX, in int theDeltaY) {
         //Makes sure at least one of these values are 0, and at least one is -1 or 1
         if (!(theDeltaX == 0 ^ theDeltaY == 0) || !(theDeltaX == -1 ^ theDeltaY == -1 || theDeltaX == 1 ^ theDeltaY == 1)) {
             return (X_BOUND * theDeltaX, Y_BOUND * theDeltaY);
@@ -434,4 +481,56 @@ public class DungeonMap
 
         return (x, y);
     }
+
+    /// <summary>
+    /// A simple recursive traversal helper method that sets the seen flag of each room to help specify which rooms are reachable from the specified initial room.
+    /// </summary>
+    /// <param name="theCurrentRoom"></param>
+    /// <returns> The number of rooms that are traversable, not including the first room. </returns>
+    private int traverse(in int theCurrentRoom) {
+        myAdjacencyList[theCurrentRoom].myRoom.SetSeenFlag(true);
+        int cnt = 0;
+        foreach (GraphNode node in myAdjacencyList[theCurrentRoom].myAdjacentRooms) {
+            if (!node.myRoom.GetSeenFlag()) {
+                cnt += traverse(node.myRoom.GetID());
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+
+    /// <summary>
+    /// This helper method traverses through the graph and removes any rooms that cannot be traversed to.
+    /// </summary>
+    /// <returns> The number of rooms that were deleted. </returns>
+    private int RemoveIsolatedRooms() {
+        //We want to make sure that the first room we traverse from isn't an isolated room
+        int firstRoom = 0;
+        while (traverse(firstRoom) < 50) { 
+            firstRoom++;
+
+            foreach (GraphNode node in myAdjacencyList) {
+                node.myRoom.SetSeenFlag(false);
+            }
+        }
+
+        //Remove any rooms that were not seen during the traversal
+        int count = 0;
+        for (int i = 0; i < myAdjacencyList.Count; i++) {
+            if (!myAdjacencyList[i].myRoom.GetSeenFlag()) {
+                myAdjacencyList.RemoveAt(i--);
+                count++;
+            }
+        }
+
+        //Reset the ID and the seen flag of each room
+        for (int i = 0; i < myAdjacencyList.Count; i++) {
+            myAdjacencyList[i].myRoom.SetID(i);
+            myAdjacencyList[i].myRoom.SetSeenFlag(false);
+        }
+
+        return count;
+    }
+    
 }

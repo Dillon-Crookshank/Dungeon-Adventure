@@ -36,6 +36,6 @@ namespace DefaultNamespace
             stream.Close();
 
             Debug.Log("Party Serialized!");
-        }   
+        }
     }
 }

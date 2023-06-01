@@ -8,6 +8,7 @@ namespace DefaultNamespace
 {
     class healButton : clickableButton
     {
+
         /// <summary>
         /// Requests a health change of +3 on all heroes of the party.
         /// </summary>

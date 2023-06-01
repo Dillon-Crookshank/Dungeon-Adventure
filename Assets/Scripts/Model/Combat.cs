@@ -10,41 +10,59 @@ namespace DefaultNamespace
     /// <summary>
     /// A static class for combat logic and simulation.
     /// </summary>
-    internal class Combat : MonoBehaviour
+    internal class Combat
     {
-
+        
         private int turnCounter;
 
         private bool isEndOfTurn;
 
         private List<AbstractCharacter> characterList;
 
-        private AbstractCharacter activeActor;
+        private AbstractCharacter myActiveCharacter;
+
+        private PlayerParty myPlayerParty;
+
+        private EnemyParty myEnemyParty;
+
+        internal Combat(PlayerParty thePlayerParty, EnemyParty theEnemyParty) {
+            myPlayerParty = thePlayerParty;
+            myEnemyParty = theEnemyParty;
+
+            CombatEncounter();
+        }
 
         /// <summary>
         /// Takes a player party and an enemy party, and handles the logic for the combat between them.
         /// </summary>
-        /// <param name="thePlayerParty">The party of heroes.</param>
-        /// <param name="theEnemyParty">The party of enemies.</param>
-        internal async void CombatEncounter(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        internal async void CombatEncounter()
         {
             Debug.Log("Encounter started!");
             turnCounter = 0;
 
             isEndOfTurn = false;
 
-            characterList = InitiativeRoll(thePlayerParty, theEnemyParty);
+            characterList = InitiativeRoll();
 
             characterList.Sort((x, y) => y.CombatInitiative - x.CombatInitiative);
 
-            while (thePlayerParty.isAllAlive && theEnemyParty.isAllAlive)
+            while (myPlayerParty.isAllAlive && myEnemyParty.isAllAlive)
             {
                 turnCounter++;
                 foreach (AbstractCharacter character in characterList)
                 {
-                    activeActor = character;
-                    Debug.LogFormat("{0}, initiative: {1}", activeActor.Name, activeActor.CombatInitiative);
-                    await TurnOver(activeActor);
+                    myActiveCharacter = character;
+                    Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
+                    
+                    if (!isPlayer()) {
+                        //Select random move
+                        myActiveCharacter.BasicAttack((myPlayerParty.GetPartyPositions())[1]);
+
+                        isEndOfTurn = true;
+                    }
+
+        
+                    await TurnOver(myActiveCharacter);
                     isEndOfTurn = false;
                 }
             }
@@ -55,17 +73,15 @@ namespace DefaultNamespace
         /// Dual purpose: This combines all of the participating Actors into a single list, and
         /// generates their combat initiative by appending a D20 to their base initiatives.
         /// </summary>
-        /// <param name="thePlayerParty">The party of heroes.</param>
-        /// <param name="theEnemyParty">The party of enemies.</param>
         /// <returns></returns>
-        internal List<AbstractCharacter> InitiativeRoll(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        internal List<AbstractCharacter> InitiativeRoll()
         {
             System.Random rng = new System.Random();
 
             List<AbstractCharacter> characters = new List<AbstractCharacter>();
 
-            foreach (AbstractCharacter actor in (thePlayerParty.GetPartyPositions().Values
-            .Concat(theEnemyParty.GetPartyPositions().Values)))
+            foreach (AbstractCharacter actor in (myPlayerParty.GetPartyPositions().Values
+            .Concat(myEnemyParty.GetPartyPositions().Values)))
             {
                 characters.Add(actor);
             }
@@ -91,7 +107,7 @@ namespace DefaultNamespace
 
         public AbstractCharacter GetActiveActor()
         {
-            return activeActor;
+            return myActiveCharacter;
         }
 
         public void EndTurn()
@@ -101,12 +117,12 @@ namespace DefaultNamespace
 
         public int ActorIndex()
         {
-            return activeActor.PartyPosition;
+            return myActiveCharacter.PartyPosition;
         }
 
         public bool isPlayer()
         {
-            return (activeActor.GetType() == typeof(PlayerCharacter));
+            return (myActiveCharacter.GetType() == typeof(PlayerCharacter));
         }
 
     }
