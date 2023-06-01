@@ -7,6 +7,9 @@ namespace DefaultNamespace
 {
     public abstract class clickableButton : MonoBehaviour
     {
+
+        [SerializeField]
+        Color highlightColor; 
         /// <summary>
         /// A reference to the rectangular backing of the cell.
         /// </summary>
