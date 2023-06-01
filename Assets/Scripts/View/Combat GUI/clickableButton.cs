@@ -9,7 +9,7 @@ namespace DefaultNamespace
     {
 
         [SerializeField]
-        Color highlightColor; 
+        public Color highlightColor; 
         /// <summary>
         /// A reference to the rectangular backing of the cell.
         /// </summary>
@@ -30,7 +30,11 @@ namespace DefaultNamespace
         /// </summary>
         void OnMouseOver()
         {
-            rend.color = Color.green;
+            if (highlightColor != null){
+                rend.color = highlightColor;
+            } else {
+                rend.color = Color.green;
+            }
             if (Input.GetMouseButtonDown(0))
             {
                 PressButton();
@@ -44,7 +48,6 @@ namespace DefaultNamespace
         {
             rend.color = Color.white;
         }
-
         public abstract void PressButton();
     }
 }

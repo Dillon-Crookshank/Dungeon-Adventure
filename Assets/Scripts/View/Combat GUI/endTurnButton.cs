@@ -8,6 +8,7 @@ namespace DefaultNamespace
 {
     class endTurnButton : clickableButton
     {
+
         /// <summary>
         /// Requests a saved state of the party from the button factory.
         /// </summary>

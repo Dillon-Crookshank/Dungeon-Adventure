@@ -10,6 +10,7 @@ namespace DefaultNamespace
 {
     class loadButton : clickableButton
     {
+
         /// <summary>
         /// Handles sending a request to the Button Factory to load the party.
         /// </summary>
