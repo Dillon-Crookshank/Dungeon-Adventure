@@ -65,7 +65,6 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     public void Update() {
         UpdateMapView();
-        //DebugMapView();
         myMapCameraController.UpdateCamera();
 
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
