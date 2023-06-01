@@ -2,22 +2,20 @@ using System;
 using System.Collections.Generic;
 using DefaultNamespace;
 
-[Serializable]
-internal class EnemyPartyQueue
+internal static class EnemyPartyQueue
 {
 
-    private string[] classes = new string[] { "skeleton", "zombie", "goblin", "orc", "skeleton archer",
+    private static int QUEUE_SIZE = 16;
+
+    private static string[] classes = new string[] { "skeleton", "zombie", "goblin", "orc", "skeleton archer",
     "necromancer", "goblin archer"};
 
-    internal Queue<EnemyParty> enemies;
-
-    internal EnemyPartyQueue()
-    {
+    static internal Queue<EnemyParty> CreateEnemyQueue() {
         Random rng = new Random();
-        enemies = new Queue<EnemyParty>();
+        Queue<EnemyParty> enemies = new Queue<EnemyParty>();
 
 
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < QUEUE_SIZE; i++)
         {
             int partySize = rng.Next(1, 4);
             EnemyParty party = new EnemyParty();
@@ -28,6 +26,7 @@ internal class EnemyPartyQueue
             }
             enemies.Enqueue(party);
         }
-    }
 
+        return enemies;
+    }
 }

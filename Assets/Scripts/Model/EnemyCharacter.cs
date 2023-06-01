@@ -7,13 +7,9 @@ namespace DefaultNamespace
     /// An abstract representation of an Enemy.
     /// Includes a RNG and a lootTable.
     /// </summary>
+    [Serializable]
     internal class EnemyCharacter : AbstractCharacter
     {
-
-        /// <summary>
-        /// A random number generator to be used for deciding Actions to perform and loot rolled.
-        /// </summary>
-        Random enemyRng;
 
         // TODO: private List<Item> lootTable;
 
@@ -30,7 +26,6 @@ namespace DefaultNamespace
      in double theDefence, in double theMana, in int theInitiative) : base(theClass, theHitpoints, theAttack,
      theDefence, theMana, theInitiative)
         {
-            enemyRng = new Random();
             //TODO: lootTable = new List<Item>();
         }
 

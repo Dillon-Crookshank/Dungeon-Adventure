@@ -271,6 +271,10 @@ namespace DefaultNamespace {
             }
             return returnSet;
         }
+
+        public void setDisplayedParty(PlayerParty theParty){
+            myTestParty = theParty;
+        }
     }
 }
 

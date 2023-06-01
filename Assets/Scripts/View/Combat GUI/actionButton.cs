@@ -44,5 +44,9 @@ namespace DefaultNamespace
         {
             onButtonClick.Raise(this, new DataPacket(name, "ActionName", "Model"));
         }
+
+        public void SetDescription(in string theDescription) {
+            displayDescription = theDescription;
+        }
     }
 }

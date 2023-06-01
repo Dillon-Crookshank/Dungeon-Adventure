@@ -1,8 +1,11 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+
+namespace DefaultNamespace {
 
 /// <summary>
 /// The Controller to the Dungeon Adventure Game. **Must attach this script to a GameObject initialized in the Unity Editor**
@@ -47,6 +50,12 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     private DungeonMap myMapModel;
 
+    private Queue<EnemyParty> myEnemyQueue;
+
+    private PlayerParty myPlayerParty;
+
+    private Combat myCombatModel;
+
     /// <summary>
     /// The Start method is run once, after the DungeonController GameObject is initialized.
     /// </summary>
@@ -54,16 +63,24 @@ public class DungeonController : MonoBehaviour {
         myMapCameraController = new CameraController(myMapCamera, myMapCamera.transform.localPosition, (4.5f, 18.0f), (32.0f, 18.0f));
         myMapView = new MapView(myMapCamera.transform.localPosition);
         myMapModel = new DungeonMap();
+        myPlayerParty = new PlayerParty(accessDB.PlayerDatabaseConstructor("warrior"));
+        myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
 
         myMapCamera.SetActive(false);
         myCombatCamera.SetActive(false);
         myMenuCamera.SetActive(true);
+
+        
     }
 
     /// <summary>
     /// The Update method is called once per frame while the DungeonController GameObject is active.
     /// </summary>
     public void Update() {
+        (GameObject.Find("Button Factory")).SendMessage("setDisplayedParty", myPlayerParty);
+        (GameObject.Find("Enemy Button Factory")).SendMessage("setDisplayedParty", myEnemyQueue.Peek());
+
+
         UpdateMapView();
         myMapCameraController.UpdateCamera();
 
@@ -103,7 +120,7 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     /// <param name="theFileName"> The name of the file that the map should be saved to. </param>
     /// <param name="theMap"> The DungeonMap that should be saved. </param>
-    private void SerializeMap(in String theFileName, in DungeonMap theMap) {
+    private void SerializeObject(in String theFileName, in System.Object theMap) {
         IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(theFileName, FileMode.Create, FileAccess.Write, FileShare.None);
         formatter.Serialize(stream, theMap);
@@ -115,23 +132,25 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     /// <param name="theFileName"> The name of the file that the dungeon map is located in. </param>
     /// <returns> The deserialized dungeon map. </returns>
-    private DungeonMap DeserializeMap(in String theFileName) {
+    private System.Object DeserializeObject(in String theFileName) {
 
         IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(theFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
         
         //Save the map to a temp variable so we can close the file stream
-        DungeonMap tempMap = (DungeonMap) formatter.Deserialize(stream);
+        System.Object temp = formatter.Deserialize(stream);
         stream.Close();
 
-        return tempMap;
+        return temp;
     }
 
     /// <summary>
     /// Saves the game to a specific file. Will override any previous saves.
     /// </summary>
     public void SaveGame() {
-        SerializeMap("myMap.bin", myMapModel);
+        SerializeObject("myMap.bin", myMapModel);
+        SerializeObject("EnemyQueue.bin", myEnemyQueue);
+        SerializeObject("PlayerParty.bin", myPlayerParty);
 
         //Add stuff to save enemy party queue and user party here
     }
@@ -142,7 +161,10 @@ public class DungeonController : MonoBehaviour {
     public void LoadGame() {
         //Check if a game file exists; If not, load a new game
 
-        myMapModel = DeserializeMap("myMap.bin");
+        myMapModel = (DungeonMap) DeserializeObject("myMap.bin");
+        myEnemyQueue = (Queue<EnemyParty>) DeserializeObject("EnemyQueue.bin");
+        myPlayerParty = (PlayerParty) DeserializeObject("PlayerParty.bin");
+
         myMapView.ClearMap();
 
         for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
@@ -205,6 +227,8 @@ public class DungeonController : MonoBehaviour {
                 if (myMapModel.GetFocusedRoom().GetEnemyFlag()) {
                     //Pull from enemy party queue and initialize combat here
 
+                    myCombatModel = new Combat(myPlayerParty, myEnemyQueue.Peek());
+
                     SwitchToCombat();
                 }
             }
@@ -218,6 +242,8 @@ public class DungeonController : MonoBehaviour {
         LoadGame();
         SwitchToMap();
     }
+
+    
 }
 
-
+}

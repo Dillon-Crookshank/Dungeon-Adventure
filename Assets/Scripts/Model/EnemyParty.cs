@@ -1,6 +1,9 @@
 using System.Collections.Generic;
-using DefaultNamespace;
+using System;
 
+namespace DefaultNamespace {
+
+[Serializable]
 internal class EnemyParty : AbstractParty
 {
 
@@ -19,4 +22,5 @@ internal class EnemyParty : AbstractParty
 
 
 
+}
 }

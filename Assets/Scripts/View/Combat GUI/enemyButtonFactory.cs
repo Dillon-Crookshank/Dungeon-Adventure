@@ -241,5 +241,9 @@ namespace DefaultNamespace {
             }
             return returnSet;
         }
+
+        public void setDisplayedParty(EnemyParty theParty) {
+            myEnemyParty = theParty;
+        }
     }    
 }
