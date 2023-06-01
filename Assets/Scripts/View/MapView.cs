@@ -6,23 +6,9 @@ using UnityEngine;
 /// </summary>
 public class MapView {
     /// <summary>
-    /// A nested enum to help identify the specific sprite being used.
-    /// </summary>
-    private enum RoomFocus {
-        PrimaryFocus,
-        Focused,
-        Unfocused
-    }
-
-    /// <summary>
     /// The origin of the map.
     /// </summary>
     private Vector2 myOrigin;
-
-    /// <summary>
-    /// The sprites used by the Map.
-    /// </summary>
-    private Sprite[] mySprites;
 
     /// <summary>
     /// The collection of Sprite components.
@@ -39,36 +25,25 @@ public class MapView {
     /// </summary>
     /// <param name="theOrigin"> The origin of the Map. All components are created about this point. </param>
     /// <param name="theSprites"> The Sprite array used by the map. Index 0: PrimaryFocus, Index 1: Focused, Index 2: Unfocused. </param>
-    public MapView(Vector2 theOrigin, Sprite[] theSprites) {
+    public MapView(Vector2 theOrigin) {
         myOrigin = theOrigin;
-        mySprites = theSprites;
         myRooms = new Dictionary<int, TiledSprite>();
         myIcons = new Dictionary<int, TiledSprite>();
     }
 
-    //Create a "SetIcon" method that takes a dungeonRoom, checks if an icon already exists on it, and sets/creates an icon based on the given sprite/state
-
     /// <summary>
-    /// Sets the primary focused room. Does not override any existing PrimaryFocused rooms, you must reset them beforehand.
+    /// Gives a sprite to the given dungeon room in the view. If the room doesn't exist yet, the view uses the bounds in the DungeonRoom class to create a view component.
     /// </summary>
     /// <param name="theRoom"></param>
-    public void SetPrimaryFocus(DungeonRoom theRoom) {
-        SetSecondaryFocus(theRoom);
-        myRooms[theRoom.GetID()].SetSprite(mySprites[(int)RoomFocus.PrimaryFocus]);
-    }
-
-    /// <summary>
-    /// Sets a room to be focused.
-    /// </summary>
-    /// <param name="theRoom"> The DungeonRoom to be focused. </param>
-    public void SetSecondaryFocus(DungeonRoom theRoom) {
-        //Create the SlicedSprite if it doesn't exist yet
+    /// <param name="theSprite"></param>
+    public void GiveSprite(DungeonRoom theRoom, Sprite theSprite) {
+        //Create the TiledSprite if it doesn't exist yet
         if (!myRooms.ContainsKey(theRoom.GetID())) {
             myRooms.Add(
                 theRoom.GetID(),
                 new TiledSprite(
                     $"Room:{theRoom.GetID()}",
-                    mySprites[0],
+                    theSprite,
                     new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, 0),
                     new Vector2(theRoom.GetW(), theRoom.GetH())
                 )
@@ -76,26 +51,27 @@ public class MapView {
 
             //Add observer and listener scripts to add UI functionality
             myRooms[theRoom.GetID()].AddComponent(typeof(MapObserver));
-            myRooms[theRoom.GetID()].AddComponent(typeof(ButtonListener));
         }
         else {
-            myRooms[theRoom.GetID()].SetSprite(mySprites[(int)RoomFocus.Focused]);
+            //If the room already exists, just update it's sprite
+            myRooms[theRoom.GetID()].SetSprite(theSprite);
         }
     }
 
     /// <summary>
-    /// Resets the sprites of the Map View to unfocused sprites.
+    /// Gives every existing room the same sprite. Good for resetting the view in-between updates.
     /// </summary>
-    public void UnfocusAll() {
+    /// <param name="theSprite"> The sprite that is given to each existing room in the view. </param>
+    public void GiveAllSprite(Sprite theSprite) {
         foreach (TiledSprite button in myRooms.Values) {
-            button.SetSprite(mySprites[(int)RoomFocus.Unfocused]);
+            button.SetSprite(theSprite);
         }
     }
 
     /// <summary>
     /// Destroys every view component in the map
     /// </summary>
-    public void Clear() {
+    public void ClearMap() {
         foreach (int id in myRooms.Keys) {
             myRooms[id].Destroy();
         }
@@ -121,13 +97,13 @@ public class MapView {
                 new TiledSprite(
                     $"Icon:{theRoom.GetID()}",
                     theIcon,
-                    new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, 0),
+                    new Vector3(theRoom.GetX() + myOrigin.x, theRoom.GetY() + myOrigin.y, -0.1f),
                     new Vector2(1, 1)
                 )
             );
         }
 
-        //Simply change the sprite of the icon if it does exist
+        //Simply change the sprite of the icon if it already exist
         else {
             myIcons[theRoom.GetID()].SetSprite(theIcon);
         }

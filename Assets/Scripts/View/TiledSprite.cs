@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// An instantiable unity button. By default, the button turns blue when hovering over, turns green when left-clicking, and turns red when right-clicking.
+/// An instantiable unity sprite with a BoxCollider.
 /// </summary>
 public class TiledSprite {
     /// <summary>

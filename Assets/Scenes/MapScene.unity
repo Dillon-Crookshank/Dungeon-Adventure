@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Map Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -325,6 +325,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e9f2cf50a41744a469d4098cb6ad3600, type: 3}
   - {fileID: 21300000, guid: 377150ec770f3004b93c0eef0e3e4bd9, type: 3}
   - {fileID: 21300000, guid: 7903cb6a39bab6e4597f8611f5b98651, type: 3}
+  myMapCamera: {fileID: 519420028}
+  myMenuCamera: {fileID: 0}
+  myCombatCamera: {fileID: 0}
 --- !u!4 &1792835305
 Transform:
   m_ObjectHideFlags: 0
