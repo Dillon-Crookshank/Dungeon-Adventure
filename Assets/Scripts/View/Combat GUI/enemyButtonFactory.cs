@@ -31,6 +31,11 @@ namespace DefaultNamespace {
         [SerializeField]
         GameObject backgroundBasis;
 
+        [SerializeField]
+        GameObject modelObject;
+
+        private Combat combatInstance;
+
         /// <summary>
         /// A constant to reference a percentage of distance that the center of the button factory is placed from
         /// the center of the screen.

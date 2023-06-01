@@ -31,6 +31,12 @@ namespace DefaultNamespace {
         GameObject templateSprite;
 
         /// <summary>
+        /// A reference to the Template object, upon which all hero cells are based upon.
+        /// </summary>
+        [SerializeField]
+        GameObject modelObject;
+
+        /// <summary>
         /// A reference to the background of the GUI, to accurately place the cells according
         /// to the DISTANCE_FROM_CENTER constant.
         /// </summary>
@@ -57,6 +63,8 @@ namespace DefaultNamespace {
         /// An array of vectors to position each of the cells correctly.
         /// </summary>
         private static Vector3[] myPositionVectors;
+
+        private Combat combatInstance;
 
         /// <summary>
         /// An array of strings to give the cell game objects names.

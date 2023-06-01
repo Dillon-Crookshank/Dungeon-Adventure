@@ -12,7 +12,7 @@ namespace DefaultNamespace
     /// </summary>
     internal class Combat : MonoBehaviour
     {
-
+        
         private int turnCounter;
 
         private bool isEndOfTurn;
