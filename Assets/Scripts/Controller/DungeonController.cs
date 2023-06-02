@@ -78,23 +78,51 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     public void Update() {
         (GameObject.Find("Button Factory")).SendMessage("setDisplayedParty", myPlayerParty);
-        (GameObject.Find("Enemy Button Factory")).SendMessage("setDisplayedParty", myEnemyQueue.Peek());
+        //Do extra check since peek throws an error when the queue is empty
+        if (myEnemyQueue.Count != 0) {
+            (GameObject.Find("Enemy Button Factory")).SendMessage("setDisplayedParty", myEnemyQueue.Peek());
+        }
+
+        //If the current enemy party is dead, we know that combat was just finished
+        if (myEnemyQueue.Count != 0 && !(myEnemyQueue.Peek()).IsAllAlive()) {
+            //Show the save prompt on the combat screen
+            
+            myEnemyQueue.Dequeue();
+            myMapModel.GetFocusedRoom().SetEnemyFlag(false);
+
+            //Do not autosave if that was the last battle of the game
+            if (myEnemyQueue.Count != 0) {
+                SaveGame();
+                SwitchToMap();
+            } else {
+                SwitchToMainMenu();
+            }
+
+            
+        }
+
+        //If the users party is dead, we know that combat was just finished
+        if (!myPlayerParty.IsAllAlive()) {
+            SwitchToMainMenu();
+        }
+
+        //left-ctr + w -> kill entire enemy party
+        if (Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftControl)) {
+            foreach(AbstractCharacter character in myEnemyQueue.Peek().GetPartyPositions().Values) {
+                character.CurrentHitpoints = -999;
+            }
+        }
+
+        //left-ctr + l -> kill entire user party
+        if (Input.GetKeyDown(KeyCode.L) && Input.GetKey(KeyCode.LeftControl)) {
+            foreach(AbstractCharacter character in myPlayerParty.GetPartyPositions().Values) {
+                character.CurrentHitpoints = -999;
+            }
+        }
 
 
         UpdateMapView();
         myMapCameraController.UpdateCamera();
-
-        if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            SwitchToMainMenu();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad2)) {
-            SwitchToCombat();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            SwitchToMap();
-        }
     }
 
     /// <summary>
@@ -109,9 +137,16 @@ public class DungeonController : MonoBehaviour {
         for (int i = 0; myMapModel.GetNthAdjacentRoom(i) != null; i++) {
             myMapView.GiveSprite(myMapModel.GetNthAdjacentRoom(i), mySprites[1]);
 
-            if (myMapModel.GetNthAdjacentRoom(i).GetEnemyFlag()) {
-                myMapView.GiveIcon(myMapModel.GetNthAdjacentRoom(i), mySprites[3]);
-            }
+            
+        }
+
+        for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
+            if (myMapModel.GetNthRoom(i).GetEnemyFlag() && myMapModel.GetNthRoom(i).GetSeenFlag()) {
+                myMapView.GiveIcon(myMapModel.GetNthRoom(i), mySprites[3]);
+            } else {
+                myMapView.ClearIcon(myMapModel.GetNthRoom(i));
+            }  
+
         }
     }
 
@@ -176,8 +211,6 @@ public class DungeonController : MonoBehaviour {
                 }
             }
         }
-
-        //Add stuff to deserialize enemy party queue and user party here
     }
 
     /// <summary>
@@ -240,6 +273,28 @@ public class DungeonController : MonoBehaviour {
     /// </summary>
     public void ContinueGame() {
         LoadGame();
+        SwitchToMap();
+    }
+
+    public void NewGame() {
+        myMapModel = new DungeonMap();
+        myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
+        myPlayerParty = new PlayerParty(accessDB.PlayerDatabaseConstructor("warrior"));
+
+        SaveGame();
+
+        myMapView.ClearMap();
+
+        for (int i = 0; i < myMapModel.GetRoomCount(); i++) {
+            if (myMapModel.GetNthRoom(i).GetSeenFlag()) {
+                myMapView.GiveSprite(myMapModel.GetNthRoom(i), mySprites[1]);
+
+                if (myMapModel.GetNthRoom(i).GetEnemyFlag()) {
+                    myMapView.GiveIcon(myMapModel.GetNthRoom(i), mySprites[3]);
+                }
+            }
+        }
+
         SwitchToMap();
     }
 
