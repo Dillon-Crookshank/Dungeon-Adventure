@@ -31,9 +31,17 @@ internal abstract class AbstractParty
     /// Getter method for whether the party is defeated or not.
     /// </summary>
     /// <returns> True if party is not defeated, false if all party members are dead.</returns>
-    private bool IsAllAlive()
+    public bool IsAllAlive()
     {
-        return isAllAlive;
+        //return isAllAlive;
+
+        foreach(AbstractCharacter character in partyPositions.Values) {
+            if (character.IsAlive()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
