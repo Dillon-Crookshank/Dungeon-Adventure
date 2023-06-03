@@ -6,11 +6,7 @@ using System;
 /// </summary>
 [Serializable]
 public class DungeonRoom
-{   
-    /// <summary>
-    /// The cached hashcode of the room.
-    /// </summary>
-    private int myHash;
+{
 
     /// <summary>
     /// The unique ID number of the room. This number usually directly correlates with the index of this room inside a collection.
