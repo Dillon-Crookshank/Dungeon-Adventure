@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -57,20 +58,24 @@ public class DungeonController : MonoBehaviour {
     private Combat myCombatModel;
 
     /// <summary>
+    /// A flag used to check if an animation is still in progress, so that the controller knows to wait.
+    /// </summary>
+    private bool myAnimationFlag;
+
+    /// <summary>
     /// The Start method is run once, after the DungeonController GameObject is initialized.
     /// </summary>
     public void Start() {
         myMapCameraController = new CameraController(myMapCamera, myMapCamera.transform.localPosition, (4.5f, 18.0f), (32.0f, 18.0f));
         myMapView = new MapView(myMapCamera.transform.localPosition);
-        myMapModel = new DungeonMap();
-        myPlayerParty = new PlayerParty(accessDB.PlayerDatabaseConstructor("warrior"));
-        myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
+        
+        LoadGame();
 
         myMapCamera.SetActive(false);
         myCombatCamera.SetActive(false);
         myMenuCamera.SetActive(true);
 
-        
+        myAnimationFlag = false;
     }
 
     /// <summary>
@@ -83,28 +88,21 @@ public class DungeonController : MonoBehaviour {
             (GameObject.Find("Enemy Button Factory")).SendMessage("setDisplayedParty", myEnemyQueue.Peek());
         }
 
-        //If the current enemy party is dead, we know that combat was just finished
-        if (myEnemyQueue.Count != 0 && !(myEnemyQueue.Peek()).IsAllAlive()) {
-            //Show the save prompt on the combat screen
-            
-            myEnemyQueue.Dequeue();
-            myMapModel.GetFocusedRoom().SetEnemyFlag(false);
-
-            //Do not autosave if that was the last battle of the game
-            if (myEnemyQueue.Count != 0) {
-                SaveGame();
-                SwitchToMap();
-            } else {
-                SwitchToMainMenu();
-            }
-
-            
+        //If either party is dead, we know that combat was just finished
+        if (myEnemyQueue.Count != 0 && !(myEnemyQueue.Peek()).IsAllAlive() && !myAnimationFlag) {
+            //Show "enemies slain"
+            myAnimationFlag = true;
+            GameObject.Find("Enemies Slain Display").SendMessage("DoFadeAnimation");
+            //Response : EndCombatEncounter();
         }
 
-        //If the users party is dead, we know that combat was just finished
-        if (!myPlayerParty.IsAllAlive()) {
-            SwitchToMainMenu();
+        else if (!myPlayerParty.IsAllAlive() && !myAnimationFlag) {
+            //Show "you died"
+            myAnimationFlag = true;
+            GameObject.Find("You Died Display").SendMessage("DoFadeAnimation");
+            //Response : SwitchToMainMenu();
         }
+
 
         //left-ctr + w -> kill entire enemy party
         if (Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftControl)) {
@@ -220,6 +218,8 @@ public class DungeonController : MonoBehaviour {
         myMapCamera.SetActive(false);
         myCombatCamera.SetActive(false);
         myMenuCamera.SetActive(true);
+        LoadGame();
+        myAnimationFlag = false;
     }
 
     /// <summary>
@@ -272,10 +272,12 @@ public class DungeonController : MonoBehaviour {
     /// Called when the user clicks the 'continue' button in the main menu
     /// </summary>
     public void ContinueGame() {
-        LoadGame();
         SwitchToMap();
     }
 
+    /// <summary>
+    /// Called by
+    /// </summary>
     public void NewGame() {
         myMapModel = new DungeonMap();
         myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
@@ -296,6 +298,26 @@ public class DungeonController : MonoBehaviour {
         }
 
         SwitchToMap();
+    }
+
+    void EndCombatEncounter() {
+        //Determine if that was the last battle of the game
+        
+        myMapModel.GetFocusedRoom().SetEnemyFlag(false);
+        SwitchToMap();
+        if (myEnemyQueue.Count != 1) {
+            
+            myEnemyQueue.Dequeue();
+            myAnimationFlag = false;
+
+            SaveGame();
+
+        } else {
+            //show "dungeon cleared"
+            myAnimationFlag = true;
+            GameObject.Find("Dungeon Cleared Display").SendMessage("DoFadeAnimation");
+            //Response : SwitchToMainMenu();
+        }
     }
 
     void DeliverBasicAttack(AbstractCharacter theTarget){

@@ -164,7 +164,7 @@ public class CameraController {
         float y = Math.Clamp(thePosition.y, -myYBound + GetCameraSize() + myOrigin.y, myYBound - GetCameraSize() + myOrigin.y);
         float x = Math.Clamp(thePosition.x, -myXBound + (GetCameraSize() / ASPECT_Y * ASPECT_X)  + myOrigin.x, myXBound - (GetCameraSize() / ASPECT_Y * ASPECT_X)  + myOrigin.x);
 
-        myCamera.transform.localPosition = new Vector3(x, y, -1);
+        myCamera.transform.localPosition = new Vector3(x, y, -10);
     }
 
     /// <summary>
