@@ -1,8 +1,6 @@
-using System.Reflection;
-using UnityEngine;
 using NUnit.Framework;
 
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
 
 
@@ -88,12 +86,12 @@ namespace DefaultNamespace
             PlayerCharacter localCleric = new PlayerCharacter("cleric", 75, 10, 5, 20, 0);
 
 
-            PlayerCharacter databaseWarrior = accessDB.PlayerDatabaseConstructor("warrior");
-            PlayerCharacter databaseBarbarian = accessDB.PlayerDatabaseConstructor("barbarian");
-            PlayerCharacter databaseArcher = accessDB.PlayerDatabaseConstructor("archer");
-            PlayerCharacter databaseRogue = accessDB.PlayerDatabaseConstructor("rogue");
-            PlayerCharacter databaseWizard = accessDB.PlayerDatabaseConstructor("wizard");
-            PlayerCharacter databaseCleric = accessDB.PlayerDatabaseConstructor("cleric");
+            PlayerCharacter databaseWarrior = AccessDB.PlayerDatabaseConstructor("warrior");
+            PlayerCharacter databaseBarbarian = AccessDB.PlayerDatabaseConstructor("barbarian");
+            PlayerCharacter databaseArcher = AccessDB.PlayerDatabaseConstructor("archer");
+            PlayerCharacter databaseRogue = AccessDB.PlayerDatabaseConstructor("rogue");
+            PlayerCharacter databaseWizard = AccessDB.PlayerDatabaseConstructor("wizard");
+            PlayerCharacter databaseCleric = AccessDB.PlayerDatabaseConstructor("cleric");
 
             Assert.AreEqual(localWarrior.ToString(), databaseWarrior.ToString());
             Assert.AreEqual(localBarbarian.ToString(), databaseBarbarian.ToString());

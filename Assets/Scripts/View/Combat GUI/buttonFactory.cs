@@ -1,4 +1,4 @@
-using DefaultNamespace;
+using DungeonAdventure;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,8 @@ using System.Text;
 /// <summary>
 /// A class to generate usuable cells to move heroes within.
 /// </summary>
-namespace DefaultNamespace {
+namespace DungeonAdventure
+{
     sealed class buttonFactory : MonoBehaviour
     {
         [Header("Events")]
@@ -87,8 +88,8 @@ namespace DefaultNamespace {
         /// </summary>
         void Start()
         {
-            PlayerCharacter h1 = new PlayerCharacter("Knight 1", 25, 3, 2, 10, 5);
-            PlayerCharacter h2 = new PlayerCharacter("Knight 2", 25, 7, 9, 10, 5);
+            PlayerCharacter h1 = new PlayerCharacter("warrior", 25, 3, 2, 10, 5);
+            PlayerCharacter h2 = new PlayerCharacter("warrior", 25, 7, 9, 10, 5);
             myTestParty = new PlayerParty(h1);
             myTestParty.AddCharacter(h2);
             myTestPartyDictionary = myTestParty.GetPartyPositions();
@@ -117,7 +118,7 @@ namespace DefaultNamespace {
                 myArrayOfObjects[i].transform.position = (myPositionVectors[i]);
                 if (myTestPartyDictionary.ContainsKey(i + 1))
                 {
-                    
+
                     GUIUpdate.Raise(
                         this,
                         new DataPacket(
@@ -168,7 +169,7 @@ namespace DefaultNamespace {
             DataPacket dPacket = (DataPacket)data;
             if (dPacket.GetLabel() == "SwapRequest")
             {
-                string label = (string) dPacket.GetData();
+                string label = (string)dPacket.GetData();
                 int startPosition = Int32.Parse(label.Substring(label.Length - 1));
                 int endPosition = Int32.Parse(sender.name.Substring(sender.name.Length - 1));
                 myArrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
@@ -195,7 +196,7 @@ namespace DefaultNamespace {
             else if (dPacket.GetLabel() == "LoadRequest")
             {
                 Debug.Log("A load was requested");
-                myTestParty = (PlayerParty) dPacket.GetData();
+                myTestParty = (PlayerParty)dPacket.GetData();
             }
         }
 
@@ -272,7 +273,8 @@ namespace DefaultNamespace {
             return returnSet;
         }
 
-        public void setDisplayedParty(PlayerParty theParty){
+        public void setDisplayedParty(PlayerParty theParty)
+        {
             myTestParty = theParty;
         }
     }

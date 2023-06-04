@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DefaultNamespace {
+namespace DungeonAdventure
+{
     [System.Serializable]
     public class CustomGameEvent : UnityEvent<Component, object> { }
 

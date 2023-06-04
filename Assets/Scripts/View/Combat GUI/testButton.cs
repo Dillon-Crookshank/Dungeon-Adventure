@@ -1,5 +1,5 @@
 using System;
-using DefaultNamespace;
+using DungeonAdventure;
 using UnityEngine;
 
 /// <summary>
@@ -308,7 +308,8 @@ sealed class testButton : MonoBehaviour
         }
     }
 
-    public AbstractCharacter GetCharacterRepresentative(){
+    public AbstractCharacter GetCharacterRepresentative()
+    {
         return characterRepresentative;
     }
 

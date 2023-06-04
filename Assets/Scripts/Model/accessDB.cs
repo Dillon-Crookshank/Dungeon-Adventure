@@ -2,13 +2,13 @@ using System.Data;
 using Mono.Data.Sqlite;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
 
     /// <summary>
     /// This class will be a representation of a stat change or active effect on an Actor.
     /// </summary>
-    public class accessDB : MonoBehaviour
+    public class AccessDB : MonoBehaviour
     {
         internal static PlayerCharacter PlayerDatabaseConstructor(string theClass)
         {
@@ -60,7 +60,7 @@ namespace DefaultNamespace
 
         }
 
-        internal static int BuffDatabaseDuration(string theClass)
+        internal static Buff BuffDatabaseConstructor(string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -73,83 +73,16 @@ namespace DefaultNamespace
 
                     if (dataReader.GetString(0) == theClass.ToLower())
                     {
-                        int duration = dataReader.GetInt32(2);
+                        Buff buff = new Buff(dataReader.GetString(1), dataReader.GetInt32(2), dataReader.GetDouble(5),
+                        dataReader.GetString(3), dataReader.GetInt32(4));
                         dbConnection.Close();
-                        return duration;
+                        return buff;
                     }
                 }
-                throw new System.Exception("Duration for buff not found.");
+                Debug.Log(theClass);
+                throw new System.Exception("Class provided for Buff not found.");
             }
         }
-
-        internal static double BuffDatabasePercentage(string theClass)
-        {
-            IDbConnection dbConnection = OpenDatabase();
-            IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
-            dbCommandReadValues.CommandText = "SELECT * FROM buffTemplates;";
-            IDataReader dataReader = dbCommandReadValues.ExecuteReader();
-            {
-
-                while (dataReader.Read())
-                {
-
-                    if (dataReader.GetString(0) == theClass.ToLower())
-                    {
-                        double percentage = dataReader.GetDouble(5);
-                        dbConnection.Close();
-                        return percentage;
-                    }
-                }
-                throw new System.Exception("Percentage for buff not found.");
-            }
-        }
-
-        internal static string BuffDatabaseStatModified(string theClass)
-        {
-            IDbConnection dbConnection = OpenDatabase();
-            IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
-            dbCommandReadValues.CommandText = "SELECT * FROM buffTemplates;";
-            IDataReader dataReader = dbCommandReadValues.ExecuteReader();
-            {
-
-                while (dataReader.Read())
-                {
-
-                    if (dataReader.GetString(0) == theClass.ToLower())
-                    {
-                        string statModified = dataReader.GetString(3);
-                        dbConnection.Close();
-                        return statModified;
-                    }
-                }
-                throw new System.Exception("Stat for buff not found.");
-            }
-        }
-
-        internal static int BuffDatabaseManaCost(string theClass)
-        {
-            IDbConnection dbConnection = OpenDatabase();
-            IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
-            dbCommandReadValues.CommandText = "SELECT * FROM buffTemplates;";
-            IDataReader dataReader = dbCommandReadValues.ExecuteReader();
-            {
-
-                while (dataReader.Read())
-                {
-
-                    if (dataReader.GetString(0) == theClass.ToLower())
-                    {
-                        int manaCost = dataReader.GetInt32(4);
-                        dbConnection.Close();
-                        return manaCost;
-                    }
-                }
-                throw new System.Exception("Stat for buff not found.");
-            }
-        }
-
-
-
 
 
         private static IDbConnection OpenDatabase()

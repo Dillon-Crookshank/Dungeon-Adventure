@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
     [Serializable]
     internal class PlayerParty : AbstractParty

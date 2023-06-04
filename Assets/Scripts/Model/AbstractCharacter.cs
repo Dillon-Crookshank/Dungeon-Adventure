@@ -1,17 +1,19 @@
 using System;
 
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
 
-    /// An abstract representation of an Character in the Dungeon Adventure.
-    /// All enemies and player characters inherit from this class, and this defines
-    /// basic behaviours and fields that are universal.
+    /// An abstract representation of an Character in Dungeon Adventure.
     [Serializable]
     internal abstract class AbstractCharacter
     {
 
+
         private string _characterClass;
 
+        /// <summary>
+        /// The Character's class/archetype.
+        /// </summary>
         internal string CharacterClass
         {
             get { return _characterClass; }
@@ -21,7 +23,7 @@ namespace DefaultNamespace
         private string _name;
 
         /// <summary>
-        /// A String representation of the Character.
+        /// A unique name for the character, to allow differentation between duplicates.
         /// </summary>
         internal string Name
         {
@@ -173,10 +175,19 @@ namespace DefaultNamespace
             set { if (!(value < 1) && !(value > AbstractParty.MAX_PARTY_SIZE)) { _partyPosition = value; } }
         }
 
+        private Buff _myBuff;
+
+        internal Buff MyBuff
+        {
+            get { return _myBuff; }
+            set { _myBuff = value; }
+        }
+
+
+
 
         /// <summary>
-        /// Base constructor for an Abstract Character, player characters and enemies both inherit
-        /// this constructor for their initialization.
+        /// Base constructor for an AbstractCharacter.
         /// </summary>
         /// <param name="theName">The name of the Character.</param>
         /// <param name="theHitpoints">The maximum hitpoints of the Character.</param>
@@ -227,30 +238,26 @@ namespace DefaultNamespace
 
         internal int Buff()
         {
-            string statModified = accessDB.BuffDatabaseStatModified(CharacterClass);
-
-            switch (statModified)
+            switch (MyBuff.StatModifiedByBuff)
             {
                 case "attack":
-                    if (CurrentMana < accessDB.BuffDatabaseManaCost(CharacterClass))
+                    if (CurrentMana < MyBuff.BuffManaCost)
                     {
                         return 0;
                     }
-                    Attack = accessDB.BuffDatabasePercentage(CharacterClass) * Attack;
-                    CurrentMana = (-accessDB.BuffDatabaseManaCost(CharacterClass));
-                    return accessDB.BuffDatabaseDuration(CharacterClass);
+                    Attack = Attack * MyBuff.BuffPercentage;
+                    CurrentMana = (-MyBuff.BuffManaCost);
+                    return MyBuff.BuffDuration;
                 case "defence":
-                    if (CurrentMana < accessDB.BuffDatabaseManaCost(CharacterClass))
+                    if (CurrentMana < MyBuff.BuffManaCost)
                     {
                         return 0;
                     }
-                    Defence = accessDB.BuffDatabasePercentage(CharacterClass) * Defence;
-                    CurrentMana = (-accessDB.BuffDatabaseManaCost(CharacterClass));
-                    return accessDB.BuffDatabaseDuration(CharacterClass);
+                    Defence = Defence * MyBuff.BuffPercentage;
+                    CurrentMana = (-MyBuff.BuffManaCost);
+                    return MyBuff.BuffDuration;
             }
-
-
-            return accessDB.BuffDatabaseDuration(CharacterClass);
+            return MyBuff.BuffDuration;
         }
 
         /// <summary>

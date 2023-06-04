@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
 
     /// <summary>
@@ -12,7 +11,7 @@ namespace DefaultNamespace
     /// </summary>
     internal class Combat
     {
-        
+
         private int turnCounter;
 
         private bool isEndOfTurn;
@@ -25,7 +24,8 @@ namespace DefaultNamespace
 
         private EnemyParty myEnemyParty;
 
-        internal Combat(PlayerParty thePlayerParty, EnemyParty theEnemyParty) {
+        internal Combat(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        {
             myPlayerParty = thePlayerParty;
             myEnemyParty = theEnemyParty;
 
@@ -53,20 +53,30 @@ namespace DefaultNamespace
                 {
                     myActiveCharacter = character;
                     Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
-                    
-                    if (!isPlayer()) {
+
+                    if (!isPlayer())
+                    {
                         //Select random move
-                        if (myActiveCharacter.IsAlive()){
+                        if (myActiveCharacter.IsAlive())
+                        {
                             await Task.Delay(500);
                             GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myActiveCharacter.Name) + " attacks " + (myPlayerParty.GetPartyPositions())[1].Name + "!");
                             myActiveCharacter.BasicAttack((myPlayerParty.GetPartyPositions())[1]);
                         }
                         isEndOfTurn = true;
+                        if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
+                        {
+                            break;
+                        }
                     }
 
-        
+
                     await TurnOver(myActiveCharacter);
                     isEndOfTurn = false;
+                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
+                    {
+                        break;
+                    }
                 }
             }
         }

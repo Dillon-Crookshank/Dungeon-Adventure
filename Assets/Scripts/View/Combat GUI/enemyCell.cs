@@ -1,5 +1,5 @@
 using System;
-using DefaultNamespace;
+using DungeonAdventure;
 using UnityEngine;
 
 /// <summary>
@@ -119,7 +119,7 @@ sealed class enemyCell : MonoBehaviour
             stats[0].text = "";
             stats[1].text = "" + characterRepresentative.CurrentHitpoints;
             stats[2].text = "" + characterRepresentative.Name;
-            
+
             float healthPercentage = (float)(
                 characterRepresentative.CurrentHitpoints
                 / characterRepresentative.MaxHitpoints
@@ -154,10 +154,12 @@ sealed class enemyCell : MonoBehaviour
             {
                 rend.color = Color.red;
             }
-            if (Input.GetMouseButtonDown(0)){ 
+            if (Input.GetMouseButtonDown(0))
+            {
                 GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
                 Debug.Log("We are attacking " + name);
-                for (int i = 1; i <= 6; i++){
+                for (int i = 1; i <= 6; i++)
+                {
                     GameObject.Find("E" + i).SendMessage("setBehaviorString", "");
                 }
             }
@@ -206,7 +208,7 @@ sealed class enemyCell : MonoBehaviour
     /// <param name="sender"> The component that sent the DataPacket. </param>
     /// <param name="data"> The object (DataPacket) held. </param>
     public void ReceiveDataPacket(Component sender, object data)
-    {   
+    {
         DataPacket dPacket = (DataPacket)data;
         if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
         {
@@ -266,11 +268,13 @@ sealed class enemyCell : MonoBehaviour
         }
     }
 
-    public AbstractCharacter GetCharacterRepresentative(){
+    public AbstractCharacter GetCharacterRepresentative()
+    {
         return characterRepresentative;
     }
 
-    public void setBehaviorString(string theBehavior){
+    public void setBehaviorString(string theBehavior)
+    {
         behaviorString = theBehavior;
         isSelectableByAction = (theBehavior != "");
     }

@@ -1,4 +1,4 @@
-using DefaultNamespace;
+using DungeonAdventure;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,9 @@ using System.Text;
 /// <summary>
 /// A class to generate usuable cells to move heroes within.
 /// </summary>
-namespace DefaultNamespace {
-        sealed class enemyButtonFactory : MonoBehaviour
+namespace DungeonAdventure
+{
+    sealed class enemyButtonFactory : MonoBehaviour
     {
         [Header("Events")]
         /// <summary>
@@ -242,8 +243,9 @@ namespace DefaultNamespace {
             return returnSet;
         }
 
-        public void setDisplayedParty(EnemyParty theParty) {
+        public void setDisplayedParty(EnemyParty theParty)
+        {
             myEnemyParty = theParty;
         }
-    }    
+    }
 }
