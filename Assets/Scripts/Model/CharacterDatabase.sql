@@ -45,3 +45,17 @@
 
 -- INSERT INTO buffTemplates(class, buffName, duration, statModified, manaCost, percentage)
 -- VALUES ("cleric", "prayer", 2, "defence", 5, 0.30);
+
+-- CREATE TABLE specialAttackTemplates(
+-- class TEXT NOT NULL PRIMARY KEY,
+-- specialAttackName TEXT NOT NULL,
+-- duration INTEGER NOT NULL,
+-- statModified TEXT NOT NULL,
+-- manaCost INTEGER NOT NULL,
+-- percentage REAL NOT NULL,
+-- damageModifier REAL NOT NULL);
+
+-- DROP TABLE specialAttackTemplates;
+
+INSERT INTO specialAttackTemplates(class, specialAttackName, duration, statModified, manaCost, percentage, damageModifier)
+VALUES ("warrior", "crush", 2, "defence", 10, 0.30, 0.5);

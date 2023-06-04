@@ -22,6 +22,7 @@ namespace DungeonAdventure
             // Important to differentiate between Players and Enemies, and leaves room for
             // eventual further distinctions such as levelling and loot tables.
             MyBuff = AccessDB.BuffDatabaseConstructor(theClass);
+            MySpecialAttack = AccessDB.SpecialAttackDatabaseConstructor(theClass);
         }
 
 
