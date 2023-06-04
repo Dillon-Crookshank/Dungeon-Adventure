@@ -184,6 +184,15 @@ namespace DungeonAdventure
         }
 
 
+        private SpecialAttack _mySpecialAttack;
+
+        internal SpecialAttack MySpecialAttack
+        {
+            get { return _mySpecialAttack; }
+            set { _mySpecialAttack = value; }
+        }
+
+
 
 
         /// <summary>
@@ -206,6 +215,8 @@ namespace DungeonAdventure
             MaxMana = theMana;
             Initiative = theInitiative;
             CombatInitiative = 0;
+            MyBuff = new Buff("empty", 0, 0, "attack", 0);
+            MySpecialAttack = new SpecialAttack("empty", 0, 0, "attack", 0, 0);
         }
 
 
@@ -223,11 +234,11 @@ namespace DungeonAdventure
         /// defence value as damage, with a minimum of 1.0.
         /// </summary>
         /// <param name="theTarget">The <see cref"AbstractCharacter"/> being targeted with this attack.</param>
-        internal bool BasicAttack(AbstractCharacter theTarget)
+        internal double BasicAttack(AbstractCharacter theTarget)
         {
             double theDamage = (Math.Max(1, Attack - theTarget.Defence));
             theTarget.CurrentHitpoints = (-1 * theDamage);
-            return true;
+            return theDamage;
         }
 
         internal int Defend()
@@ -258,6 +269,29 @@ namespace DungeonAdventure
                     return MyBuff.BuffDuration;
             }
             return MyBuff.BuffDuration;
+        }
+
+        internal double SpecialAttack(AbstractCharacter theTarget)
+        {
+            if (CurrentMana < MySpecialAttack.SpecialAttackManaCost) { return 0; }
+
+            CurrentMana = -(MySpecialAttack.SpecialAttackManaCost);
+
+            double theDamage = (Math.Max(1, Attack - theTarget.Defence));
+
+            switch (MySpecialAttack.StatModifiedByBuff)
+            {
+                case "attack":
+                    theTarget.Attack = -(theTarget.Attack * MySpecialAttack.DebuffPercentage);
+                    return theDamage;
+
+                case "defence":
+                    theTarget.Defence = -(theTarget.Defence * MySpecialAttack.DebuffPercentage);
+                    return theDamage;
+
+                default:
+                    return theDamage;
+            }
         }
 
         /// <summary>

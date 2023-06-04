@@ -84,6 +84,30 @@ namespace DungeonAdventure
             }
         }
 
+        internal static SpecialAttack SpecialAttackDatabaseConstructor(string theClass)
+        {
+            IDbConnection dbConnection = OpenDatabase();
+            IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
+            dbCommandReadValues.CommandText = "SELECT * FROM specialAttackTemplates;";
+            IDataReader dataReader = dbCommandReadValues.ExecuteReader();
+            {
+
+                while (dataReader.Read())
+                {
+
+                    if (dataReader.GetString(0) == theClass.ToLower())
+                    {
+                        SpecialAttack special = new SpecialAttack(dataReader.GetString(1), dataReader.GetInt32(2), dataReader.GetDouble(5),
+                        dataReader.GetString(3), dataReader.GetInt32(4), dataReader.GetDouble(6));
+                        dbConnection.Close();
+                        return special;
+                    }
+                }
+                Debug.Log(theClass);
+                throw new System.Exception("Class provided for Special Attack not found.");
+            }
+        }
+
 
         private static IDbConnection OpenDatabase()
         {

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -316,6 +315,8 @@ namespace DungeonAdventure
             myMapModel = new DungeonMap();
             myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
             myPlayerParty = new PlayerParty(AccessDB.PlayerDatabaseConstructor("warrior"));
+            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("warrior"));
+            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("warrior"));
 
             SaveGame();
 

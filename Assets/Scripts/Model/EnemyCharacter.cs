@@ -26,7 +26,6 @@ namespace DungeonAdventure
         {
             // Important to differentiate between Enemies and Players, and leaves room for
             // eventual further distinctions such as levelling and loot tables.
-            MyBuff = new Buff("empty", 0, 0, "attack", 0);
         }
 
     }
