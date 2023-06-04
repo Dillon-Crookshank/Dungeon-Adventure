@@ -4489,6 +4489,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1998383341}
+  - component: {fileID: 1998383342}
   m_Layer: 0
   m_Name: ActionButtons
   m_TagString: Untagged
@@ -4515,6 +4516,21 @@ Transform:
   m_Father: {fileID: 1103995222}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1998383342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998383340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f08ea23b40c1742a7501dda11f9082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myActionButtons:
+  - {fileID: 1694396206}
+  - {fileID: 1833896597}
 --- !u!1 &2086297853
 GameObject:
   m_ObjectHideFlags: 0
@@ -4971,10 +4987,10 @@ GameObject:
   m_Component:
   - component: {fileID: 513539621772790839}
   - component: {fileID: 513539621772790838}
-  - component: {fileID: 6100761134110710900}
   - component: {fileID: 513539621772790840}
   - component: {fileID: 4947397954193212853}
   - component: {fileID: 4947397954193212815}
+  - component: {fileID: 4947397954193212854}
   m_Layer: 0
   m_Name: EnemyTemplate
   m_TagString: Untagged
@@ -5060,10 +5076,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4866356734922247059}
   - component: {fileID: 4866356734922247058}
-  - component: {fileID: 4866356734922247069}
   - component: {fileID: 4866356734922247068}
   - component: {fileID: 1823179281}
   - component: {fileID: 1823179307}
+  - component: {fileID: 4866356734922247069}
   m_Layer: 0
   m_Name: Template
   m_TagString: Untagged
@@ -5106,30 +5122,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4866356734922247064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a49b92268774cb34ba8c779f7e6c6b7f, type: 3}
+  m_Script: {fileID: 11500000, guid: a20e5a5a2e2f1894c9f3b57b4656b569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   onButtonClick: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
   arrowDisplay: {fileID: 1101055748}
   healthBar: {fileID: 898696856}
-  characterRepresentative:
-    _characterClass: 
-    _name: 
-    _maxHitpoints: 0
-    _currentHitpoints: 0
-    _attack: 0
-    _defence: 0
-    _maxMana: 0
-    _currentMana: 0
-    _intiative: 0
-    _combatInitiative: 0
-    _partyPosition: 0
-    _myBuff:
-      _statModifiedByBuff: 
-      _buffDuration: 0
-      _buffPercentage: 0
-      _buffManaCost: 0
-      _buffName: 
   spriteArray:
   - {fileID: 21300000, guid: e5bb688cf7483134bb8c2eacdf538c6f, type: 3}
   - {fileID: 21300000, guid: 9e53d8bd41d8f504faeefd3c5710e4fb, type: 3}
@@ -5138,15 +5136,6 @@ MonoBehaviour:
   - {fileID: 38192482}
   - {fileID: 1570411901}
   statDisplays: {fileID: 508635160}
-  arrowSize: {x: 0, y: 0}
-  clickedCellName: 
-  clickedVector: {x: 0, y: 0, z: 0}
-  arrowVector: {x: 0, y: 0, z: 0}
-  hasHero: 0
-  selectMoveMode: 0
-  held: 0
-  clicked: 0
-  rend: {fileID: 0}
 --- !u!114 &4947397954193212815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5163,7 +5152,7 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6100761134110710900}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: enemyCell, CombatGUI
         m_MethodName: HandleDamage
         m_Mode: 0
@@ -5191,7 +5180,7 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6100761134110710900}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: enemyCell, CombatGUI
         m_MethodName: ReceiveDataPacket
         m_Mode: 0
@@ -5203,6 +5192,29 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4947397954193212854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513539621772790844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728d42ebf4745a14eb65ef5534e04555, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onButtonClick: {fileID: 11400000, guid: b9ab541afbc9c8d4c8ea19288596fbb0, type: 2}
+  arrowDisplay: {fileID: 1101055748}
+  healthBar: {fileID: 4947397955147841852}
+  spriteArray:
+  - {fileID: 21300000, guid: e5bb688cf7483134bb8c2eacdf538c6f, type: 3}
+  - {fileID: 21300000, guid: a2da67b40a5406745b0480e559ada6b7, type: 3}
+  stats:
+  - {fileID: 4947397955628975710}
+  - {fileID: 4947397955847127750}
+  - {fileID: 4947397954477445849}
+  statDisplays: {fileID: 4947397955512758204}
 --- !u!4 &4947397954477445848
 Transform:
   m_ObjectHideFlags: 0
@@ -5815,29 +5827,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6100761134110710900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513539621772790844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 728d42ebf4745a14eb65ef5534e04555, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onButtonClick: {fileID: 11400000, guid: b9ab541afbc9c8d4c8ea19288596fbb0, type: 2}
-  arrowDisplay: {fileID: 1101055748}
-  healthBar: {fileID: 4947397955147841852}
-  spriteArray:
-  - {fileID: 21300000, guid: e5bb688cf7483134bb8c2eacdf538c6f, type: 3}
-  - {fileID: 21300000, guid: a2da67b40a5406745b0480e559ada6b7, type: 3}
-  stats:
-  - {fileID: 4947397955628975710}
-  - {fileID: 4947397955847127750}
-  - {fileID: 4947397954477445849}
-  statDisplays: {fileID: 4947397955512758204}
 --- !u!1001 &7247790269734758739
 PrefabInstance:
   m_ObjectHideFlags: 0
