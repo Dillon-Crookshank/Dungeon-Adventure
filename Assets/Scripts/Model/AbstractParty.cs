@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using DefaultNamespace;
+using DungeonAdventure;
 
 /// <summary>
 /// An abstract class representing a party of AbstractActors.
@@ -35,8 +35,10 @@ internal abstract class AbstractParty
     {
         //return isAllAlive;
 
-        foreach(AbstractCharacter character in partyPositions.Values) {
-            if (character.IsAlive()) {
+        foreach (AbstractCharacter character in partyPositions.Values)
+        {
+            if (character.IsAlive())
+            {
                 return true;
             }
         }

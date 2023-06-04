@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// An representation of a GUI button that handles file saving.
 /// </summary>
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
     class saveButton : clickableButton
     {
@@ -26,10 +26,11 @@ namespace DefaultNamespace
         public void HandleFile(Component sender, object data)
         {
             DataPacket dPacket = (DataPacket)data;
-            SerializeParty("testParty.bin", (PlayerParty) dPacket.GetData());
+            SerializeParty("testParty.bin", (PlayerParty)dPacket.GetData());
         }
 
-        private void SerializeParty(string theFileName, PlayerParty theParty) {
+        private void SerializeParty(string theFileName, PlayerParty theParty)
+        {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(theFileName, FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, theParty);

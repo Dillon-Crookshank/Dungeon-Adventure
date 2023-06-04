@@ -1,26 +1,27 @@
 using System.Collections.Generic;
 using System;
 
-namespace DefaultNamespace {
-
-[Serializable]
-internal class EnemyParty : AbstractParty
+namespace DungeonAdventure
 {
 
-    internal EnemyParty(EnemyCharacter theEnemy)
+    [Serializable]
+    internal class EnemyParty : AbstractParty
     {
-        partyPositions = new Dictionary<int, AbstractCharacter>();
-        AddCharacter(theEnemy);
-        isAllAlive = true;
+
+        internal EnemyParty(EnemyCharacter theEnemy)
+        {
+            partyPositions = new Dictionary<int, AbstractCharacter>();
+            AddCharacter(theEnemy);
+            isAllAlive = true;
+        }
+
+        internal EnemyParty()
+        {
+            partyPositions = new Dictionary<int, AbstractCharacter>();
+            isAllAlive = true;
+        }
+
+
+
     }
-
-    internal EnemyParty()
-    {
-        partyPositions = new Dictionary<int, AbstractCharacter>();
-        isAllAlive = true;
-    }
-
-
-
-}
 }

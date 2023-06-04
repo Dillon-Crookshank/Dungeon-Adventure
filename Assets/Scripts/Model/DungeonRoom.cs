@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System;
 
 /// <summary>
@@ -32,7 +31,7 @@ public class DungeonRoom
     /// The height of the room.
     /// </summary>
     private float myH;
-    
+
     /// <summary>
     /// Only used when initialized using the grid constraints method. This holds the minimum X grid constraint.
     /// </summary>
@@ -70,8 +69,9 @@ public class DungeonRoom
     /// <param name="theXMax"> The Highest X-value of the DungeonRoom. </param>
     /// <param name="theYMin"> The Lowest Y-value of the DungeonRoom. </param>
     /// <param name="theYMax"> The Highest Y-value of the DungeonRoom. </param>
-    public DungeonRoom(in int theXMin, in int theXMax, in int theYMin, in int theYMax) {
-        
+    public DungeonRoom(in int theXMin, in int theXMax, in int theYMin, in int theYMax)
+    {
+
         //Calculate the game unit coordinates based on the given grid domain
         myX = (theXMin + theXMax) / 2.0f + 0.5f;
         myY = (theYMin + theYMax) / 2.0f + 0.5f;
@@ -83,13 +83,14 @@ public class DungeonRoom
         myGridXMax = theXMax;
         myGridYMin = theYMin;
         myGridYMax = theYMax;
-     }
+    }
 
     /// <summary>
     /// An accessor for the room ID number.  This number usually directly correlates with the index of this room inside a collection.
     /// </summary>
     /// <returns> The ID number of the room. </returns>
-    public int GetID() {
+    public int GetID()
+    {
         return myID;
     }
 
@@ -97,7 +98,8 @@ public class DungeonRoom
     /// A mutator for the room ID number.  This number usually directly correlates with the index of this room inside a collection.
     /// </summary>
     /// <returns> The ID number of the room. </returns>
-    public void SetID(int theID) {
+    public void SetID(int theID)
+    {
         myID = theID;
     }
 
@@ -141,7 +143,8 @@ public class DungeonRoom
     /// Only used when initialized using the grid constraints method. Returns the minimum X grid constraint.
     /// </summary>
     /// <returns> Returns the minimum X grid constraint. </returns>
-    public int GetXMin() {
+    public int GetXMin()
+    {
         return myGridXMin;
     }
 
@@ -149,7 +152,8 @@ public class DungeonRoom
     /// Only used when initialized using the grid constraints method. Returns the maximum X grid constraint.
     /// </summary>
     /// <returns> Returns the maximum X grid constraint. </returns>
-    public int GetXMax() {
+    public int GetXMax()
+    {
         return myGridXMax;
     }
 
@@ -157,7 +161,8 @@ public class DungeonRoom
     /// Only used when initialized using the grid constraints method. Returns the minimum Y grid constraint.
     /// </summary>
     /// <returns> Returns the minimum Y grid constraint. </returns>
-    public int GetYMin() {
+    public int GetYMin()
+    {
         return myGridYMin;
     }
 
@@ -165,7 +170,8 @@ public class DungeonRoom
     /// Only used when initialized using the grid constraints method. Returns the maximum Y grid constraint.
     /// </summary>
     /// <returns> Returns the maximum Y grid constraint. </returns>
-    public int GetYMax() {
+    public int GetYMax()
+    {
         return myGridYMax;
     }
 
@@ -173,14 +179,16 @@ public class DungeonRoom
     /// An accessor for the seen flag. True if the user party has seen the room. To see a room, you must be at least adjacent to the room.
     /// </summary>
     /// <returns> True if the user has 'seen' the dungeon room. </returns>
-    public bool GetSeenFlag() {
+    public bool GetSeenFlag()
+    {
         return mySeenFlag;
     }
 
     /// <summary>
     /// A mutator for the seen flag. True if the user party has seen the room. To see a room, you must be at least adjacent to the room.
     /// </summary>
-    public void SetSeenFlag(in bool theSeenFlag) {
+    public void SetSeenFlag(in bool theSeenFlag)
+    {
         mySeenFlag = theSeenFlag;
     }
 
@@ -188,14 +196,16 @@ public class DungeonRoom
     /// An accessor for the enemy flag.
     /// </summary>
     /// <returns> True if an enemy exists inside the room; false otherwise. </returns>
-    public bool GetEnemyFlag() {
+    public bool GetEnemyFlag()
+    {
         return myEnemyFlag;
     }
 
     /// <summary>
     /// A mutator for the enemy flag.
     /// </summary>
-    public void SetEnemyFlag(in bool theEnemyFlag) {
+    public void SetEnemyFlag(in bool theEnemyFlag)
+    {
         myEnemyFlag = theEnemyFlag;
     }
 }

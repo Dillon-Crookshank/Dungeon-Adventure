@@ -1,3 +1,5 @@
+-- A file used for storing templates for SQLite database entries, as well as former entries into the database.
+
 -- CREATE TABLE characterTemplates(
 -- class TEXT NOT NULL PRIMARY KEY,
 -- hitpoints REAL NOT NULL,
@@ -41,5 +43,5 @@
 -- manaCost INTEGER NOT NULL,
 -- percentage REAL NOT NULL);
 
-INSERT INTO buffTemplates(class, buffName, duration, statModified, manaCost, percentage)
-VALUES ("warrior", "focus", 2, "attack", 5, 0.30);
+-- INSERT INTO buffTemplates(class, buffName, duration, statModified, manaCost, percentage)
+-- VALUES ("cleric", "prayer", 2, "defence", 5, 0.30);
