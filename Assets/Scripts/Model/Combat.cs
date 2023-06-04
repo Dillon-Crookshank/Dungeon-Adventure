@@ -28,7 +28,7 @@ namespace DungeonAdventure
         {
             myPlayerParty = thePlayerParty;
             myEnemyParty = theEnemyParty;
-
+            GameObject.Find("Combat Log").SendMessage("ClearCombatLog");
             CombatEncounter();
         }
 
@@ -56,6 +56,7 @@ namespace DungeonAdventure
 
                     if (!isPlayer())
                     {
+                        GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
                         //Select random move
                         if (myActiveCharacter.IsAlive())
                         {
@@ -64,13 +65,13 @@ namespace DungeonAdventure
                             myActiveCharacter.BasicAttack((myPlayerParty.GetPartyPositions())[1]);
                         }
                         isEndOfTurn = true;
-                        if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
-                        {
-                            break;
-                        }
+                    } else {
+                        GameObject.Find("ActionButtons").SendMessage("UnlockButtons", true);
                     }
-
-
+                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
+                    {
+                        break;
+                    }
                     await TurnOver(myActiveCharacter);
                     isEndOfTurn = false;
                     if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))

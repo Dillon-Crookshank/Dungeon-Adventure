@@ -14,4 +14,11 @@ public class combatLog : MonoBehaviour
         }
         myLogs[myLogs.Length - 1].text = theNewLog;
     }
+
+    void ClearCombatLog(){
+        for (int i = 0; i < myLogs.Length; i++){
+            myLogs[i].text = "";
+        }
+    }
+
 }

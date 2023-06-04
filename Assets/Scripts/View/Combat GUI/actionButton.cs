@@ -6,12 +6,14 @@ using UnityEngine;
 /// <summary>
 /// An representation of a GUI button that handles file loading.
 /// </summary>
-namespace DungeonAdventure
+namespace DefaultNamespace
 {
     class actionButton : clickableButton
-    {
-        [SerializeField]
-        GameEvent onButtonHover;
+    {    
+
+        private bool isClickable;
+
+        private Color lockedColor = new Color(0.2f, 0.2f, 0.2f, 1f);
 
         [SerializeField]
         string displayHeader;
@@ -19,23 +21,31 @@ namespace DungeonAdventure
         [SerializeField]
         string displayDescription;
 
-        void OnMouseOver()
-        {
-            onButtonHover.Raise(this, new DataPacket(displayHeader, "NewTextString", "ActionHeader"));
-            onButtonHover.Raise(this, new DataPacket(displayDescription, "NewTextString", "ActionDescription"));
-            GetComponent<SpriteRenderer>().color = highlightColor;
-            if (Input.GetMouseButtonDown(0))
-            {
-                Debug.Log(name);
-                PressButton();
+        void Update(){
+            if (!isClickable){
+                rend.color = lockedColor;
             }
         }
 
-        void OnMouseExit()
-        {
-            GetComponent<SpriteRenderer>().color = Color.white;
-            onButtonHover.Raise(this, new DataPacket("", "NewTextString", "ActionHeader"));
-            onButtonHover.Raise(this, new DataPacket("", "NewTextString", "ActionDescription"));
+        void OnMouseOver(){
+            if (isClickable){
+                GameObject.Find("ActionHeader").SendMessage("setText", displayHeader);
+                GameObject.Find("ActionDescription").SendMessage("setText", displayDescription);
+                GetComponent<SpriteRenderer>().color = highlightColor;
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Debug.Log(name);
+                    PressButton();
+                }
+            }
+        }
+
+        void OnMouseExit(){
+            if (isClickable){
+                GetComponent<SpriteRenderer>().color = Color.white;
+                GameObject.Find("ActionHeader").SendMessage("setText", "");
+                GameObject.Find("ActionDescription").SendMessage("setText", "");
+            }   
         }
 
         /// <summary>
@@ -43,12 +53,17 @@ namespace DungeonAdventure
         /// </summary>
         public override void PressButton()
         {
-            Debug.Log(name + " pressed");
+            if (isClickable){
+                Debug.Log(name + " pressed");
+            }   
         }
 
-        public void SetDescription(in string theDescription)
-        {
+        public void SetDescription(in string theDescription) {
             displayDescription = theDescription;
+        }
+
+        void SetClickable(bool theClickability){
+            isClickable = theClickability;
         }
     }
 }

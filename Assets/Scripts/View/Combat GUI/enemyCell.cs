@@ -104,7 +104,6 @@ sealed class enemyCell : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(name + ": " + (characterRepresentative != null));
         arrowDisplay.SetActive(false);
         rend = gameObject.GetComponent<SpriteRenderer>();
     }
@@ -150,17 +149,17 @@ sealed class enemyCell : MonoBehaviour
             float newZ = arrowDisplay.transform.rotation.z;
             float newW = arrowDisplay.transform.rotation.w;
             arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
-            if (hasHero)
+            if (hasHero && characterRepresentative.IsAlive())
             {
                 rend.color = Color.red;
-            }
-            if (Input.GetMouseButtonDown(0))
-            {
-                GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
-                Debug.Log("We are attacking " + name);
-                for (int i = 1; i <= 6; i++)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    GameObject.Find("E" + i).SendMessage("setBehaviorString", "");
+                    GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
+                    Debug.Log("We are attacking " + name);
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        GameObject.Find("E" + i).SendMessage("setBehaviorString", "");
+                    }
                 }
             }
         }
@@ -277,5 +276,12 @@ sealed class enemyCell : MonoBehaviour
     {
         behaviorString = theBehavior;
         isSelectableByAction = (theBehavior != "");
+    }
+
+    void SetNullCharacterRepresentative() {
+        characterRepresentative = null;
+    }
+    void SetCharacterRepresentative(EnemyCharacter theCharacter) {
+        characterRepresentative = theCharacter;
     }
 }

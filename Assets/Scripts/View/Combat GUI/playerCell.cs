@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Representation of a cell that can hold and display the data of a hero.
 /// </summary>
-sealed class testButton : MonoBehaviour
+sealed class playerCell : MonoBehaviour
 {
     [Header("Events")]
     /// <summary>
@@ -333,5 +333,12 @@ sealed class testButton : MonoBehaviour
                 rend.color = new Color(0.5f, 0f, 0f, 1f);
             }
         }
+    }
+    void SetNullCharacterRepresentative() {
+        characterRepresentative = null;
+    }
+    
+    void SetCharacterRepresentative(PlayerCharacter theCharacter) {
+        characterRepresentative = theCharacter;
     }
 }
