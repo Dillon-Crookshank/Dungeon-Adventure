@@ -11,38 +11,37 @@ namespace DungeonAdventure
 {
     sealed class buttonFactory : MonoBehaviour
     {
-        [Header("Events")]
-        /// <summary>
-        /// The GameEvent called whenever the GUI needs to update its cells.
-        /// </summary>
-        [SerializeField]
-        GameEvent GUIUpdate;
+        // [Header("Events")]
+        // /// <summary>
+        // /// The GameEvent called whenever the GUI needs to update its cells.
+        // /// </summary>
+        // [SerializeField]
+        // GameEvent GUIUpdate;
 
-        /// <summary>
-        /// The GameEvent called whenever the GUI needs to read in or send out a state of the party.
-        /// </summary>
-        [SerializeField]
-        GameEvent changeFileRequest;
+        // /// <summary>
+        // /// The GameEvent called whenever the GUI needs to read in or send out a state of the party.
+        // /// </summary>
+        // [SerializeField]
+        // GameEvent changeFileRequest;
 
         [Header("Important Sprites")]
         /// <summary>
         /// A reference to the Template object, upon which all hero cells are based upon.
         /// </summary>
         [SerializeField]
-        GameObject templateSprite;
-
-        /// <summary>
-        /// A reference to the Template object, upon which all hero cells are based upon.
-        /// </summary>
-        [SerializeField]
-        GameObject modelObject;
+        GameObject myTemplateSprite;
 
         /// <summary>
         /// A reference to the background of the GUI, to accurately place the cells according
         /// to the DISTANCE_FROM_CENTER constant.
         /// </summary>
         [SerializeField]
-        GameObject backgroundBasis;
+        private GameObject myBackgroundBasis;
+
+        /// <summary>
+        /// An string to add to the beginning of each button object's name.
+        /// </summary>
+        private const string BUTTON_PREFIX = "P";
 
         /// <summary>
         /// A constant to reference a percentage of distance that the center of the button factory is placed from
@@ -65,19 +64,15 @@ namespace DungeonAdventure
         /// </summary>
         private static Vector3[] myPositionVectors;
 
-        private Combat combatInstance;
-
-        /// <summary>
-        /// An array of strings to give the cell game objects names.
-        /// </summary>
-        private string[] myButtonLabels = { "P1", "P2", "P3", "P4", "P5", "P6" };
-
         /// <summary>
         /// A party for testing purposes.
         /// </summary>
         private PlayerParty myParty;
 
-        private AbstractCharacter activeCharacter;
+        /// <summary>
+        /// A reference to the currently active character.
+        /// </summary>
+        private AbstractCharacter myActiveCharacter;
 
         /// <summary>
         /// A reference to the party's dictionary of positions, for testing purposes.
@@ -91,10 +86,10 @@ namespace DungeonAdventure
         void Start()
         {
 
-            Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
+            Vector3 colliderSize = myTemplateSprite.GetComponent<BoxCollider2D>().bounds.size;
             Vector3 scaleSize = new Vector3(
-                3 * templateSprite.transform.localScale.x / (MAX_PARTY_SIZE * 1.25f),
-                3 * templateSprite.transform.localScale.y / (MAX_PARTY_SIZE * 1.25f),
+                3 * myTemplateSprite.transform.localScale.x / (MAX_PARTY_SIZE * 1.25f),
+                3 * myTemplateSprite.transform.localScale.y / (MAX_PARTY_SIZE * 1.25f),
                 0.01f
             );
             myArrayOfObjects = new GameObject[MAX_PARTY_SIZE];
@@ -106,12 +101,12 @@ namespace DungeonAdventure
             for (int i = 0; i < MAX_PARTY_SIZE; i++)
             {
                 myArrayOfObjects[i] = Instantiate(
-                    templateSprite,
+                    myTemplateSprite,
                     transform.position,
                     transform.rotation
                 );
                 myArrayOfObjects[i].transform.localScale = scaleSize;
-                myArrayOfObjects[i].name = myButtonLabels[i];
+                myArrayOfObjects[i].name = BUTTON_PREFIX + (i+1);
                 myArrayOfObjects[i].transform.position = (myPositionVectors[i]);
             }
         }
@@ -128,8 +123,8 @@ namespace DungeonAdventure
                     if (myPartyDictionary.ContainsKey(i + 1))
                     {
                         myArrayOfObjects[i].SendMessage("SetCharacterRepresentative", myPartyDictionary[i + 1]);
-                        if (activeCharacter != null){
-                            myArrayOfObjects[i].SendMessage("CheckActivePlayer", activeCharacter);
+                        if (myActiveCharacter != null){
+                            myArrayOfObjects[i].SendMessage("CheckActivePlayer", myActiveCharacter);
                         }
                     }
                     else
@@ -142,7 +137,7 @@ namespace DungeonAdventure
 
         private Vector3[] returnPositionVectors(float width, float length)
         {
-            float backgroundCenterPoint = backgroundBasis.GetComponent<SpriteRenderer>().bounds.size.y;
+            float backgroundCenterPoint = myBackgroundBasis.GetComponent<SpriteRenderer>().bounds.size.y;
             Vector3[] returnSet = new Vector3[MAX_PARTY_SIZE];
             Vector2 gapBorder = new Vector2(width / 20, length / 20);
             int breakPoint = Mathf.CeilToInt(MAX_PARTY_SIZE / 2);
@@ -186,7 +181,7 @@ namespace DungeonAdventure
         }
 
         void SetActiveCharacter(AbstractCharacter theAbstractCharacter){
-            activeCharacter = theAbstractCharacter;
+            myActiveCharacter = theAbstractCharacter;
         }
 
         // /// <summary>

@@ -110,6 +110,7 @@ namespace DungeonAdventure
                     //Show "enemies slain"
                     myAnimationFlag = true;
                     GameObject.Find("Enemies Slain Display").SendMessage("DoFadeAnimation");
+                    myCombatModel.stopCombat();
                     //Response : EndCombatEncounter();
                 }
                 else if (!myPlayerParty.IsAllAlive() && !myAnimationFlag)
@@ -117,6 +118,7 @@ namespace DungeonAdventure
                     //Show "you died"
                     myAnimationFlag = true;
                     GameObject.Find("You Died Display").SendMessage("DoFadeAnimation");
+                    myCombatModel.stopCombat();
                     //Response : SwitchToMainMenu();
                 }
 
@@ -270,7 +272,9 @@ namespace DungeonAdventure
             if (File.Exists("myMap.bin")){
                 File.Delete("myMap.bin");
             }   
-            GameObject.Find("Continue Button").SetActive(false);
+            if (!isGameLoaded){
+                GameObject.Find("Continue Button").SetActive(false);
+            }
         }
 
         /// <summary>

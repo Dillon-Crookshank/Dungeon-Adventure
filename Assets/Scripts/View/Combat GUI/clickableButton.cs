@@ -9,15 +9,15 @@ namespace DungeonAdventure
     {
 
         [SerializeField]
-        public Color highlightColor; 
+        public Color myHighlightColor; 
         /// <summary>
         /// A reference to the rectangular backing of the cell.
         /// </summary>
-        private SpriteRenderer rend;
+        private SpriteRenderer myRenderer;
 
         void Start()
         {
-            rend = gameObject.GetComponent<SpriteRenderer>();
+            myRenderer = gameObject.GetComponent<SpriteRenderer>();
         }
 
         /// <summary>
@@ -25,10 +25,10 @@ namespace DungeonAdventure
         /// </summary>
         void OnMouseOver()
         {
-            if (highlightColor != null){
-                rend.color = highlightColor;
+            if (myHighlightColor != null){
+                myRenderer.color = myHighlightColor;
             } else {
-                rend.color = Color.green;
+                myRenderer.color = Color.green;
             }
             if (Input.GetMouseButtonDown(0))
             {
@@ -41,7 +41,7 @@ namespace DungeonAdventure
         /// </summary>
         void OnMouseExit()
         {
-            rend.color = Color.white;
+            myRenderer.color = Color.white;
         }
         public abstract void PressButton();
     }

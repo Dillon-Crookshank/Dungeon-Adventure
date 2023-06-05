@@ -11,15 +11,15 @@ namespace DungeonAdventure
     class actionButton : clickableButton
     {    
 
-        private bool isClickable;
+        private bool myClickability;
 
-        private Color lockedColor = new Color(0.2f, 0.2f, 0.2f, 1f);
-
-        [SerializeField]
-        string displayHeader;
+        private Color myLockedColor = new Color(0.2f, 0.2f, 0.2f, 1f);
 
         [SerializeField]
-        string displayDescription;
+        private string myDisplayHeader;
+
+        [SerializeField]
+        private string myDisplayDescription;
 
         private SpriteRenderer myActionRenderer;
 
@@ -28,16 +28,16 @@ namespace DungeonAdventure
         }
 
         void Update(){
-            if (!isClickable){
-                myActionRenderer.color = lockedColor;
+            if (!myClickability){
+                myActionRenderer.color = myLockedColor;
             }
         }
 
         void OnMouseOver(){
-            if (isClickable){
-                GameObject.Find("ActionHeader").SendMessage("setText", displayHeader);
-                GameObject.Find("ActionDescription").SendMessage("setText", displayDescription);
-                myActionRenderer.color = highlightColor;
+            if (myClickability){
+                GameObject.Find("ActionHeader").SendMessage("setText", myDisplayHeader);
+                GameObject.Find("ActionDescription").SendMessage("setText", myDisplayDescription);
+                myActionRenderer.color = myHighlightColor;
                 if (Input.GetMouseButtonDown(0))
                 {
                     PressButton();
@@ -46,7 +46,7 @@ namespace DungeonAdventure
         }
 
         void OnMouseExit(){
-            if (isClickable){
+            if (myClickability){
                 GetComponent<SpriteRenderer>().color = Color.white;
                 GameObject.Find("ActionHeader").SendMessage("setText", "");
                 GameObject.Find("ActionDescription").SendMessage("setText", "");
@@ -58,17 +58,17 @@ namespace DungeonAdventure
         /// </summary>
         public override void PressButton()
         {
-            if (isClickable){
+            if (myClickability){
                 Debug.Log(name + " pressed");
             }   
         }
 
-        public void SetDescription(in string theDescription) {
-            displayDescription = theDescription;
+        public void SetDescription(string theDescription) {
+            myDisplayDescription = theDescription;
         }
 
         void SetClickable(bool theClickability){
-            isClickable = theClickability;
+            myClickability = theClickability;
         }
     }
 }

@@ -23,6 +23,11 @@ namespace DungeonAdventure
         private bool isEndOfTurn;
 
         /// <summary>
+        /// A boolean for whether combat should be stopped.
+        /// </summary>
+        private bool stopCombatFlag;
+
+        /// <summary>
         /// A List of all the Characters involved in the Combat.
         /// </summary>
         private List<AbstractCharacter> characterList;
@@ -41,6 +46,8 @@ namespace DungeonAdventure
         /// The Enemy's party in the Combat.
         /// </summary>
         private EnemyParty myEnemyParty;
+
+        
 
         /// <summary>
         /// Constructor for Combat that sets the different parties and starts a Combat encounter.
@@ -111,12 +118,12 @@ namespace DungeonAdventure
                         await TurnOver(myActiveCharacter);
                         isEndOfTurn = false;
                     }
-                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
+                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive) || stopCombatFlag)
                     {
                         break;
                     }
                 }
-                if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
+                if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive) || stopCombatFlag)
                 {
                     break;
                 }
@@ -190,5 +197,9 @@ namespace DungeonAdventure
             return (myActiveCharacter.GetType() == typeof(PlayerCharacter));
         }
 
+
+        internal void stopCombat(){
+            stopCombatFlag = true;
+        }
     }
 }
