@@ -406,10 +406,10 @@ namespace DungeonAdventure
                 .Find("Combat Log")
                 .SendMessage(
                     "UpdateCombatLog",
-                    (myCombatModel.GetActiveActor().Name) + " attacks " + theTarget.Name + "..."
+                    (myCombatModel.GetActiveCharacter().Name) + " attacks " + theTarget.Name + "..."
                 );
             await Task.Delay(300);
-            double damage = Math.Round(myCombatModel.GetActiveActor().BasicAttack(theTarget), 1);
+            double damage = Math.Round(myCombatModel.GetActiveCharacter().BasicAttack(theTarget), 1);
             GameObject
                 .Find("Combat Log")
                 .SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
@@ -432,9 +432,9 @@ namespace DungeonAdventure
                 .Find("Combat Log")
                 .SendMessage(
                     "UpdateCombatLog",
-                    (myCombatModel.GetActiveActor().Name)
+                    (myCombatModel.GetActiveCharacter().Name)
                         + " uses "
-                        + myCombatModel.GetActiveActor().MySpecialAttack.SpecialAttackName
+                        + myCombatModel.GetActiveCharacter().MySpecialAttack.SpecialAttackName
                         + " on "
                         + theTarget.Name
                         + "..."
