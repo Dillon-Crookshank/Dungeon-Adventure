@@ -25,36 +25,36 @@ sealed class enemyCell : MonoBehaviour
     /// A reference to the bar sprite that represents a character's health.
     /// </summary>
     [SerializeField]
-    private GameObject healthBar;
+    private GameObject myHealthBar;
 
     /// <summary>
     /// A reference to testHero object being represented in the instance of the cell.
     /// </summary>
     [SerializeField]
-    private AbstractCharacter characterRepresentative;
+    private AbstractCharacter myCharacterRepresentative;
 
     /// <summary>
     /// A sprite array containing the different display states of a cell.
     /// </summary>
     [SerializeField]
-    private Sprite[] spriteArray = new Sprite[2];
+    private Sprite[] mySpriteArray = new Sprite[2];
 
     /// <summary>
-    /// A text mesh array containing the different text displays that show up as the hero's stats.
+    /// A text mesh array containing the different text displays that show up as the hero's myStats.
     /// </summary>
     [SerializeField]
-    private TextMesh[] stats = new TextMesh[3];
+    private TextMesh[] myStats = new TextMesh[3];
 
     /// <summary>
     /// A reference to the area labelling the hero's name.
     /// </summary>
     [SerializeField]
-    private GameObject statDisplays;
+    private GameObject myStatDisplays;
 
-    /// <summary>
-    /// A vector representing the size of the arrow, when displayed.
-    /// </summary>
-    private Vector2 arrowSize;
+    // /// <summary>
+    // /// A vector representing the size of the arrow, when displayed.
+    // /// </summary>
+    // private Vector2 arrowSize;
 
     // /// <summary>
     // /// A string ID of the cell that was clicked.
@@ -112,42 +112,42 @@ sealed class enemyCell : MonoBehaviour
 
     void Update()
     {
-        hasHero = (characterRepresentative != null);
+        hasHero = (myCharacterRepresentative != null);
 
         if (hasHero && name != "EnemyTemplate")
         {
-            if (!characterRepresentative.IsAlive()){
+            if (!myCharacterRepresentative.IsAlive()){
                 rend.color = new Color(0.5f, 0f, 0f, 1f);
             } else if (hovered) {
                 rend.color = Color.red;
             }
-            // stats[0].text = "" + characterRepresentative.Attack;
-            stats[0].text = "" + Math.Round(characterRepresentative.Attack, 0);
-            stats[1].text = "" + Math.Round(characterRepresentative.Defence, 0);
-            stats[2].text = "" + characterRepresentative.Name;
-            stats[2].GetComponent<TextMesh>().fontSize = 93 - (stats[2].text.Length * 2);
+            // myStats[0].text = "" + myCharacterRepresentative.Attack;
+            myStats[0].text = "" + Math.Round(myCharacterRepresentative.Attack, 0);
+            myStats[1].text = "" + Math.Round(myCharacterRepresentative.Defence, 0);
+            myStats[2].text = "" + myCharacterRepresentative.Name;
+            myStats[2].GetComponent<TextMesh>().fontSize = 93 - (myStats[2].text.Length * 2);
 
             float healthPercentage = (float)(
-                characterRepresentative.CurrentHitpoints
-                / characterRepresentative.MaxHitpoints
+                myCharacterRepresentative.CurrentHitpoints
+                / myCharacterRepresentative.MaxHitpoints
             );
 
-            healthBar.transform.localPosition = new Vector3(
+            myHealthBar.transform.localPosition = new Vector3(
                 0f,
                 (float)(healthPercentage - 1) / 2,
                 -0.51f
             );
-            healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+            myHealthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
         } else {
             rend.color = Color.white;
         }
-        rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
-        statDisplays.SetActive(hasHero);
+        rend.sprite = mySpriteArray[System.Convert.ToInt32(hasHero)];
+        myStatDisplays.SetActive(hasHero);
     }
 
     void CheckActivePlayer(AbstractCharacter thePlayer){
-        if (characterRepresentative.IsAlive()){
-            if (thePlayer == characterRepresentative){
+        if (myCharacterRepresentative.IsAlive()){
+            if (thePlayer == myCharacterRepresentative){
                 rend.color = Color.yellow;
             } else {
                 rend.color = Color.white;
@@ -158,7 +158,7 @@ sealed class enemyCell : MonoBehaviour
     void OnMouseOver()
     {
         
-        if (isSelectableByAction && hasHero && characterRepresentative.IsAlive())
+        if (isSelectableByAction && hasHero && myCharacterRepresentative.IsAlive())
         {
             hovered = true;
             // arrowDisplay.SetActive(true);
@@ -170,12 +170,12 @@ sealed class enemyCell : MonoBehaviour
             // float newZ = arrowDisplay.transform.rotation.z;
             // float newW = arrowDisplay.transform.rotation.w;
             // arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
-            if (hasHero && characterRepresentative.IsAlive())
+            if (hasHero && myCharacterRepresentative.IsAlive())
             {
                 rend.color = Color.red;
                 if (Input.GetMouseButtonDown(0))
                 {
-                    GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
+                    GameObject.Find("Dungeon Controller").SendMessage(behaviorString, myCharacterRepresentative);
                     // Debug.Log("We are attacking " + name);
                     for (int i = 1; i <= 6; i++)
                     {
@@ -197,8 +197,8 @@ sealed class enemyCell : MonoBehaviour
         if (!clicked)
         {
             if (
-                characterRepresentative != null && characterRepresentative.IsAlive()
-                || characterRepresentative == null
+                myCharacterRepresentative != null && myCharacterRepresentative.IsAlive()
+                || myCharacterRepresentative == null
             )
             {
                 rend.color = Color.white;
@@ -262,7 +262,7 @@ sealed class enemyCell : MonoBehaviour
     //         else if (dataLabel.Equals("CharacterData"))
     //         {
     //             // // Debug.Log(incomingData);
-    //             characterRepresentative = (AbstractCharacter)incomingData;
+    //             myCharacterRepresentative = (AbstractCharacter)incomingData;
     //         }
     //     }
     // }
@@ -273,12 +273,12 @@ sealed class enemyCell : MonoBehaviour
     //     int number = 0;
     //     if (
     //         dPacket.GetLabel() == "DamageAmount"
-    //         && characterRepresentative != null
+    //         && myCharacterRepresentative != null
     //         && Int32.TryParse((string)dPacket.GetData(), out number)
     //     )
     //     {
-    //         characterRepresentative.CurrentHitpoints = number;
-    //         if (characterRepresentative.IsAlive())
+    //         myCharacterRepresentative.CurrentHitpoints = number;
+    //         if (myCharacterRepresentative.IsAlive())
     //         {
     //             rend.color = Color.white;
     //         }
@@ -289,10 +289,10 @@ sealed class enemyCell : MonoBehaviour
     //     }
     // }
 
-    public AbstractCharacter GetCharacterRepresentative()
-    {
-        return characterRepresentative;
-    }
+    // public AbstractCharacter GetCharacterRepresentative()
+    // {
+    //     return myCharacterRepresentative;
+    // }
 
     public void setBehaviorString(string theBehavior)
     {
@@ -301,9 +301,9 @@ sealed class enemyCell : MonoBehaviour
     }
 
     void SetNullCharacterRepresentative() {
-        characterRepresentative = null;
+        myCharacterRepresentative = null;
     }
     void SetCharacterRepresentative(EnemyCharacter theCharacter) {
-        characterRepresentative = theCharacter;
+        myCharacterRepresentative = theCharacter;
     }
 }

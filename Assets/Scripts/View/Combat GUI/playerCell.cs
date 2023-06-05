@@ -174,10 +174,10 @@ sealed class playerCell : MonoBehaviour
         }
     }
 
-    public AbstractCharacter GetCharacterRepresentative()
-    {
-        return myCharacterRepresentative;
-    }
+    // public AbstractCharacter GetCharacterRepresentative()
+    // {
+    //     return myCharacterRepresentative;
+    // }
 
     void SetNullCharacterRepresentative() {
         myCharacterRepresentative = null;

@@ -3,9 +3,9 @@ using UnityEngine;
 sealed class textBehavior : MonoBehaviour
 {
     [SerializeField]
-    TextMesh textMesh;
+    private TextMesh myTextMesh;
 
     void setText(string theText){
-        textMesh.text = theText;
+        myTextMesh.text = theText;
     }
 }
