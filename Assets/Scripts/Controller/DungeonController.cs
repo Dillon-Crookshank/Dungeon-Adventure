@@ -373,9 +373,9 @@ namespace DungeonAdventure
         /// <param name="theTarget">The AbstractCharacter being attacked.</param>
         async void DeliverBasicAttack(AbstractCharacter theTarget)
         {
-            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveActor().Name) + " attacks " + theTarget.Name + "...");
+            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveCharacter().Name) + " attacks " + theTarget.Name + "...");
             await Task.Delay(300);
-            double damage = myCombatModel.GetActiveActor().BasicAttack(theTarget);
+            double damage = myCombatModel.GetActiveCharacter().BasicAttack(theTarget);
             GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
             if (!theTarget.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (theTarget.Name + " dies!")); }
             myCombatModel.EndTurn();
@@ -387,10 +387,10 @@ namespace DungeonAdventure
         /// <param name="theTarget">The AbstractCharacter being attacked.</param>
         async void DeliverSpecialAttack(AbstractCharacter theTarget)
         {
-            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveActor().Name) + " uses " +
-            myCombatModel.GetActiveActor().MySpecialAttack.SpecialAttackName + " on " + theTarget.Name + "...");
+            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveCharacter().Name) + " uses " +
+            myCombatModel.GetActiveCharacter().MySpecialAttack.SpecialAttackName + " on " + theTarget.Name + "...");
             await Task.Delay(300);
-            double damage = myCombatModel.GetActiveActor().SpecialAttack(theTarget);
+            double damage = myCombatModel.GetActiveCharacter().SpecialAttack(theTarget);
             GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
             if (!theTarget.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (theTarget.Name + " dies!")); }
             myCombatModel.EndTurn();

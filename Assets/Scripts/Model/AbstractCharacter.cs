@@ -3,7 +3,9 @@ using System;
 namespace DungeonAdventure
 {
 
+    /// <summary>
     /// An abstract representation of an Character in Dungeon Adventure.
+    /// </summary>
     [Serializable]
     internal abstract class AbstractCharacter
     {
@@ -177,6 +179,10 @@ namespace DungeonAdventure
 
         private Buff _myBuff;
 
+        /// <summary>
+        /// The Buff this Character class utilizes
+        /// </summary>
+        /// <value>The new Buff for the class.</value>
         internal Buff MyBuff
         {
             get { return _myBuff; }
@@ -186,16 +192,28 @@ namespace DungeonAdventure
 
         private SpecialAttack _mySpecialAttack;
 
+        /// <summary>
+        /// The Special Attack this Character class utilizes.
+        /// </summary>
+        /// <value>The new Special Attack for the class.</value>
         internal SpecialAttack MySpecialAttack
         {
             get { return _mySpecialAttack; }
             set { _mySpecialAttack = value; }
         }
 
-        [NonSerialized()] private Random rng = new Random();
+        /// <summary>
+        /// A Random object for damage calculations.
+        /// </summary>
+        [NonSerialized()] private Random rng;
 
         private int _currentBuffDuration;
 
+
+        /// <summary>
+        /// The current duration of the buff applied to the Character. (default 0)
+        /// </summary>
+        /// <value>The change in duration.</value>
         internal int CurrentBuffDuration
         {
             get { return _currentBuffDuration; }
@@ -207,7 +225,6 @@ namespace DungeonAdventure
                     switch (MyBuff.StatModifiedByBuff)
                     {
                         case "attack":
-
                             Attack = -CurrentBuffModification;
                             break;
                         case "defence":
@@ -221,12 +238,15 @@ namespace DungeonAdventure
 
         private double _currentBuffModification;
 
+        /// <summary>
+        /// The current value that the stat is modified by the buff. (default 0)
+        /// </summary>
+        /// <value>The change in the currentBuffModification.</value>
         internal double CurrentBuffModification
         {
             get { return _currentBuffModification; }
             set { _currentBuffModification += value; }
         }
-
 
 
 
@@ -252,6 +272,7 @@ namespace DungeonAdventure
             CombatInitiative = 0;
             MyBuff = new Buff("empty", 0, 0, "attack", 0);
             MySpecialAttack = new SpecialAttack("empty", 0, 0, "attack", 0, 0);
+            rng = new Random();
         }
 
 
@@ -269,69 +290,81 @@ namespace DungeonAdventure
         /// defence value as damage, with a minimum of 1.0.
         /// </summary>
         /// <param name="theTarget">The <see cref"AbstractCharacter"/> being targeted with this attack.</param>
-        internal double BasicAttack(AbstractCharacter theTarget)
+        /// <returns>The damage the Attack dealt to theTarget.</returns>
+        internal double BasicAttack(in AbstractCharacter theTarget)
         {
-            double theDamage = (Math.Max(1, Attack - theTarget.Defence) + rng.Next(1, 10));
+            double theDamage = (Math.Max(1, Attack + rng.Next(1, 10) - theTarget.Defence));
             theTarget.CurrentHitpoints = (-1 * theDamage);
             return theDamage;
         }
 
+
+        /// <summary>
+        /// An action that increases the Character's Defence for 2 turns by doubling it.
+        /// </summary>
+        /// <returns>The duration the change in Defence lasts.</returns>
         internal int Defend()
         {
+            if (CurrentBuffModification != 0) { return 0; }
             Defence *= 2;
-            return 1;
+            return 2;
         }
 
+        /// <summary>
+        /// An action that buffs the Character's stats by some value.
+        /// </summary>
+        /// <returns>The duration the Buff is active for.</returns>
         internal int Buff()
         {
+            if (CurrentMana < MyBuff.BuffManaCost)
+            {
+                return 0;
+            }
             switch (MyBuff.StatModifiedByBuff)
             {
                 case "attack":
-                    if (CurrentMana < MyBuff.BuffManaCost)
-                    {
-                        return 0;
-                    }
                     CurrentBuffModification = Attack * MyBuff.BuffPercentage;
                     Attack = Attack * MyBuff.BuffPercentage;
-                    CurrentMana = (-MyBuff.BuffManaCost);
-                    return MyBuff.BuffDuration;
+                    break;
                 case "defence":
-                    if (CurrentMana < MyBuff.BuffManaCost)
-                    {
-                        return 0;
-                    }
                     CurrentBuffModification = Defence * MyBuff.BuffPercentage;
                     Defence = Defence * MyBuff.BuffPercentage;
-                    CurrentMana = (-MyBuff.BuffManaCost);
-                    return MyBuff.BuffDuration;
+                    break;
             }
+            CurrentMana = (-MyBuff.BuffManaCost);
             return MyBuff.BuffDuration;
         }
 
-        internal double SpecialAttack(AbstractCharacter theTarget)
+        /// <summary>
+        /// An action that is a Special Attack that may also apply a Debuff for one turn.
+        /// </summary>
+        /// <param name="theTarget">The Character being targetted.</param>
+        /// <returns>The damage that the Special Attack dealt.</returns>
+        internal double SpecialAttack(in AbstractCharacter theTarget)
         {
             if (CurrentMana < MySpecialAttack.SpecialAttackManaCost) { return 0; }
 
             CurrentMana = -(MySpecialAttack.SpecialAttackManaCost);
 
-            double theDamage = (Math.Max(1, Attack - theTarget.Defence));
+            double temporaryAttack = Attack + Attack * MySpecialAttack.DamageModifier;
 
-            switch (MySpecialAttack.StatModifiedByBuff)
+            double theDamage = (Math.Max(1, (temporaryAttack + rng.Next(1, 10) - theTarget.Defence)));
+
+            switch (MySpecialAttack.DebuffedStat)
             {
                 case "attack":
                     theTarget.Attack = -(theTarget.Attack * MySpecialAttack.DebuffPercentage);
-                    theTarget.CurrentHitpoints = (-1 * theDamage);
-                    return theDamage;
+                    break;
 
                 case "defence":
                     theTarget.Defence = -(theTarget.Defence * MySpecialAttack.DebuffPercentage);
-                    theTarget.CurrentHitpoints = (-1 * theDamage);
-                    return theDamage;
+                    break;
 
                 default:
-                    theTarget.CurrentHitpoints = (-1 * theDamage);
-                    return theDamage;
+                    break;
             }
+            theTarget.CurrentHitpoints = (-1 * theDamage);
+            return theDamage;
         }
 
         /// <summary>
