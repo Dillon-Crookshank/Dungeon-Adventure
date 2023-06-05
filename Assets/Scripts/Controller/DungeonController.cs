@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Threading.Tasks;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -315,8 +317,11 @@ namespace DungeonAdventure
             myMapModel = new DungeonMap();
             myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
             myPlayerParty = new PlayerParty(AccessDB.PlayerDatabaseConstructor("warrior"));
-            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("warrior"));
-            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("warrior"));
+            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("barbarian"));
+            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("rogue"));
+            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("wizard"));
+            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("cleric"));
+            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("archer"));
 
             SaveGame();
 
@@ -362,10 +367,32 @@ namespace DungeonAdventure
             }
         }
 
-        void DeliverBasicAttack(AbstractCharacter theTarget)
+        /// <summary>
+        /// After the attack button is clicked, calls the attack on the target character and updates the combat log.
+        /// </summary>
+        /// <param name="theTarget">The AbstractCharacter being attacked.</param>
+        async void DeliverBasicAttack(AbstractCharacter theTarget)
         {
-            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveActor().Name) + " attacks " + theTarget.Name + "!");
-            myCombatModel.GetActiveActor().BasicAttack(theTarget);
+            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveActor().Name) + " attacks " + theTarget.Name + "...");
+            await Task.Delay(300);
+            double damage = myCombatModel.GetActiveActor().BasicAttack(theTarget);
+            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
+            if (!theTarget.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (theTarget.Name + " dies!")); }
+            myCombatModel.EndTurn();
+        }
+
+        /// <summary>
+        /// After the Special Attack button is clicked, calls the attack on the target character and updates the combat log.
+        /// </summary>
+        /// <param name="theTarget">The AbstractCharacter being attacked.</param>
+        async void DeliverSpecialAttack(AbstractCharacter theTarget)
+        {
+            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveActor().Name) + " uses " +
+            myCombatModel.GetActiveActor().MySpecialAttack.SpecialAttackName + " on " + theTarget.Name + "...");
+            await Task.Delay(300);
+            double damage = myCombatModel.GetActiveActor().SpecialAttack(theTarget);
+            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
+            if (!theTarget.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (theTarget.Name + " dies!")); }
             myCombatModel.EndTurn();
         }
     }

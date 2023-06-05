@@ -192,6 +192,41 @@ namespace DungeonAdventure
             set { _mySpecialAttack = value; }
         }
 
+        [NonSerialized()] private Random rng = new Random();
+
+        private int _currentBuffDuration;
+
+        internal int CurrentBuffDuration
+        {
+            get { return _currentBuffDuration; }
+            set
+            {
+                _currentBuffDuration += value;
+                if (_currentBuffDuration <= 0)
+                {
+                    switch (MyBuff.StatModifiedByBuff)
+                    {
+                        case "attack":
+
+                            Attack = -CurrentBuffModification;
+                            break;
+                        case "defence":
+                            Defence = -CurrentBuffModification;
+                            break;
+                    }
+                    CurrentBuffModification -= CurrentBuffModification;
+                }
+            }
+        }
+
+        private double _currentBuffModification;
+
+        internal double CurrentBuffModification
+        {
+            get { return _currentBuffModification; }
+            set { _currentBuffModification += value; }
+        }
+
 
 
 
@@ -208,7 +243,7 @@ namespace DungeonAdventure
          in double theDefence, in double theMana, in int theInitiative)
         {
             CharacterClass = theClass;
-            Name = CharacterClass;
+            Name = CharacterClass.Substring(0, 1).ToUpper() + CharacterClass.Substring(1);
             MaxHitpoints = theHitpoints;
             Attack = theAttack;
             Defence = theDefence;
@@ -236,7 +271,7 @@ namespace DungeonAdventure
         /// <param name="theTarget">The <see cref"AbstractCharacter"/> being targeted with this attack.</param>
         internal double BasicAttack(AbstractCharacter theTarget)
         {
-            double theDamage = (Math.Max(1, Attack - theTarget.Defence));
+            double theDamage = (Math.Max(1, Attack - theTarget.Defence) + rng.Next(1, 10));
             theTarget.CurrentHitpoints = (-1 * theDamage);
             return theDamage;
         }
@@ -256,6 +291,7 @@ namespace DungeonAdventure
                     {
                         return 0;
                     }
+                    CurrentBuffModification = Attack * MyBuff.BuffPercentage;
                     Attack = Attack * MyBuff.BuffPercentage;
                     CurrentMana = (-MyBuff.BuffManaCost);
                     return MyBuff.BuffDuration;
@@ -264,6 +300,7 @@ namespace DungeonAdventure
                     {
                         return 0;
                     }
+                    CurrentBuffModification = Defence * MyBuff.BuffPercentage;
                     Defence = Defence * MyBuff.BuffPercentage;
                     CurrentMana = (-MyBuff.BuffManaCost);
                     return MyBuff.BuffDuration;
@@ -283,13 +320,16 @@ namespace DungeonAdventure
             {
                 case "attack":
                     theTarget.Attack = -(theTarget.Attack * MySpecialAttack.DebuffPercentage);
+                    theTarget.CurrentHitpoints = (-1 * theDamage);
                     return theDamage;
 
                 case "defence":
                     theTarget.Defence = -(theTarget.Defence * MySpecialAttack.DebuffPercentage);
+                    theTarget.CurrentHitpoints = (-1 * theDamage);
                     return theDamage;
 
                 default:
+                    theTarget.CurrentHitpoints = (-1 * theDamage);
                     return theDamage;
             }
         }

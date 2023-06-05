@@ -57,5 +57,11 @@
 
 -- DROP TABLE specialAttackTemplates;
 
+
 INSERT INTO specialAttackTemplates(class, specialAttackName, duration, statModified, manaCost, percentage, damageModifier)
-VALUES ("warrior", "crush", 2, "defence", 10, 0.30, 0.5);
+-- VALUES ("warrior", "crush", 2, "defence", 10, 0.30, 0.5);
+-- VALUES ("barbarian", "slash", 0, "default", 10, 0, 0.7);
+-- VALUES ("archer", "heavy shot", 2, "defence", 10, 0.30, 0.5);
+-- VALUES ("rogue", "slice", 2, "defence", 10, 0.30, 0.5);
+-- VALUES ("wizard", "fireball", 2, "defence", 10, 0.30, 0.5);
+VALUES ("cleric", "smite", 2, "defence", 10, 0.30, 0.5);
