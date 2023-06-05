@@ -61,11 +61,15 @@ namespace DungeonAdventure
                         if (myActiveCharacter.IsAlive())
                         {
                             await Task.Delay(500);
-                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myActiveCharacter.Name) + " attacks " + (myPlayerParty.GetPartyPositions())[1].Name + "!");
-                            myActiveCharacter.BasicAttack((myPlayerParty.GetPartyPositions())[1]);
+
+                            PlayerCharacter target = (PlayerCharacter)myPlayerParty.GetPartyPositions().ElementAt(Random.Range(0, myPlayerParty.GetPartyPositions().Count)).Value;
+                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myActiveCharacter.Name) + " attacks " + (target.Name) + "!");
+                            myActiveCharacter.BasicAttack(target);
                         }
                         isEndOfTurn = true;
-                    } else {
+                    }
+                    else
+                    {
                         GameObject.Find("ActionButtons").SendMessage("UnlockButtons", true);
                     }
                     if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
