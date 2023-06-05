@@ -93,6 +93,8 @@ sealed class enemyCell : MonoBehaviour
     /// </summary>
     private bool clicked = false;
 
+    private bool hovered = false;
+
     private bool isSelectableByAction = false;
 
     /// <summary>
@@ -116,10 +118,12 @@ sealed class enemyCell : MonoBehaviour
         {
             if (!characterRepresentative.IsAlive()){
                 rend.color = new Color(0.5f, 0f, 0f, 1f);
+            } else if (hovered) {
+                rend.color = Color.red;
             }
             // stats[0].text = "" + characterRepresentative.Attack;
-            stats[0].text = "";
-            stats[1].text = "" + Math.Ceiling(characterRepresentative.CurrentHitpoints);
+            stats[0].text = "" + Math.Round(characterRepresentative.Attack, 0);
+            stats[1].text = "" + Math.Round(characterRepresentative.Defence, 0);
             stats[2].text = "" + characterRepresentative.Name;
             stats[2].GetComponent<TextMesh>().fontSize = 93 - (stats[2].text.Length * 2);
 
@@ -137,15 +141,26 @@ sealed class enemyCell : MonoBehaviour
         } else {
             rend.color = Color.white;
         }
-
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
         statDisplays.SetActive(hasHero);
     }
 
+    void CheckActivePlayer(AbstractCharacter thePlayer){
+        if (characterRepresentative.IsAlive()){
+            if (thePlayer == characterRepresentative){
+                rend.color = Color.yellow;
+            } else {
+                rend.color = Color.white;
+            }
+        }
+    }
+
     void OnMouseOver()
     {
+        
         if (isSelectableByAction && hasHero && characterRepresentative.IsAlive())
         {
+            hovered = true;
             arrowDisplay.SetActive(true);
             arrowDisplay.transform.position = arrowVector;
             arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
@@ -173,6 +188,7 @@ sealed class enemyCell : MonoBehaviour
 
     void OnMouseExit()
     {
+        hovered = false;
         held = false;
         if (selectMoveMode)
         {
@@ -198,80 +214,80 @@ sealed class enemyCell : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Toggles the 'clicked' variable.
-    /// </summary>
-    public void ToggleClicked()
-    {
-        clicked = !clicked;
-    }
+    // /// <summary>
+    // /// Toggles the 'clicked' variable.
+    // /// </summary>
+    // public void ToggleClicked()
+    // {
+    //     clicked = !clicked;
+    // }
 
-    /// <summary>
-    /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
-    /// Can be expanded upon to include more behaviors.
-    /// </summary>
-    /// <param name="sender"> The component that sent the DataPacket. </param>
-    /// <param name="data"> The object (DataPacket) held. </param>
-    public void ReceiveDataPacket(Component sender, object data)
-    {
-        DataPacket dPacket = (DataPacket)data;
-        if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
-        {
-            object incomingData = dPacket.GetData();
-            string dataLabel = dPacket.GetLabel();
-            if (dataLabel.Equals("ArrowVector"))
-            {
-                selectMoveMode = !selectMoveMode;
-                clickedCellName = sender.name;
-                clickedVector = (Vector3)incomingData;
-                arrowVector = new Vector3(
-                    gameObject.transform.position.x
-                        + (clickedVector.x - gameObject.transform.position.x) / 2,
-                    gameObject.transform.position.y
-                        + (clickedVector.y - gameObject.transform.position.y) / 2,
-                    -0.4f
-                );
-                arrowSize = new Vector2(
-                    10f,
-                    20
-                        * Mathf.Sqrt(
-                            Mathf.Pow((clickedVector.x - gameObject.transform.position.x) / 2, 2)
-                                + Mathf.Pow(
-                                    (clickedVector.y - gameObject.transform.position.y) / 2,
-                                    2
-                                )
-                        )
-                );
-            }
-            else if (dataLabel.Equals("CharacterData"))
-            {
-                // Debug.Log(incomingData);
-                characterRepresentative = (AbstractCharacter)incomingData;
-            }
-        }
-    }
+    // /// <summary>
+    // /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
+    // /// Can be expanded upon to include more behaviors.
+    // /// </summary>
+    // /// <param name="sender"> The component that sent the DataPacket. </param>
+    // /// <param name="data"> The object (DataPacket) held. </param>
+    // public void ReceiveDataPacket(Component sender, object data)
+    // {
+    //     DataPacket dPacket = (DataPacket)data;
+    //     if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
+    //     {
+    //         object incomingData = dPacket.GetData();
+    //         string dataLabel = dPacket.GetLabel();
+    //         if (dataLabel.Equals("ArrowVector"))
+    //         {
+    //             selectMoveMode = !selectMoveMode;
+    //             clickedCellName = sender.name;
+    //             clickedVector = (Vector3)incomingData;
+    //             arrowVector = new Vector3(
+    //                 gameObject.transform.position.x
+    //                     + (clickedVector.x - gameObject.transform.position.x) / 2,
+    //                 gameObject.transform.position.y
+    //                     + (clickedVector.y - gameObject.transform.position.y) / 2,
+    //                 -0.4f
+    //             );
+    //             arrowSize = new Vector2(
+    //                 10f,
+    //                 20
+    //                     * Mathf.Sqrt(
+    //                         Mathf.Pow((clickedVector.x - gameObject.transform.position.x) / 2, 2)
+    //                             + Mathf.Pow(
+    //                                 (clickedVector.y - gameObject.transform.position.y) / 2,
+    //                                 2
+    //                             )
+    //                     )
+    //             );
+    //         }
+    //         else if (dataLabel.Equals("CharacterData"))
+    //         {
+    //             // Debug.Log(incomingData);
+    //             characterRepresentative = (AbstractCharacter)incomingData;
+    //         }
+    //     }
+    // }
 
-    public void HandleDamage(Component sender, object data)
-    {
-        DataPacket dPacket = (DataPacket)data;
-        int number = 0;
-        if (
-            dPacket.GetLabel() == "DamageAmount"
-            && characterRepresentative != null
-            && Int32.TryParse((string)dPacket.GetData(), out number)
-        )
-        {
-            characterRepresentative.CurrentHitpoints = number;
-            if (characterRepresentative.IsAlive())
-            {
-                rend.color = Color.white;
-            }
-            else
-            {
-                rend.color = new Color(0.5f, 0f, 0f, 1f);
-            }
-        }
-    }
+    // public void HandleDamage(Component sender, object data)
+    // {
+    //     DataPacket dPacket = (DataPacket)data;
+    //     int number = 0;
+    //     if (
+    //         dPacket.GetLabel() == "DamageAmount"
+    //         && characterRepresentative != null
+    //         && Int32.TryParse((string)dPacket.GetData(), out number)
+    //     )
+    //     {
+    //         characterRepresentative.CurrentHitpoints = number;
+    //         if (characterRepresentative.IsAlive())
+    //         {
+    //             rend.color = Color.white;
+    //         }
+    //         else
+    //         {
+    //             rend.color = new Color(0.5f, 0f, 0f, 1f);
+    //         }
+    //     }
+    // }
 
     public AbstractCharacter GetCharacterRepresentative()
     {

@@ -77,6 +77,8 @@ namespace DungeonAdventure
         /// </summary>
         private PlayerParty myParty;
 
+        private AbstractCharacter activeCharacter;
+
         /// <summary>
         /// A reference to the party's dictionary of positions, for testing purposes.
         /// </summary>
@@ -125,96 +127,18 @@ namespace DungeonAdventure
                 {
                     if (myPartyDictionary.ContainsKey(i + 1))
                     {
-                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetCharacterRepresentative", myPartyDictionary[i + 1]);
+                        myArrayOfObjects[i].SendMessage("SetCharacterRepresentative", myPartyDictionary[i + 1]);
+                        if (activeCharacter != null){
+                            myArrayOfObjects[i].SendMessage("CheckActivePlayer", activeCharacter);
+                        }
                     }
                     else
                     {
-                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetNullCharacterRepresentative");
+                        myArrayOfObjects[i].SendMessage("SetNullCharacterRepresentative");
                     }
                 }
             }
         }
-
-        /// <summary>
-        /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
-        /// Can be expanded upon to include more behaviors.
-        /// </summary>
-        /// <param name="sender"> The component that sent the DataPacket. </param>
-        /// <param name="data"> The object (DataPacket) held. </param>
-        public void ReceiveDataPacket(Component sender, object data)
-        {
-            DataPacket dPacket = (DataPacket)data;
-            if (dPacket.GetLabel() == "SwapRequest")
-            {
-                string label = (string)dPacket.GetData();
-                int startPosition = Int32.Parse(label.Substring(label.Length - 1));
-                int endPosition = Int32.Parse(sender.name.Substring(sender.name.Length - 1));
-                myArrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
-                myArrayOfObjects[startPosition - 1].GetComponent<playerCell>().ToggleClicked();
-                myParty.moveCharacter(endPosition, myPartyDictionary[startPosition]);
-            }
-        }
-
-        // /// <summary>
-        // /// Handles saving and loading parties.
-        // /// Can be expanded upon to include more behaviors.
-        // /// </summary>
-        // /// <param name="sender"> The component that sent the DataPacket. </param>
-        // /// <param name="data"> The object (DataPacket) held. </param>
-        // public void HandleFileRequest(Component sender, object data)
-        // {
-        //     DataPacket dPacket = (DataPacket)data;
-
-        //     if (dPacket.GetLabel() == "SaveRequest")
-        //     {
-        //         Debug.Log("A save was requested");
-        //         changeFileRequest.Raise(this, new DataPacket(myParty, "PartyData", "Save"));
-        //     }
-        //     else if (dPacket.GetLabel() == "LoadRequest")
-        //     {
-        //         Debug.Log("A load was requested");
-        //         myParty = (PlayerParty)dPacket.GetData();
-        //     }
-        // }
-
-        /// <summary>
-        /// Checks if a given string array representation is a valid set of data.
-        /// </summary>
-        /// <param name="hero"> The array representation of the hero. </param>
-        private PlayerCharacter checkValidHero(string[] hero)
-        {
-            Debug.Log(hero.Length);
-            if (hero.Length != 7)
-            {
-                return null;
-            }
-            else
-            {
-                double[] loadStats = new double[5];
-                for (int i = 2; i <= 6; i++)
-                {
-                    if (!Double.TryParse(hero[i], out loadStats[i - 2]))
-                    {
-                        return null;
-                    }
-                }
-                return new PlayerCharacter(
-                    hero[1], // Name
-                    loadStats[0], // HP
-                    loadStats[1], // Attack
-                    loadStats[2], // Defense
-                    loadStats[3], // Mana
-                    (int)loadStats[4] // Intiative
-                );
-            }
-        }
-
-        /// <summary>
-        /// Returns the position vectors to be used to place the cells.
-        /// </summary>
-        /// <param name="width"> The width of the cell. </param>
-        /// <param name="length"> The length of the cell. </param>
-        /// <returns> The array of position vectors. </returns>
 
         private Vector3[] returnPositionVectors(float width, float length)
         {
@@ -260,6 +184,91 @@ namespace DungeonAdventure
                 myArrayOfObjects[i].SendMessage("SetGameLoadedFlag");
             }
         }
+
+        void SetActiveCharacter(AbstractCharacter theAbstractCharacter){
+            activeCharacter = theAbstractCharacter;
+        }
+
+        // /// <summary>
+        // /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
+        // /// Can be expanded upon to include more behaviors.
+        // /// </summary>
+        // /// <param name="sender"> The component that sent the DataPacket. </param>
+        // /// <param name="data"> The object (DataPacket) held. </param>
+        // public void ReceiveDataPacket(Component sender, object data)
+        // {
+        //     DataPacket dPacket = (DataPacket)data;
+        //     if (dPacket.GetLabel() == "SwapRequest")
+        //     {
+        //         string label = (string)dPacket.GetData();
+        //         int startPosition = Int32.Parse(label.Substring(label.Length - 1));
+        //         int endPosition = Int32.Parse(sender.name.Substring(sender.name.Length - 1));
+        //         myArrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
+        //         myArrayOfObjects[startPosition - 1].GetComponent<playerCell>().ToggleClicked();
+        //         myParty.moveCharacter(endPosition, myPartyDictionary[startPosition]);
+        //     }
+        // }
+
+        // /// <summary>
+        // /// Handles saving and loading parties.
+        // /// Can be expanded upon to include more behaviors.
+        // /// </summary>
+        // /// <param name="sender"> The component that sent the DataPacket. </param>
+        // /// <param name="data"> The object (DataPacket) held. </param>
+        // public void HandleFileRequest(Component sender, object data)
+        // {
+        //     DataPacket dPacket = (DataPacket)data;
+
+        //     if (dPacket.GetLabel() == "SaveRequest")
+        //     {
+        //         Debug.Log("A save was requested");
+        //         changeFileRequest.Raise(this, new DataPacket(myParty, "PartyData", "Save"));
+        //     }
+        //     else if (dPacket.GetLabel() == "LoadRequest")
+        //     {
+        //         Debug.Log("A load was requested");
+        //         myParty = (PlayerParty)dPacket.GetData();
+        //     }
+        // }
+
+        /// <summary>
+        /// Checks if a given string array representation is a valid set of data.
+        /// </summary>
+        /// <param name="hero"> The array representation of the hero. </param>
+        // private PlayerCharacter checkValidHero(string[] hero)
+        // {
+        //     Debug.Log(hero.Length);
+        //     if (hero.Length != 7)
+        //     {
+        //         return null;
+        //     }
+        //     else
+        //     {
+        //         double[] loadStats = new double[5];
+        //         for (int i = 2; i <= 6; i++)
+        //         {
+        //             if (!Double.TryParse(hero[i], out loadStats[i - 2]))
+        //             {
+        //                 return null;
+        //             }
+        //         }
+        //         return new PlayerCharacter(
+        //             hero[1], // Name
+        //             loadStats[0], // HP
+        //             loadStats[1], // Attack
+        //             loadStats[2], // Defense
+        //             loadStats[3], // Mana
+        //             (int)loadStats[4] // Intiative
+        //         );
+        //     }
+        // }
+
+        /// <summary>
+        /// Returns the position vectors to be used to place the cells.
+        /// </summary>
+        /// <param name="width"> The width of the cell. </param>
+        /// <param name="length"> The length of the cell. </param>
+        /// <returns> The array of position vectors. </returns>
     }
 }
 

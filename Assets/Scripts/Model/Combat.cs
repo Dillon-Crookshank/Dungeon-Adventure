@@ -76,17 +76,18 @@ namespace DungeonAdventure
                 turnCounter++;
                 foreach (AbstractCharacter character in characterList)
                 {
+                    GameObject.Find("Enemy Button Factory").SendMessage("SetActiveCharacter", character);
+                    GameObject.Find("Button Factory").SendMessage("SetActiveCharacter", character);
                     myActiveCharacter = character;
                     
                     character.CurrentMana = 5;
                     Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
-
-                    if (!isPlayer())
-                    {
-                        GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
-                        //Select random move
-                        if (myActiveCharacter.IsAlive())
+                    if (myActiveCharacter.IsAlive()){
+                        if (!isPlayer())
                         {
+                            GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
+                            
+                            //Select random move
                             await Task.Delay(500);
 
                             PlayerCharacter target = (PlayerCharacter)myPlayerParty.GetPartyPositions().ElementAt(Random.Range(0, myPlayerParty.GetPartyPositions().Count)).Value;
@@ -96,28 +97,28 @@ namespace DungeonAdventure
                             double damage = myActiveCharacter.BasicAttack(target);
                             GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
                             if (!target.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (target.Name + " dies!")); }
+                            isEndOfTurn = true;
                         }
-                        isEndOfTurn = true;
-                    }
-                    else
-                    {
-                        
-                        GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", "It is " + (myActiveCharacter.Name) + "'s turn!");
-                        GameObject.Find("ActionButtons").SendMessage("UnlockButtons", true);
-                        if (myActiveCharacter.CurrentMana < myActiveCharacter.MySpecialAttack.SpecialAttackManaCost){
-                            GameObject.Find("SpecialAttackButton").SendMessage("SetClickable", false);
+                        else
+                        {
+                            
+                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", "It is " + (myActiveCharacter.Name) + "'s turn!");
+                            GameObject.Find("ActionButtons").SendMessage("UnlockButtons", true);
+                            if (myActiveCharacter.CurrentMana < myActiveCharacter.MySpecialAttack.SpecialAttackManaCost){
+                                GameObject.Find("SpecialAttackButton").SendMessage("SetClickable", false);
+                            }
                         }
+                        await TurnOver(myActiveCharacter);
+                        isEndOfTurn = false;
                     }
                     if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
                     {
                         break;
                     }
-                    await TurnOver(myActiveCharacter);
-                    isEndOfTurn = false;
-                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
-                    {
-                        break;
-                    }
+                }
+                if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
+                {
+                    break;
                 }
             }
         }

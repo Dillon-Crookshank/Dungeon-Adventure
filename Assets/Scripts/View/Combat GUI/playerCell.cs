@@ -7,12 +7,12 @@ using UnityEngine;
 /// </summary>
 sealed class playerCell : MonoBehaviour
 {
-    [Header("Events")]
-    /// <summary>
-    /// The GameEvent called whenever a cell has been clicked on.
-    /// </summary>
-    [SerializeField]
-    GameEvent onButtonClick;
+    // [Header("Events")]
+    // /// <summary>
+    // /// The GameEvent called whenever a cell has been clicked on.
+    // /// </summary>
+    // [SerializeField]
+    // GameEvent onButtonClick;
 
     /// <summary>
     /// A reference to the arrow sprite that displays when prompting the user
@@ -26,6 +26,12 @@ sealed class playerCell : MonoBehaviour
     /// </summary>
     [SerializeField]
     GameObject healthBar;
+
+    /// <summary>
+    /// A reference to the bar sprite that represents a character's mana.
+    /// </summary>
+    [SerializeField]
+    GameObject manaBar;
 
     /// <summary>
     /// A reference to testHero object being represented in the instance of the cell.
@@ -108,33 +114,99 @@ sealed class playerCell : MonoBehaviour
 
     void Update()
     {
-        hasHero = (characterRepresentative != null);
+        if (isButtonGameLoaded){
+            hasHero = (characterRepresentative != null);
 
-        if (hasHero && name != "Template")
-        {
-            // stats[0].text = "" + characterRepresentative.Attack;
-            stats[0].text = "";
-            stats[1].text = "" + characterRepresentative.Defence;
-            stats[2].text = "" + characterRepresentative.Name;
-            stats[2].GetComponent<TextMesh>().fontSize = 93 - (stats[2].text.Length * 2);
+            if (hasHero && name != "Template")
+            {
+                if (!characterRepresentative.IsAlive()){
+                    rend.color = new Color(0.5f, 0f, 0f, 1f);
+                }
+                // stats[0].text = "" + characterRepresentative.Attack;
+                stats[0].text = "" + characterRepresentative.Attack;
+                stats[1].text = "" + characterRepresentative.Defence;
+                stats[2].text = "" + characterRepresentative.Name;
+                stats[2].GetComponent<TextMesh>().fontSize = 93 - (stats[2].text.Length * 2);
 
-            if (isButtonGameLoaded){
-                float healthPercentage = (float)(
-                    characterRepresentative.CurrentHitpoints
-                    / characterRepresentative.MaxHitpoints
-                );
                 
-                healthBar.transform.localPosition = new Vector3(
-                    0f,
-                    (float)(healthPercentage - 1) / 2,
-                    -0.51f
-                );
-                healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+                    float healthPercentage = (float)(
+                        characterRepresentative.CurrentHitpoints
+                        / characterRepresentative.MaxHitpoints
+                    );
+                    
+                    healthBar.transform.localPosition = new Vector3(
+                        0f,
+                        (float)(healthPercentage - 1) / 2,
+                        -0.51f
+                    );
+                    healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+
+                    float manaPercentage = (float)(
+                        characterRepresentative.CurrentMana
+                        / characterRepresentative.MaxMana
+                    );
+                    
+                    manaBar.transform.localPosition = new Vector3(
+                        0f,
+                        (float)(manaPercentage - 1) / 2,
+                        -0.51f
+                    );
+                    manaBar.transform.localScale = new Vector3(1f, manaPercentage, 1f);
+                
+            } else {
+                rend.color = Color.white;
             }
         }
-
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
         statDisplays.SetActive(hasHero);
+    }
+
+    void CheckActivePlayer(AbstractCharacter thePlayer){
+        if (characterRepresentative.IsAlive()){
+            if (thePlayer == characterRepresentative){
+                rend.color = Color.yellow;
+            } else {
+                rend.color = Color.white;
+            }
+        }
+    }
+
+    public AbstractCharacter GetCharacterRepresentative()
+    {
+        return characterRepresentative;
+    }
+
+    public void HandleDamage(Component sender, object data)
+    {
+        DataPacket dPacket = (DataPacket)data;
+        int number = 0;
+        if (
+            dPacket.GetLabel() == "DamageAmount"
+            && characterRepresentative != null
+            && Int32.TryParse((string)dPacket.GetData(), out number)
+        )
+        {
+            characterRepresentative.CurrentHitpoints = number;
+            if (characterRepresentative.IsAlive())
+            {
+                rend.color = Color.white;
+            }
+            else
+            {
+                rend.color = new Color(0.5f, 0f, 0f, 1f);
+            }
+        }
+    }
+    void SetNullCharacterRepresentative() {
+        characterRepresentative = null;
+    }
+    
+    void SetCharacterRepresentative(PlayerCharacter theCharacter) {
+        characterRepresentative = theCharacter;
+    }
+
+    void SetGameLoadedFlag(){
+        isButtonGameLoaded = true;
     }
 
     // void OnMouseOver()
@@ -261,94 +333,57 @@ sealed class playerCell : MonoBehaviour
     //     }
     // }
 
-    /// <summary>
-    /// Toggles the 'clicked' variable.
-    /// </summary>
-    public void ToggleClicked()
-    {
-        clicked = !clicked;
-    }
+    // /// <summary>
+    // /// Toggles the 'clicked' variable.
+    // /// </summary>
+    // public void ToggleClicked()
+    // {
+    //     clicked = !clicked;
+    // }
 
-    /// <summary>
-    /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
-    /// Can be expanded upon to include more behaviors.
-    /// </summary>
-    /// <param name="sender"> The component that sent the DataPacket. </param>
-    /// <param name="data"> The object (DataPacket) held. </param>
-    public void ReceiveDataPacket(Component sender, object data)
-    {
-        DataPacket dPacket = (DataPacket)data;
-        if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
-        {
-            object incomingData = dPacket.GetData();
-            string dataLabel = dPacket.GetLabel();
-            if (dataLabel.Equals("ArrowVector"))
-            {
-                selectMoveMode = !selectMoveMode;
-                clickedCellName = sender.name;
-                clickedVector = (Vector3)incomingData;
-                arrowVector = new Vector3(
-                    gameObject.transform.position.x
-                        + (clickedVector.x - gameObject.transform.position.x) / 2,
-                    gameObject.transform.position.y
-                        + (clickedVector.y - gameObject.transform.position.y) / 2,
-                    -0.4f
-                );
-                arrowSize = new Vector2(
-                    10f,
-                    20
-                        * Mathf.Sqrt(
-                            Mathf.Pow((clickedVector.x - gameObject.transform.position.x) / 2, 2)
-                                + Mathf.Pow(
-                                    (clickedVector.y - gameObject.transform.position.y) / 2,
-                                    2
-                                )
-                        )
-                );
-            }
-            else if (dataLabel.Equals("CharacterData"))
-            {
-                characterRepresentative = (PlayerCharacter)incomingData;
-            }
-        }
-    }
+    // /// <summary>
+    // /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
+    // /// Can be expanded upon to include more behaviors.
+    // /// </summary>
+    // /// <param name="sender"> The component that sent the DataPacket. </param>
+    // /// <param name="data"> The object (DataPacket) held. </param>
+    // public void ReceiveDataPacket(Component sender, object data)
+    // {
+    //     DataPacket dPacket = (DataPacket)data;
+    //     if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
+    //     {
+    //         object incomingData = dPacket.GetData();
+    //         string dataLabel = dPacket.GetLabel();
+    //         if (dataLabel.Equals("ArrowVector"))
+    //         {
+    //             selectMoveMode = !selectMoveMode;
+    //             clickedCellName = sender.name;
+    //             clickedVector = (Vector3)incomingData;
+    //             arrowVector = new Vector3(
+    //                 gameObject.transform.position.x
+    //                     + (clickedVector.x - gameObject.transform.position.x) / 2,
+    //                 gameObject.transform.position.y
+    //                     + (clickedVector.y - gameObject.transform.position.y) / 2,
+    //                 -0.4f
+    //             );
+    //             arrowSize = new Vector2(
+    //                 10f,
+    //                 20
+    //                     * Mathf.Sqrt(
+    //                         Mathf.Pow((clickedVector.x - gameObject.transform.position.x) / 2, 2)
+    //                             + Mathf.Pow(
+    //                                 (clickedVector.y - gameObject.transform.position.y) / 2,
+    //                                 2
+    //                             )
+    //                     )
+    //             );
+    //         }
+    //         else if (dataLabel.Equals("CharacterData"))
+    //         {
+    //             characterRepresentative = (PlayerCharacter)incomingData;
+    //         }
+    //     }
+    // }
 
-    public AbstractCharacter GetCharacterRepresentative()
-    {
-        return characterRepresentative;
-    }
-
-    public void HandleDamage(Component sender, object data)
-    {
-        DataPacket dPacket = (DataPacket)data;
-        int number = 0;
-        if (
-            dPacket.GetLabel() == "DamageAmount"
-            && characterRepresentative != null
-            && Int32.TryParse((string)dPacket.GetData(), out number)
-        )
-        {
-            characterRepresentative.CurrentHitpoints = number;
-            if (characterRepresentative.IsAlive())
-            {
-                rend.color = Color.white;
-            }
-            else
-            {
-                rend.color = new Color(0.5f, 0f, 0f, 1f);
-            }
-        }
-    }
-    void SetNullCharacterRepresentative() {
-        characterRepresentative = null;
-    }
     
-    void SetCharacterRepresentative(PlayerCharacter theCharacter) {
-        characterRepresentative = theCharacter;
-    }
-
-    void SetGameLoadedFlag(){
-        Debug.Log("Hello!");
-        isButtonGameLoaded = true;
-    }
 }

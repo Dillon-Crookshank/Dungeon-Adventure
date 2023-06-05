@@ -72,6 +72,7 @@ namespace DungeonAdventure
         /// A reference to the party's dictionary of positions, for testing purposes.
         /// </summary>
         private Dictionary<int, AbstractCharacter> myEnemyPartyDictionary;
+        private AbstractCharacter activeCharacter;
 
         /// <summary>
         /// Generates the cells and places two knights in their appropriate locations as a basis
@@ -115,14 +116,60 @@ namespace DungeonAdventure
                 {
                     if (myEnemyPartyDictionary.ContainsKey(i + 1))
                     {
-                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetCharacterRepresentative", myEnemyPartyDictionary[i + 1]);
+                        myArrayOfObjects[i].SendMessage("SetCharacterRepresentative", myEnemyPartyDictionary[i + 1]);
+                        if (activeCharacter != null){
+                            myArrayOfObjects[i].SendMessage("CheckActivePlayer", activeCharacter);
+                        }
                     }
                     else
                     {
-                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetNullCharacterRepresentative");
+                        myArrayOfObjects[i].SendMessage("SetNullCharacterRepresentative");
                     }
                 }
             }
+        }
+
+        private Vector3[] returnPositionVectors(float width, float length)
+        {
+            float backgroundCenterPoint = backgroundBasis.GetComponent<SpriteRenderer>().bounds.size.y;
+            Vector3[] returnSet = new Vector3[MAX_PARTY_SIZE];
+            Vector2 gapBorder = new Vector2(width / 20, length / 20);
+            int breakPoint = Mathf.CeilToInt(MAX_PARTY_SIZE / 2);
+            Vector2 centeringPoint = new Vector2((gapBorder.x + width), (gapBorder.y + length));
+            if (breakPoint % 2 == 0)
+            {
+                centeringPoint.x = (gapBorder.y + width) * (MAX_PARTY_SIZE - 1) / MAX_PARTY_SIZE;
+            }
+            if (breakPoint < MAX_PARTY_SIZE)
+            {
+                centeringPoint.y = (gapBorder.y + length) / 2;
+            }
+            for (int i = 0; i < breakPoint; i++)
+            {
+                returnSet[i] = new Vector3(
+                    ((gapBorder.x + width) * i) - centeringPoint.x,
+                    centeringPoint.y - (backgroundCenterPoint * DISTANCE_FROM_CENTER),
+                    0f
+                );
+            }
+            for (int i = breakPoint; i < MAX_PARTY_SIZE; i++)
+            {
+                returnSet[i] = new Vector3(
+                    ((gapBorder.x + width) * (i - breakPoint)) - centeringPoint.x,
+                    -centeringPoint.y - (backgroundCenterPoint * DISTANCE_FROM_CENTER),
+                    0f
+                );
+            }
+            return returnSet;
+        }
+
+        void setDisplayedParty(EnemyParty theParty)
+        {
+            myEnemyParty = theParty;
+        }
+
+        void SetActiveCharacter(AbstractCharacter theAbstractCharacter){
+            activeCharacter = theAbstractCharacter;
         }
 
         // /// <summary>
@@ -184,45 +231,6 @@ namespace DungeonAdventure
         /// <param name="width"> The width of the cell. </param>
         /// <param name="length"> The length of the cell. </param>
         /// <returns> The array of position vectors. </returns>
-
-        private Vector3[] returnPositionVectors(float width, float length)
-        {
-            float backgroundCenterPoint = backgroundBasis.GetComponent<SpriteRenderer>().bounds.size.y;
-            Vector3[] returnSet = new Vector3[MAX_PARTY_SIZE];
-            Vector2 gapBorder = new Vector2(width / 20, length / 20);
-            int breakPoint = Mathf.CeilToInt(MAX_PARTY_SIZE / 2);
-            Vector2 centeringPoint = new Vector2((gapBorder.x + width), (gapBorder.y + length));
-            if (breakPoint % 2 == 0)
-            {
-                centeringPoint.x = (gapBorder.y + width) * (MAX_PARTY_SIZE - 1) / MAX_PARTY_SIZE;
-            }
-            if (breakPoint < MAX_PARTY_SIZE)
-            {
-                centeringPoint.y = (gapBorder.y + length) / 2;
-            }
-            for (int i = 0; i < breakPoint; i++)
-            {
-                returnSet[i] = new Vector3(
-                    ((gapBorder.x + width) * i) - centeringPoint.x,
-                    centeringPoint.y - (backgroundCenterPoint * DISTANCE_FROM_CENTER),
-                    0f
-                );
-            }
-            for (int i = breakPoint; i < MAX_PARTY_SIZE; i++)
-            {
-                returnSet[i] = new Vector3(
-                    ((gapBorder.x + width) * (i - breakPoint)) - centeringPoint.x,
-                    -centeringPoint.y - (backgroundCenterPoint * DISTANCE_FROM_CENTER),
-                    0f
-                );
-            }
-            return returnSet;
-        }
-
-        public void setDisplayedParty(EnemyParty theParty)
-        {
-            myEnemyParty = theParty;
-        }
 
         
     }
