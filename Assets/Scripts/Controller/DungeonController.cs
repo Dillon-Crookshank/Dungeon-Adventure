@@ -84,6 +84,7 @@ namespace DungeonAdventure
             myMenuCamera.SetActive(true);
 
             myAnimationFlag = false;
+            GameObject.Find("Continue Button").SetActive(File.Exists("myMap.bin"));
         }
 
         /// <summary>
@@ -91,6 +92,7 @@ namespace DungeonAdventure
         /// </summary>
         public void Update()
         {
+            
             if (isGameLoaded){
                 (GameObject.Find("Button Factory")).SendMessage("setDisplayedParty", myPlayerParty);
                 //Do extra check since peek throws an error when the queue is empty
@@ -251,7 +253,6 @@ namespace DungeonAdventure
                     }
                 }
             }
-
             SetGameLoadedFlag();
         }
 
@@ -260,11 +261,16 @@ namespace DungeonAdventure
         /// </summary>
         public void SwitchToMainMenu()
         {
+            
             myMapCamera.SetActive(false);
             myCombatCamera.SetActive(false);
             myMenuCamera.SetActive(true);
-            LoadGame();
             myAnimationFlag = false;
+            isGameLoaded = false;
+            if (File.Exists("myMap.bin")){
+                File.Delete("myMap.bin");
+            }   
+            GameObject.Find("Continue Button").SetActive(false);
         }
 
         /// <summary>
@@ -325,6 +331,7 @@ namespace DungeonAdventure
         /// </summary>
         public void ContinueGame()
         {
+            LoadGame();
             SwitchToMap();
         }
 
@@ -385,7 +392,6 @@ namespace DungeonAdventure
         }
 
         private void SetGameLoadedFlag(){
-            Debug.Log("Hello!");
             GameObject.Find("Button Factory").SendMessage("SetButtonsGameLoadedFlag");
             isGameLoaded = true;
         }
@@ -456,6 +462,18 @@ namespace DungeonAdventure
                     (myCombatModel.GetActiveActor().Name) + " is on guard this turn!"
                 );
             myCombatModel.GetActiveActor().Defend();
+            myCombatModel.EndTurn();
+        }
+
+        void Buff()
+        {
+            GameObject
+                .Find("Combat Log")
+                .SendMessage(
+                    "UpdateCombatLog",
+                    (myCombatModel.GetActiveActor().Name) + " uses " + myCombatModel.GetActiveActor().MyBuff.BuffName + "!"
+                );
+            myCombatModel.GetActiveActor().Buff();
             myCombatModel.EndTurn();
         }
 

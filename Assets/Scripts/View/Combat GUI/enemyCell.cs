@@ -114,10 +114,14 @@ sealed class enemyCell : MonoBehaviour
 
         if (hasHero && name != "EnemyTemplate")
         {
+            if (!characterRepresentative.IsAlive()){
+                rend.color = new Color(0.5f, 0f, 0f, 1f);
+            }
             // stats[0].text = "" + characterRepresentative.Attack;
             stats[0].text = "";
             stats[1].text = "" + Math.Ceiling(characterRepresentative.CurrentHitpoints);
             stats[2].text = "" + characterRepresentative.Name;
+            stats[2].GetComponent<TextMesh>().fontSize = 93 - (stats[2].text.Length * 2);
 
             float healthPercentage = (float)(
                 characterRepresentative.CurrentHitpoints
@@ -130,6 +134,8 @@ sealed class enemyCell : MonoBehaviour
                 -0.51f
             );
             healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+        } else {
+            rend.color = Color.white;
         }
 
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
@@ -138,7 +144,7 @@ sealed class enemyCell : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (isSelectableByAction)
+        if (isSelectableByAction && hasHero && characterRepresentative.IsAlive())
         {
             arrowDisplay.SetActive(true);
             arrowDisplay.transform.position = arrowVector;

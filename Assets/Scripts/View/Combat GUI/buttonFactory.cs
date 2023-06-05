@@ -155,27 +155,27 @@ namespace DungeonAdventure
             }
         }
 
-        /// <summary>
-        /// Handles saving and loading parties.
-        /// Can be expanded upon to include more behaviors.
-        /// </summary>
-        /// <param name="sender"> The component that sent the DataPacket. </param>
-        /// <param name="data"> The object (DataPacket) held. </param>
-        public void HandleFileRequest(Component sender, object data)
-        {
-            DataPacket dPacket = (DataPacket)data;
+        // /// <summary>
+        // /// Handles saving and loading parties.
+        // /// Can be expanded upon to include more behaviors.
+        // /// </summary>
+        // /// <param name="sender"> The component that sent the DataPacket. </param>
+        // /// <param name="data"> The object (DataPacket) held. </param>
+        // public void HandleFileRequest(Component sender, object data)
+        // {
+        //     DataPacket dPacket = (DataPacket)data;
 
-            if (dPacket.GetLabel() == "SaveRequest")
-            {
-                Debug.Log("A save was requested");
-                changeFileRequest.Raise(this, new DataPacket(myParty, "PartyData", "Save"));
-            }
-            else if (dPacket.GetLabel() == "LoadRequest")
-            {
-                Debug.Log("A load was requested");
-                myParty = (PlayerParty)dPacket.GetData();
-            }
-        }
+        //     if (dPacket.GetLabel() == "SaveRequest")
+        //     {
+        //         Debug.Log("A save was requested");
+        //         changeFileRequest.Raise(this, new DataPacket(myParty, "PartyData", "Save"));
+        //     }
+        //     else if (dPacket.GetLabel() == "LoadRequest")
+        //     {
+        //         Debug.Log("A load was requested");
+        //         myParty = (PlayerParty)dPacket.GetData();
+        //     }
+        // }
 
         /// <summary>
         /// Checks if a given string array representation is a valid set of data.

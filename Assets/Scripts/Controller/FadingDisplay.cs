@@ -37,6 +37,7 @@ public class FadingDisplay : MonoBehaviour {
         Debug.Log(myRenderer.color.a);
         //Fade in
         Debug.Log("Fade In");
+        GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
         myRenderer.color = new Color(myRenderer.color.r, myRenderer.color.g, myRenderer.color.b, 0f);
         for (int i = 0; i < 100; i++) {
             await Task.Delay(myFadeTime / 100);

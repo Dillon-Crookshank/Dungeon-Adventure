@@ -192,8 +192,6 @@ namespace DungeonAdventure
             set { _mySpecialAttack = value; }
         }
 
-        [NonSerialized()] private Random rng = new Random();
-
         private int _currentBuffDuration;
 
         internal int CurrentBuffDuration
@@ -271,7 +269,7 @@ namespace DungeonAdventure
         /// <param name="theTarget">The <see cref"AbstractCharacter"/> being targeted with this attack.</param>
         internal double BasicAttack(AbstractCharacter theTarget)
         {
-            double theDamage = (Math.Max(1, Attack - theTarget.Defence) + rng.Next(1, 10));
+            double theDamage = (Math.Max(1, Attack - theTarget.Defence) + new Random().Next(1, 10));
             theTarget.CurrentHitpoints = (-1 * theDamage);
             return theDamage;
         }
