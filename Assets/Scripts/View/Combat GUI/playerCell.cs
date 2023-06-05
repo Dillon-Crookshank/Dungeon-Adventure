@@ -91,6 +91,8 @@ sealed class playerCell : MonoBehaviour
     /// </summary>
     private bool clicked = false;
 
+    private bool isButtonGameLoaded = false;
+
     /// <summary>
     /// A reference to the SpriteRenderer component of this object.
     /// </summary>
@@ -112,20 +114,22 @@ sealed class playerCell : MonoBehaviour
         {
             // stats[0].text = "" + characterRepresentative.Attack;
             stats[0].text = "";
-            stats[1].text = "" + characterRepresentative.CurrentHitpoints;
+            stats[1].text = "" + characterRepresentative.Defence;
             stats[2].text = "" + characterRepresentative.Name;
 
-            float healthPercentage = (float)(
-                characterRepresentative.CurrentHitpoints
-                / characterRepresentative.MaxHitpoints
-            );
-
-            healthBar.transform.localPosition = new Vector3(
-                0f,
-                (float)(healthPercentage - 1) / 2,
-                -0.51f
-            );
-            healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+            if (isButtonGameLoaded){
+                float healthPercentage = (float)(
+                    characterRepresentative.CurrentHitpoints
+                    / characterRepresentative.MaxHitpoints
+                );
+                
+                healthBar.transform.localPosition = new Vector3(
+                    0f,
+                    (float)(healthPercentage - 1) / 2,
+                    -0.51f
+                );
+                healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+            }
         }
 
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
@@ -340,5 +344,10 @@ sealed class playerCell : MonoBehaviour
     
     void SetCharacterRepresentative(PlayerCharacter theCharacter) {
         characterRepresentative = theCharacter;
+    }
+
+    void SetGameLoadedFlag(){
+        Debug.Log("Hello!");
+        isButtonGameLoaded = true;
     }
 }

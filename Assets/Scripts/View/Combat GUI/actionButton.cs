@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// An representation of a GUI button that handles file loading.
 /// </summary>
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
     class actionButton : clickableButton
     {    
@@ -21,9 +21,15 @@ namespace DefaultNamespace
         [SerializeField]
         string displayDescription;
 
+        private SpriteRenderer myActionRenderer;
+
+        void Start(){
+            myActionRenderer = GetComponent<SpriteRenderer>();
+        }
+
         void Update(){
             if (!isClickable){
-                rend.color = lockedColor;
+                myActionRenderer.color = lockedColor;
             }
         }
 
@@ -31,10 +37,9 @@ namespace DefaultNamespace
             if (isClickable){
                 GameObject.Find("ActionHeader").SendMessage("setText", displayHeader);
                 GameObject.Find("ActionDescription").SendMessage("setText", displayDescription);
-                GetComponent<SpriteRenderer>().color = highlightColor;
+                myActionRenderer.color = highlightColor;
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log(name);
                     PressButton();
                 }
             }

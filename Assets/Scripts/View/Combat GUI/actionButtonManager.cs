@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace{
+namespace DungeonAdventure{
     public class actionButtonManager : MonoBehaviour
     {
         [SerializeField]

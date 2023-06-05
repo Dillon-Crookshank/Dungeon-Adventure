@@ -116,7 +116,7 @@ sealed class enemyCell : MonoBehaviour
         {
             // stats[0].text = "" + characterRepresentative.Attack;
             stats[0].text = "";
-            stats[1].text = "" + characterRepresentative.CurrentHitpoints;
+            stats[1].text = "" + Math.Ceiling(characterRepresentative.CurrentHitpoints);
             stats[2].text = "" + characterRepresentative.Name;
 
             float healthPercentage = (float)(

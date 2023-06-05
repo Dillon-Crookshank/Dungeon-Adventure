@@ -254,6 +254,12 @@ namespace DungeonAdventure
         {
             myParty = theParty;
         }
+
+        void SetButtonsGameLoadedFlag(){
+            for (int i = 0; i < MAX_PARTY_SIZE; i++){
+                myArrayOfObjects[i].SendMessage("SetGameLoadedFlag");
+            }
+        }
     }
 }
 
