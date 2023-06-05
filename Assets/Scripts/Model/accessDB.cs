@@ -6,11 +6,18 @@ namespace DungeonAdventure
 {
 
     /// <summary>
-    /// This class will be a representation of a stat change or active effect on an Actor.
+    /// This class handles SQLite Database access and logic.
     /// </summary>
     public class AccessDB : MonoBehaviour
     {
-        internal static PlayerCharacter PlayerDatabaseConstructor(string theClass)
+
+        /// <summary>
+        /// Constructs a PlayerCharacter by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be created.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create a PlayerCharacter of.</param>
+        /// <returns>A new PlayerCharacter object with values from the SQLite database.</returns>
+        internal static PlayerCharacter PlayerDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -35,7 +42,13 @@ namespace DungeonAdventure
 
         }
 
-        internal static EnemyCharacter EnemyDatabaseConstructor(string theClass)
+        /// <summary>
+        /// Constructs an EnemyCharacter by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be created.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create an EnemyCharacter of.</param>
+        /// <returns>A new EnemyCharacter object with values from the SQLite database.</returns>
+        internal static EnemyCharacter EnemyDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -60,7 +73,13 @@ namespace DungeonAdventure
 
         }
 
-        internal static Buff BuffDatabaseConstructor(string theClass)
+        /// <summary>
+        /// Constructs a Buff object by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be based on.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create an Buff from.</param>
+        /// <returns>A new Buff object with values from the SQLite database.</returns>
+        internal static Buff BuffDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -84,7 +103,14 @@ namespace DungeonAdventure
             }
         }
 
-        internal static SpecialAttack SpecialAttackDatabaseConstructor(string theClass)
+
+        /// <summary>
+        /// Constructs a SpecialAttack object by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be based on.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create a Special Attack from.</param>
+        /// <returns>A new Special Attack object with values from the SQLite database.</returns>
+        internal static SpecialAttack SpecialAttackDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -109,6 +135,10 @@ namespace DungeonAdventure
         }
 
 
+        /// <summary>
+        /// A static method for connecting to the SQLite database.
+        /// </summary>
+        /// <returns>A connection to the SQLite database.</returns>
         private static IDbConnection OpenDatabase()
         {
             // Open a connection to the database.

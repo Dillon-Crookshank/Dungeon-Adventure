@@ -4,8 +4,7 @@ namespace DungeonAdventure
 {
 
     /// <summary>
-    /// An abstract representation of an Enemy.
-    /// Includes a RNG and a lootTable.
+    /// An class that represents an EnemyCharacter.
     /// </summary>
     [Serializable]
     internal class EnemyCharacter : AbstractCharacter
