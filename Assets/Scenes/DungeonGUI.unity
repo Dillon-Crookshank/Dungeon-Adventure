@@ -133,8 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4516117}
   - component: {fileID: 4516118}
-  - component: {fileID: 4516120}
-  - component: {fileID: 4516119}
   m_Layer: 0
   m_Name: Enemy Button Factory
   m_TagString: Untagged
@@ -169,66 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 192c527ce1aaa6c4bad2e46c4ffda3a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GUIUpdate: {fileID: 11400000, guid: b9ab541afbc9c8d4c8ea19288596fbb0, type: 2}
-  templateSprite: {fileID: 513539621772790844}
-  backgroundBasis: {fileID: 1803705462}
-  modelObject: {fileID: 0}
---- !u!114 &4516119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4516116}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4516118}
-        m_TargetAssemblyTypeName: buttonFactory, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &4516120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4516116}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: b9ab541afbc9c8d4c8ea19288596fbb0, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4516118}
-        m_TargetAssemblyTypeName: enemyButtonFactory, CombatGUI
-        m_MethodName: ReceiveDataPacket
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  myTemplateSprite: {fileID: 513539621772790844}
+  myBackgroundBasis: {fileID: 1803705462}
 --- !u!102 &38192482
 TextMesh:
   serializedVersion: 3
@@ -1012,9 +952,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74bfe60e8f6d94091da5d24d70add9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightColor: {r: 0.7924528, g: 0.65428436, b: 0.03289423, a: 1}
-  displayHeader: Special Attack
-  displayDescription: A strong attack; costs mana.
+  myHighlightColor: {r: 0.6792453, g: 0.56133646, b: 0.18839444, a: 1}
+  myDisplayHeader: Special Attack
+  myDisplayDescription: Stronger attack; costs mana.
 --- !u!1 &345762845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1837,9 +1777,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4146695580b524fbff92642f2a0e02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightColor: {r: 0.6320754, g: 0.42452514, b: 0.31245992, a: 1}
-  displayHeader: End Turn
-  displayDescription: End turn without action.
+  myHighlightColor: {r: 0.5283019, g: 0.35937145, b: 0.26614454, a: 1}
+  myDisplayHeader: End Turn
+  myDisplayDescription: End turn without action.
 --- !u!4 &816272442
 Transform:
   m_ObjectHideFlags: 0
@@ -1848,7 +1788,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816272445}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.54, y: 0.49, z: 0}
+  m_LocalPosition: {x: -1.54, y: 0.48999977, z: 0}
   m_LocalScale: {x: 0.34, y: 4.13, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2361,7 +2301,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1101055748}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.05, y: -0.02, z: 9.410851}
+  m_LocalPosition: {x: 0.05, y: -0.01999998, z: -5.3}
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2947,9 +2887,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b2102ea1aadb045b6b19619453626a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightColor: {r: 0.027803458, g: 0.6698113, b: 0.16778807, a: 1}
-  displayHeader: Buff
-  displayDescription: Temporarily increases stats.
+  myHighlightColor: {r: 0.073050864, g: 0.6792453, b: 0.3711737, a: 1}
+  myDisplayHeader: Buff
+  myDisplayDescription: Increases stats.
 --- !u!1 &1300969670
 GameObject:
   m_ObjectHideFlags: 0
@@ -3688,8 +3628,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1622406112}
   - component: {fileID: 1622406111}
-  - component: {fileID: 1622406113}
-  - component: {fileID: 1622406114}
   m_Layer: 0
   m_Name: Button Factory
   m_TagString: Untagged
@@ -3709,11 +3647,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 219fa021d965782408c7d321045af18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GUIUpdate: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
-  changeFileRequest: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
-  templateSprite: {fileID: 4866356734922247064}
-  modelObject: {fileID: 0}
-  backgroundBasis: {fileID: 1803705462}
+  myTemplateSprite: {fileID: 4866356734922247064}
+  myBackgroundBasis: {fileID: 1803705462}
 --- !u!4 &1622406112
 Transform:
   m_ObjectHideFlags: 0
@@ -3729,62 +3664,6 @@ Transform:
   m_Father: {fileID: 878085358}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1622406113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1622406110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 2ca0c6ddbb0c7fb42a6cb7ec16640d00, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1622406111}
-        m_TargetAssemblyTypeName: buttonFactory, Assembly-CSharp
-        m_MethodName: ReceiveDataPacket
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &1622406114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1622406110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 35a9a79d192b7ef49a4e41345bef3433, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1622406111}
-        m_TargetAssemblyTypeName: buttonFactory, Assembly-CSharp
-        m_MethodName: HandleFileRequest
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1635652382
 GameObject:
   m_ObjectHideFlags: 0
@@ -4204,9 +4083,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 660c59f2e321a204e8755113c929bad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightColor: {r: 1, g: 0.5109794, b: 0, a: 1}
-  displayHeader: Attack
-  displayDescription: Attack a chosen enemy.
+  myHighlightColor: {r: 0.8207547, g: 0.3225724, b: 0.2121573, a: 1}
+  myDisplayHeader: Attack
+  myDisplayDescription: Attack a chosen enemy.
 --- !u!1 &1723061610
 GameObject:
   m_ObjectHideFlags: 0
@@ -4218,7 +4097,7 @@ GameObject:
   - component: {fileID: 1723061611}
   - component: {fileID: 1723061614}
   - component: {fileID: 1723061613}
-  - component: {fileID: 1723061612}
+  - component: {fileID: 1723061615}
   m_Layer: 0
   m_Name: ItemButton
   m_TagString: Untagged
@@ -4241,21 +4120,6 @@ Transform:
   m_Father: {fileID: 1998383341}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1723061612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1723061610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56f1667177b8e8c4e971fe3eabd36987, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightColor: {r: 0, g: 0.6066632, b: 1, a: 1}
-  displayHeader: Defend
-  displayDescription: Increases defense for 1 turn.
 --- !u!61 &1723061613
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4334,6 +4198,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1723061615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723061610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56f1667177b8e8c4e971fe3eabd36987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myHighlightColor: {r: 0.7264151, g: 0, b: 0.67093134, a: 1}
+  myDisplayHeader: Item
+  myDisplayDescription: Not yet implemented.
 --- !u!1 &1761380991
 GameObject:
   m_ObjectHideFlags: 0
@@ -4361,7 +4240,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761380991}
-  m_Text: Zombie attacks Warrior...
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -4793,9 +4672,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3823cf1c866582a46a6ed24f959ef8b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightColor: {r: 0, g: 0.6038656, b: 0.8301887, a: 1}
-  displayHeader: Defend
-  displayDescription: Increase defense for 1 turn.
+  myHighlightColor: {r: 0, g: 0.8016935, b: 0.9339623, a: 1}
+  myDisplayHeader: Defend
+  myDisplayDescription: Raises defense.
 --- !u!1 &1856986316
 GameObject:
   m_ObjectHideFlags: 0
@@ -5661,8 +5540,6 @@ GameObject:
   - component: {fileID: 513539621772790839}
   - component: {fileID: 513539621772790838}
   - component: {fileID: 513539621772790840}
-  - component: {fileID: 4947397954193212853}
-  - component: {fileID: 4947397954193212815}
   - component: {fileID: 4947397954193212854}
   m_Layer: 0
   m_Name: EnemyTemplate
@@ -5796,73 +5673,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a20e5a5a2e2f1894c9f3b57b4656b569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowDisplay: {fileID: 1101055748}
-  healthBar: {fileID: 898696856}
-  manaBar: {fileID: 345762845}
-  spriteArray:
+  myHealthBar: {fileID: 898696856}
+  myManaBar: {fileID: 345762845}
+  mySpriteArray:
   - {fileID: 21300000, guid: e5bb688cf7483134bb8c2eacdf538c6f, type: 3}
   - {fileID: 21300000, guid: 9e53d8bd41d8f504faeefd3c5710e4fb, type: 3}
-  stats:
+  myStats:
   - {fileID: 289899002}
   - {fileID: 38192482}
   - {fileID: 1570411901}
-  statDisplays: {fileID: 508635160}
---- !u!114 &4947397954193212815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513539621772790844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: a6a03ed84e7502245a67596c0e76c584, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: enemyCell, CombatGUI
-        m_MethodName: HandleDamage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
---- !u!114 &4947397954193212853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513539621772790844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1678d1626fd3e5a4a8d76e4f703737d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: b9ab541afbc9c8d4c8ea19288596fbb0, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: enemyCell, CombatGUI
-        m_MethodName: ReceiveDataPacket
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  myStatDisplays: {fileID: 508635160}
 --- !u!114 &4947397954193212854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5875,8 +5695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728d42ebf4745a14eb65ef5534e04555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onButtonClick: {fileID: 11400000, guid: b9ab541afbc9c8d4c8ea19288596fbb0, type: 2}
-  arrowDisplay: {fileID: 1101055748}
   healthBar: {fileID: 4947397955147841852}
   spriteArray:
   - {fileID: 21300000, guid: e5bb688cf7483134bb8c2eacdf538c6f, type: 3}

@@ -105,14 +105,14 @@ sealed class playerCell : MonoBehaviour
     /// <summary>
     /// A reference to the SpriteRenderer component of this object.
     /// </summary>
-    private SpriteRenderer rend;
+    private SpriteRenderer mySpriteRenderer;
 
     // Start is called before the first frame update
 
     void Start()
     {
         // arrowDisplay.SetActive(false);
-        rend = gameObject.GetComponent<SpriteRenderer>();
+        mySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -123,7 +123,7 @@ sealed class playerCell : MonoBehaviour
             if (myCellHasHero && name != "Template")
             {
                 if (!myCharacterRepresentative.IsAlive()){
-                    rend.color = new Color(0.5f, 0f, 0f, 1f);
+                    mySpriteRenderer.color = new Color(0.5f, 0f, 0f, 1f);
                 }
                 // myStats[0].text = "" + myCharacterRepresentative.Attack;
                 myStats[0].text = "" + myCharacterRepresentative.Attack;
@@ -157,19 +157,19 @@ sealed class playerCell : MonoBehaviour
                     myManaBar.transform.localScale = new Vector3(1f, manaPercentage, 1f);
                 
             } else {
-                rend.color = Color.white;
+                mySpriteRenderer.color = Color.white;
             }
         }
-        rend.sprite = mySpriteArray[System.Convert.ToInt32(myCellHasHero)];
+        mySpriteRenderer.sprite = mySpriteArray[System.Convert.ToInt32(myCellHasHero)];
         myStatDisplays.SetActive(myCellHasHero);
     }
 
     void CheckActivePlayer(AbstractCharacter thePlayer){
         if (myCharacterRepresentative.IsAlive()){
             if (thePlayer == myCharacterRepresentative){
-                rend.color = Color.yellow;
+                mySpriteRenderer.color = Color.yellow;
             } else {
-                rend.color = Color.white;
+                mySpriteRenderer.color = Color.white;
             }
         }
     }
@@ -204,11 +204,11 @@ sealed class playerCell : MonoBehaviour
     //         myCharacterRepresentative.CurrentHitpoints = number;
     //         if (myCharacterRepresentative.IsAlive())
     //         {
-    //             rend.color = Color.white;
+    //             mySpriteRenderer.color = Color.white;
     //         }
     //         else
     //         {
-    //             rend.color = new Color(0.5f, 0f, 0f, 1f);
+    //             mySpriteRenderer.color = new Color(0.5f, 0f, 0f, 1f);
     //         }
     //     }
     // }
@@ -235,7 +235,7 @@ sealed class playerCell : MonoBehaviour
     //                             this,
     //                             new DataPacket(gameObject.transform.position, "ArrowVector")
     //                         );
-    //                         rend.sprite = mySpriteArray[System.Convert.ToInt32(myCellHasHero)];
+    //                         mySpriteRenderer.sprite = mySpriteArray[System.Convert.ToInt32(myCellHasHero)];
     //                         held = true;
     //                         clicked = !clicked;
     //                     }
@@ -254,7 +254,7 @@ sealed class playerCell : MonoBehaviour
     //                             new DataPacket(gameObject.transform.position, "ArrowVector")
     //                         );
     //                         clicked = false;
-    //                         rend.color = Color.white;
+    //                         mySpriteRenderer.color = Color.white;
     //                         arrowDisplay.SetActive(false);
     //                     }
     //                     else if (clicked)
@@ -263,7 +263,7 @@ sealed class playerCell : MonoBehaviour
     //                             this,
     //                             new DataPacket(gameObject.transform.position, "ArrowVector")
     //                         );
-    //                         rend.sprite = mySpriteArray[System.Convert.ToInt32(myCellHasHero)];
+    //                         mySpriteRenderer.sprite = mySpriteArray[System.Convert.ToInt32(myCellHasHero)];
     //                         held = true;
     //                         clicked = !clicked;
     //                     }
@@ -277,17 +277,17 @@ sealed class playerCell : MonoBehaviour
 
     //         if (held)
     //         {
-    //             rend.color = new Color(0.0f, 0.5f, 0.0f);
+    //             mySpriteRenderer.color = new Color(0.0f, 0.5f, 0.0f);
     //         }
     //         else if (myCellHasHero || selectMoveMode)
     //         {
     //             if (myCharacterRepresentative == null || myCharacterRepresentative.IsAlive())
     //             {
-    //                 rend.color = Color.green;
+    //                 mySpriteRenderer.color = Color.green;
     //             }
     //             else
     //             {
-    //                 rend.color = Color.red;
+    //                 mySpriteRenderer.color = Color.red;
     //             }
 
     //             if (selectMoveMode && !clicked)
@@ -303,7 +303,7 @@ sealed class playerCell : MonoBehaviour
     //                 arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
     //                 if (myCellHasHero)
     //                 {
-    //                     rend.color = Color.red;
+    //                     mySpriteRenderer.color = Color.red;
     //                 }
     //             }
     //         }
@@ -324,16 +324,16 @@ sealed class playerCell : MonoBehaviour
     //             || myCharacterRepresentative == null
     //         )
     //         {
-    //             rend.color = Color.white;
+    //             mySpriteRenderer.color = Color.white;
     //         }
     //         else
     //         {
-    //             rend.color = new Color(0.5f, 0f, 0f, 1f);
+    //             mySpriteRenderer.color = new Color(0.5f, 0f, 0f, 1f);
     //         }
     //     }
     //     else
     //     {
-    //         rend.color = Color.yellow;
+    //         mySpriteRenderer.color = Color.yellow;
     //     }
     // }
 
