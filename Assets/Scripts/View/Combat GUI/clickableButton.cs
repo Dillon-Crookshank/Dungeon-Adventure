@@ -3,22 +3,18 @@ using UnityEngine;
 /// <summary>
 /// An abstraction of a GUI button that handles file editing.
 /// </summary>
-namespace DungeonAdventure
+namespace DefaultNamespace
 {
     public abstract class clickableButton : MonoBehaviour
     {
 
         [SerializeField]
-        public Color highlightColor;
+        public Color highlightColor; 
         /// <summary>
         /// A reference to the rectangular backing of the cell.
         /// </summary>
-        private SpriteRenderer rend;
-
-        /// <summary>
-        /// The GameEvent to be called whenever there is a file request.
-        /// </summary>
-        public GameEvent onButtonClick;
+        [SerializeField]
+        public SpriteRenderer rend;
 
         void Start()
         {
@@ -30,12 +26,9 @@ namespace DungeonAdventure
         /// </summary>
         void OnMouseOver()
         {
-            if (highlightColor != null)
-            {
+            if (highlightColor != null){
                 rend.color = highlightColor;
-            }
-            else
-            {
+            } else {
                 rend.color = Color.green;
             }
             if (Input.GetMouseButtonDown(0))
