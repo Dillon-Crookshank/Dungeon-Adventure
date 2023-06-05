@@ -7,24 +7,47 @@ namespace DungeonAdventure
 {
 
     /// <summary>
-    /// A static class for combat logic and simulation.
+    /// A class for combat logic and simulation.
     /// </summary>
     internal class Combat
     {
 
+        /// <summary>
+        /// The current turn number.
+        /// </summary>
         private int turnCounter;
 
+        /// <summary>
+        /// A boolean for whether an individual Character's turn has ended.
+        /// </summary>
         private bool isEndOfTurn;
 
+        /// <summary>
+        /// A List of all the Characters involved in the Combat.
+        /// </summary>
         private List<AbstractCharacter> characterList;
 
+        /// <summary>
+        /// The currently active Character in the Combat.
+        /// </summary>
         private AbstractCharacter myActiveCharacter;
 
+        /// <summary>
+        /// The Player's party in the Combat.
+        /// </summary>
         private PlayerParty myPlayerParty;
 
+        /// <summary>
+        /// The Enemy's party in the Combat.
+        /// </summary>
         private EnemyParty myEnemyParty;
 
-        internal Combat(PlayerParty thePlayerParty, EnemyParty theEnemyParty)
+        /// <summary>
+        /// Constructor for Combat that sets the different parties and starts a Combat encounter.
+        /// </summary>
+        /// <param name="thePlayerParty">The Player's party.</param>
+        /// <param name="theEnemyParty">The Enemy's party.</param>
+        internal Combat(in PlayerParty thePlayerParty, in EnemyParty theEnemyParty)
         {
             myPlayerParty = thePlayerParty;
             myEnemyParty = theEnemyParty;
@@ -33,7 +56,9 @@ namespace DungeonAdventure
         }
 
         /// <summary>
-        /// Takes a player party and an enemy party, and handles the logic for the combat between them.
+        /// Combat logic simulator.
+        /// Builds the combined list of Characters and sorts them by their Initiative rolls.
+        /// Continues a combat loop until one party is defeated.
         /// </summary>
         internal async void CombatEncounter()
         {
@@ -102,7 +127,7 @@ namespace DungeonAdventure
         /// Dual purpose: This combines all of the participating Actors into a single list, and
         /// generates their combat initiative by appending a D20 to their base initiatives.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The combined list of Characters in Combat sorted by CombatInitiative.</returns>
         internal List<AbstractCharacter> InitiativeRoll()
         {
             System.Random rng = new System.Random();
@@ -124,6 +149,10 @@ namespace DungeonAdventure
             return characters;
         }
 
+        /// <summary>
+        /// Checks every 100ms for the end of the Player's turn after an action is performed.
+        /// </summary>
+        /// <param name="character">The character who's turn we are awaiting to finish.</param>
         private async Task TurnOver(AbstractCharacter character)
         {
             while (!isEndOfTurn)
@@ -134,22 +163,28 @@ namespace DungeonAdventure
         }
 
 
-        public AbstractCharacter GetActiveActor()
+        /// <summary>
+        /// Accessor for the ActiveCharacter.
+        /// </summary>
+        /// <returns></returns>
+        public AbstractCharacter GetActiveCharacter()
         {
             return myActiveCharacter;
         }
 
-        public void EndTurn()
+        /// <summary>
+        /// Ends the current character's turn.
+        /// </summary>
+        internal void EndTurn()
         {
             isEndOfTurn = true;
         }
 
-        public int ActorIndex()
-        {
-            return myActiveCharacter.PartyPosition;
-        }
-
-        public bool isPlayer()
+        /// <summary>
+        /// Checks whether the Active Character is a player or an enemy.
+        /// </summary>
+        /// <returns>True if Active Character is a player.</returns>
+        internal bool isPlayer()
         {
             return (myActiveCharacter.GetType() == typeof(PlayerCharacter));
         }

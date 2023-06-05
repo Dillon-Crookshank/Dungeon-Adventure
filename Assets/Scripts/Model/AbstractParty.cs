@@ -31,9 +31,8 @@ internal abstract class AbstractParty
     /// Getter method for whether the party is defeated or not.
     /// </summary>
     /// <returns> True if party is not defeated, false if all party members are dead.</returns>
-    public bool IsAllAlive()
+    internal bool IsAllAlive()
     {
-        //return isAllAlive;
 
         foreach (AbstractCharacter character in partyPositions.Values)
         {
@@ -51,8 +50,7 @@ internal abstract class AbstractParty
     /// Party size must be positive, and max party size is <see cref=MAX_PARTY_SIZE>
     /// </summary>
     /// <param name="theCharacter">The Actor to be added to the party.</param>
-    /// <returns>True if added successfully, false otherwise.</returns>
-    internal bool AddCharacter(AbstractCharacter theCharacter)
+    internal void AddCharacter(in AbstractCharacter theCharacter)
     {
         int key = 0;
         for (int i = 1; i <= MAX_PARTY_SIZE; i++)
@@ -63,13 +61,8 @@ internal abstract class AbstractParty
                 break;
             }
         }
-        if (key == 0)
-        {
-            return false;
-        }
         partyPositions.Add(key, theCharacter);
         theCharacter.PartyPosition = key;
-        return true;
     }
 
     /// <summary>
@@ -87,7 +80,7 @@ internal abstract class AbstractParty
     /// <param name="thePosition">The party position the Actor is attempting to move to.</param>
     /// <param name="theCharacter">The Actor attempting to move.</param>
     /// <returns>True if move is successful, false otherwise.</returns>
-    internal bool moveCharacter(int thePosition, AbstractCharacter theCharacter)
+    internal bool moveCharacter(in int thePosition, in AbstractCharacter theCharacter)
     {
         if (thePosition < 1 || thePosition > 6 || partyPositions.ContainsKey(thePosition))
         {
@@ -98,6 +91,5 @@ internal abstract class AbstractParty
         partyPositions.Add(thePosition, theCharacter);
         return true;
     }
-
 
 }

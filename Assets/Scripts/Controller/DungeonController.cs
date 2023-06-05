@@ -440,7 +440,7 @@ namespace DungeonAdventure
                         + "..."
                 );
             await Task.Delay(300);
-            double damage = Math.Round(myCombatModel.GetActiveActor().SpecialAttack(theTarget), 1);
+            double damage = Math.Round(myCombatModel.GetActiveCharacter().SpecialAttack(theTarget), 1);
             GameObject
                 .Find("Combat Log")
                 .SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
@@ -459,9 +459,9 @@ namespace DungeonAdventure
                 .Find("Combat Log")
                 .SendMessage(
                     "UpdateCombatLog",
-                    (myCombatModel.GetActiveActor().Name) + " is on guard this turn!"
+                    (myCombatModel.GetActiveCharacter().Name) + " is on guard this turn!"
                 );
-            myCombatModel.GetActiveActor().Defend();
+            myCombatModel.GetActiveCharacter().Defend();
             myCombatModel.EndTurn();
         }
 
@@ -471,9 +471,9 @@ namespace DungeonAdventure
                 .Find("Combat Log")
                 .SendMessage(
                     "UpdateCombatLog",
-                    (myCombatModel.GetActiveActor().Name) + " uses " + myCombatModel.GetActiveActor().MyBuff.BuffName + "!"
+                    (myCombatModel.GetActiveCharacter().Name) + " uses " + myCombatModel.GetActiveCharacter().MyBuff.BuffName + "!"
                 );
-            myCombatModel.GetActiveActor().Buff();
+            myCombatModel.GetActiveCharacter().Buff();
             myCombatModel.EndTurn();
         }
 
@@ -483,7 +483,7 @@ namespace DungeonAdventure
                 .Find("Combat Log")
                 .SendMessage(
                     "UpdateCombatLog",
-                    (myCombatModel.GetActiveActor().Name) + " skips their turn!"
+                    (myCombatModel.GetActiveCharacter().Name) + " skips their turn!"
                 );
             myCombatModel.EndTurn();
         }
