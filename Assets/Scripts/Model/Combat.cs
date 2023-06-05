@@ -52,6 +52,7 @@ namespace DungeonAdventure
                 foreach (AbstractCharacter character in characterList)
                 {
                     myActiveCharacter = character;
+                    character.CurrentMana = 5;
                     Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
 
                     if (!isPlayer())
@@ -63,8 +64,12 @@ namespace DungeonAdventure
                             await Task.Delay(500);
 
                             PlayerCharacter target = (PlayerCharacter)myPlayerParty.GetPartyPositions().ElementAt(Random.Range(0, myPlayerParty.GetPartyPositions().Count)).Value;
-                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myActiveCharacter.Name) + " attacks " + (target.Name) + "!");
-                            myActiveCharacter.BasicAttack(target);
+
+                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myActiveCharacter.Name) + " attacks " + target.Name + "...");
+                            await Task.Delay(300);
+                            double damage = myActiveCharacter.BasicAttack(target);
+                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
+                            if (!target.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (target.Name + " dies!")); }
                         }
                         isEndOfTurn = true;
                     }
