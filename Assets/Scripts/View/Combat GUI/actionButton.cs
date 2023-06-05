@@ -53,17 +53,9 @@ namespace DungeonAdventure
             }   
         }
 
-        /// <summary>
-        /// Handles sending a request to the Button Factory to load the party.
-        /// </summary>
-        public override void PressButton()
-        {
-            if (myClickability){
-                Debug.Log(name + " pressed");
-            }   
-        }
+        public override void PressButton(){}
 
-        public void SetDescription(string theDescription) {
+        public void SetDescription(in string theDescription) {
             myDisplayDescription = theDescription;
         }
 

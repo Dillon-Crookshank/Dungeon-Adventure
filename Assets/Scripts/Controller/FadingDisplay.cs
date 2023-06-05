@@ -34,9 +34,9 @@ public class FadingDisplay : MonoBehaviour {
 
     private async void FadeAnimation() {
         this.transform.localPosition += new Vector3(0, 0, -25);
-        Debug.Log(myRenderer.color.a);
+        // Debug.Log(myRenderer.color.a);
         //Fade in
-        Debug.Log("Fade In");
+        // Debug.Log("Fade In");
         GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
         myRenderer.color = new Color(myRenderer.color.r, myRenderer.color.g, myRenderer.color.b, 0f);
         for (int i = 0; i < 100; i++) {
@@ -46,11 +46,11 @@ public class FadingDisplay : MonoBehaviour {
     
 
         //Stay at full opacity
-        Debug.Log("Hold");
+        // Debug.Log("Hold");
         await Task.Delay(myFadeTime);
 
         //Fade out
-        Debug.Log("Fade Out");
+        // Debug.Log("Fade Out");
         for (int i = 0; i < 100; i++) {
             await Task.Delay(myFadeTime / 100);
             myRenderer.color = new Color(myRenderer.color.r, myRenderer.color.g, myRenderer.color.b, myRenderer.color.a - 0.01f);

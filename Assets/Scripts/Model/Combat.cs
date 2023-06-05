@@ -69,7 +69,7 @@ namespace DungeonAdventure
         /// </summary>
         internal async void CombatEncounter()
         {
-            Debug.Log("Encounter started!");
+            // Debug.Log("Encounter started!");
             turnCounter = 0;
 
             isEndOfTurn = false;
@@ -88,7 +88,7 @@ namespace DungeonAdventure
                     myActiveCharacter = character;
                     
                     character.CurrentMana = 5;
-                    Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
+                    // Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
                     if (myActiveCharacter.IsAlive()){
                         if (!isPlayer())
                         {

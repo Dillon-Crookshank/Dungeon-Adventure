@@ -2,7 +2,8 @@ using UnityEngine;
 
 sealed class textBehavior : MonoBehaviour
 {
-    public TextMesh textMesh;
+    [SerializeField]
+    TextMesh textMesh;
 
     void setText(string theText){
         textMesh.text = theText;

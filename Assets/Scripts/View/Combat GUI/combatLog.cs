@@ -6,7 +6,7 @@ public class combatLog : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField]
-    TextMesh[] myLogs;
+    private TextMesh[] myLogs;
 
     void UpdateCombatLog (string theNewLog){
         for (int i = 0; i < myLogs.Length - 1; i++){

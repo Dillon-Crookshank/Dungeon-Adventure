@@ -273,7 +273,11 @@ namespace DungeonAdventure
                 File.Delete("myMap.bin");
             }   
             if (!isGameLoaded){
-                GameObject.Find("Continue Button").SetActive(false);
+                try {
+                    GameObject.Find("Continue Button").SetActive(false);
+                } catch (Exception e){
+                    Debug.Log(e.Message);
+                }
             }
         }
 

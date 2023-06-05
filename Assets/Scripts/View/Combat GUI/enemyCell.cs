@@ -7,69 +7,69 @@ using UnityEngine;
 /// </summary>
 sealed class enemyCell : MonoBehaviour
 {
-    [Header("Events")]
-    /// <summary>
-    /// The GameEvent called whenever a cell has been clicked on.
-    /// </summary>
-    [SerializeField]
-    GameEvent onButtonClick;
+    // [Header("Events")]
+    // /// <summary>
+    // /// The GameEvent called whenever a cell has been clicked on.
+    // /// </summary>
+    // [SerializeField]
+    // GameEvent onButtonClick;
 
-    /// <summary>
-    /// A reference to the arrow sprite that displays when prompting the user
-    /// to move their hero.
-    /// </summary>
-    [SerializeField]
-    GameObject arrowDisplay;
+    // /// <summary>
+    // /// A reference to the arrow sprite that displays when prompting the user
+    // /// to move their hero.
+    // /// </summary>
+    // [SerializeField]
+    // private GameObject arrowDisplay;
 
     /// <summary>
     /// A reference to the bar sprite that represents a character's health.
     /// </summary>
     [SerializeField]
-    GameObject healthBar;
+    private GameObject healthBar;
 
     /// <summary>
     /// A reference to testHero object being represented in the instance of the cell.
     /// </summary>
     [SerializeField]
-    AbstractCharacter characterRepresentative;
+    private AbstractCharacter characterRepresentative;
 
     /// <summary>
     /// A sprite array containing the different display states of a cell.
     /// </summary>
     [SerializeField]
-    Sprite[] spriteArray = new Sprite[2];
+    private Sprite[] spriteArray = new Sprite[2];
 
     /// <summary>
     /// A text mesh array containing the different text displays that show up as the hero's stats.
     /// </summary>
     [SerializeField]
-    TextMesh[] stats = new TextMesh[3];
+    private TextMesh[] stats = new TextMesh[3];
 
     /// <summary>
     /// A reference to the area labelling the hero's name.
     /// </summary>
     [SerializeField]
-    GameObject statDisplays;
+    private GameObject statDisplays;
 
     /// <summary>
     /// A vector representing the size of the arrow, when displayed.
     /// </summary>
     private Vector2 arrowSize;
 
-    /// <summary>
-    /// A string ID of the cell that was clicked.
-    /// </summary>
-    private string clickedCellName;
+    // /// <summary>
+    // /// A string ID of the cell that was clicked.
+    // /// </summary>
+    // private string clickedCellName;
 
-    /// <summary>
-    /// A vector representing the location of the clicked cell.
-    /// </summary>
-    private Vector3 clickedVector;
+    // /// <summary>
+    // /// A vector representing the location of the clicked cell.
+    // /// </summary>
+    // private Vector3 clickedVector;
 
-    /// <summary>
-    /// A vector representing the location of the arrow.
-    /// </summary>
-    private Vector3 arrowVector;
+    // /// <summary>
+    // /// A vector representing the location of the arrow.
+    // /// </summary>
+    // private Vector3 arrowVector;
 
     private string behaviorString;
 
@@ -78,15 +78,15 @@ sealed class enemyCell : MonoBehaviour
     /// </summary>
     private bool hasHero = false;
 
-    /// <summary>
-    /// Determines whether or not this cell is being evaluated for a hero translation or not.
-    /// </summary>
-    private bool selectMoveMode = false;
+    // /// <summary>
+    // /// Determines whether or not this cell is being evaluated for a hero translation or not.
+    // /// </summary>
+    // private bool selectMoveMode = false;
 
-    /// <summary>
-    /// Determines whether or not this cell is being held down by the mouse.
-    /// </summary>
-    private bool held = false;
+    // /// <summary>
+    // /// Determines whether or not this cell is being held down by the mouse.
+    // /// </summary>
+    // private bool held = false;
 
     /// <summary>
     /// Determines whether or not this cell was selected as the hero to move to a new location.
@@ -106,7 +106,7 @@ sealed class enemyCell : MonoBehaviour
 
     void Start()
     {
-        arrowDisplay.SetActive(false);
+        // arrowDisplay.SetActive(false);
         rend = gameObject.GetComponent<SpriteRenderer>();
     }
 
@@ -161,22 +161,22 @@ sealed class enemyCell : MonoBehaviour
         if (isSelectableByAction && hasHero && characterRepresentative.IsAlive())
         {
             hovered = true;
-            arrowDisplay.SetActive(true);
-            arrowDisplay.transform.position = arrowVector;
-            arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
+            // arrowDisplay.SetActive(true);
+            // arrowDisplay.transform.position = arrowVector;
+            // arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
 
             // Obtains the new rotation values by calling LookAt to obtain new Z and W values.
-            arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
-            float newZ = arrowDisplay.transform.rotation.z;
-            float newW = arrowDisplay.transform.rotation.w;
-            arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
+            // arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
+            // float newZ = arrowDisplay.transform.rotation.z;
+            // float newW = arrowDisplay.transform.rotation.w;
+            // arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
             if (hasHero && characterRepresentative.IsAlive())
             {
                 rend.color = Color.red;
                 if (Input.GetMouseButtonDown(0))
                 {
                     GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
-                    Debug.Log("We are attacking " + name);
+                    // Debug.Log("We are attacking " + name);
                     for (int i = 1; i <= 6; i++)
                     {
                         GameObject.Find("E" + i).SendMessage("setBehaviorString", "");
@@ -189,11 +189,11 @@ sealed class enemyCell : MonoBehaviour
     void OnMouseExit()
     {
         hovered = false;
-        held = false;
-        if (selectMoveMode)
-        {
-            arrowDisplay.SetActive(false);
-        }
+        // held = false;
+        // if (selectMoveMode)
+        // {
+        //     arrowDisplay.SetActive(false);
+        // }
         if (!clicked)
         {
             if (
@@ -261,7 +261,7 @@ sealed class enemyCell : MonoBehaviour
     //         }
     //         else if (dataLabel.Equals("CharacterData"))
     //         {
-    //             // Debug.Log(incomingData);
+    //             // // Debug.Log(incomingData);
     //             characterRepresentative = (AbstractCharacter)incomingData;
     //         }
     //     }

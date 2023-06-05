@@ -7,7 +7,7 @@ namespace DungeonAdventure{
         private GameObject[] myActionButtons; 
     
         void UnlockButtons(bool theAvailability){
-            Debug.Log("Yep!");
+            // Debug.Log("Yep!");
             foreach (GameObject button in myActionButtons){
                 button.SendMessage("SetClickable", theAvailability);
                 if (theAvailability){
