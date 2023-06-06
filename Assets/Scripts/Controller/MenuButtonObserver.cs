@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 
+/// The behaviour given to menu button GameObjects. 
 /// </summary>
 public class MenuButtonObserver : MonoBehaviour {
     /// <summary>
@@ -28,13 +28,21 @@ public class MenuButtonObserver : MonoBehaviour {
     [SerializeField]
     private string myListener;
 
+    /// <summary>
+    /// A flag used to make sure a click isn't registered twice.
+    /// </summary>
     private bool myLeftPressFlag;
 
+    /// <summary>
+    /// Called when the Game Object is initialized.
+    /// </summary>
     public void Start() {
         myLeftPressFlag = false;
     }
 
-    
+    /// <summary>
+    /// Called each frame where the mouse is within the BoxCollider2D that is attached to the Game Object
+    /// </summary>
     public void OnMouseOver() {
         ChangeColor(myHoverColor);
 

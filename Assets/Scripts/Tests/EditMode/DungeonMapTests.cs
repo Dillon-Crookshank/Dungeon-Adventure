@@ -2,24 +2,25 @@ using UnityEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
-using System.IO;
-
+/// <summary>
+/// A testing class that tests the DungeonMap class.
+/// </summary>
 public class DungeonMapTests {
     [Test]
     /// <summary>
-    /// We test to see if the generated map is traversable; That is, is every room reachable if we begin traversing from the first room?
+    /// We test to see if the generated map is traversable; That is, are a reasonable number of rooms reachable if we begin traversing from the first room?
     /// </summary>
     public void TraversalTest() {
         DungeonMap map;
 
-        //We must test a large number of different maps since they are randomly generated, and a certain case may not show for most random dungeons.
+        //We must test a large number of different maps since they are randomly generated, and certain cases may not show for most random dungeons.
         for (int n = 0; n < 250; n++) {
             map = new DungeonMap();
             HashSet<int> visitedRooms = new HashSet<int>();
 
             traverse(map, visitedRooms, 0);
+
+            Assert.AreEqual(map.GetRoomCount(), visitedRooms.Count);
         }
     }
 
@@ -39,7 +40,7 @@ public class DungeonMapTests {
     }
 
     /// <summary>
-    /// A helper method used to recursively traverse a dungeon map
+    /// A helper method used to recursively traverse a dungeon map.
     /// </summary>
     /// <param name="theMap"> A reference to the dungeon map you would like to traverse. </param>
     /// <param name="theVisitedRooms"> A set of int to store visited rooms. </param>
