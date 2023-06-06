@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// The observer to the listener. This observes each map room individuals. When a room is left-clicked, its hashcode is sent to the GameController for processing.
+/// The observer to the listener. This observes each map room individuals. When a room is left-clicked, its ID is sent to the GameController for processing.
 /// </summary>
 public class MapObserver : MonoBehaviour {
     /// <summary>

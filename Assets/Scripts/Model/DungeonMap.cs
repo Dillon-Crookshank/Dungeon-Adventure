@@ -4,28 +4,29 @@ using System;
 using static UnityEngine.Debug;
 
 /// <summary>
-/// The DungeonMap class is a collection of DungeonRooms held in a Graph, represented as an Adjacency List.
+/// The DungeonMap class is a collection of DungeonRooms held in a Graph. 
+/// Uses the Iterator design pattern to implicitly store the current location of a user party within the map.
 /// </summary>
 [Serializable]
 public class DungeonMap
 {
     /// <summary>
-    /// The minimum side length of a room
+    /// The minimum side length of a room.
     /// </summary>
     private const int SIDE_MIN = 3;
 
     /// <summary>
-    /// The maximum side length of a room
+    /// The maximum side length of a room.
     /// </summary>
     private const int SIDE_MAX = 6;
 
     /// <summary>
-    /// The absolute maximum x-coordinate in game units (The rooms can exist from -X_BOUND to X-BOUND)
+    /// The absolute maximum x-coordinate in game units (The rooms can exist from -X_BOUND to X-BOUND).
     /// </summary>
     private const int X_BOUND = 32;
 
     /// <summary>
-    /// The absolute maximum y-coordinate in game units (The rooms can exist from -Y_BOUND to Y-BOUND)
+    /// The absolute maximum y-coordinate in game units (The rooms can exist from -Y_BOUND to Y-BOUND).
     /// </summary>
     private const int Y_BOUND = 18;
 
@@ -42,12 +43,12 @@ public class DungeonMap
     private const int EXPECTED_VOLUME = 50;
 
     /// <summary>
-    /// The number of enemy rooms that are placed in the map.
+    /// The number of enemy parties that are placed in the map.
     /// </summary>
     private const int ENEMY_AMOUNT = 16;
 
     /// <summary>
-    /// Random number generator used within the dungeon generating algorithm
+    /// Random number generator used within the dungeon generating algorithm.
     /// </summary>
     private static Random myRand = new Random();
 
