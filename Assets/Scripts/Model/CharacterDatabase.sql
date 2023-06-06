@@ -1,3 +1,5 @@
+-- A file used for storing templates for SQLite database entries, as well as former entries into the database.
+
 -- CREATE TABLE characterTemplates(
 -- class TEXT NOT NULL PRIMARY KEY,
 -- hitpoints REAL NOT NULL,
@@ -41,5 +43,25 @@
 -- manaCost INTEGER NOT NULL,
 -- percentage REAL NOT NULL);
 
-INSERT INTO buffTemplates(class, buffName, duration, statModified, manaCost, percentage)
-VALUES ("warrior", "focus", 2, "attack", 5, 0.30);
+-- INSERT INTO buffTemplates(class, buffName, duration, statModified, manaCost, percentage)
+-- VALUES ("cleric", "prayer", 2, "defence", 5, 0.30);
+
+-- CREATE TABLE specialAttackTemplates(
+-- class TEXT NOT NULL PRIMARY KEY,
+-- specialAttackName TEXT NOT NULL,
+-- duration INTEGER NOT NULL,
+-- statModified TEXT NOT NULL,
+-- manaCost INTEGER NOT NULL,
+-- percentage REAL NOT NULL,
+-- damageModifier REAL NOT NULL);
+
+-- DROP TABLE specialAttackTemplates;
+
+
+INSERT INTO specialAttackTemplates(class, specialAttackName, duration, statModified, manaCost, percentage, damageModifier)
+-- VALUES ("warrior", "crush", 2, "defence", 10, 0.30, 0.5);
+-- VALUES ("barbarian", "slash", 0, "default", 10, 0, 0.7);
+-- VALUES ("archer", "heavy shot", 2, "defence", 10, 0.30, 0.5);
+-- VALUES ("rogue", "slice", 2, "defence", 10, 0.30, 0.5);
+-- VALUES ("wizard", "fireball", 2, "defence", 10, 0.30, 0.5);
+VALUES ("cleric", "smite", 2, "defence", 10, 0.30, 0.5);

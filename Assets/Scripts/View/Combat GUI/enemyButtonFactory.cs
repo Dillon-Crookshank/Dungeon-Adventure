@@ -1,4 +1,4 @@
-using DefaultNamespace;
+using DungeonAdventure;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,9 @@ using System.Text;
 /// <summary>
 /// A class to generate usuable cells to move heroes within.
 /// </summary>
-namespace DefaultNamespace {
-        sealed class enemyButtonFactory : MonoBehaviour
+namespace DungeonAdventure
+{
+    sealed class enemyButtonFactory : MonoBehaviour
     {
         [Header("Events")]
         /// <summary>
@@ -78,12 +79,6 @@ namespace DefaultNamespace {
         /// </summary>
         void Start()
         {
-            EnemyCharacter h1 = new EnemyCharacter("Skeleton 1", 25, 3, 2, 10, 5);
-            EnemyCharacter h2 = new EnemyCharacter("Skeleton 2", 25, 7, 9, 10, 5);
-            myEnemyParty = new EnemyParty(h1);
-            myEnemyParty.AddCharacter(h2);
-            myEnemyPartyDictionary = myEnemyParty.GetPartyPositions();
-
             Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
             Vector3 scaleSize = new Vector3(
                 3 * templateSprite.transform.localScale.x / (MAX_PARTY_SIZE * 1.25f),
@@ -106,19 +101,7 @@ namespace DefaultNamespace {
                 myArrayOfObjects[i].transform.localScale = scaleSize;
                 myArrayOfObjects[i].name = myButtonLabels[i];
                 myArrayOfObjects[i].transform.position = (myPositionVectors[i]);
-                if (myEnemyPartyDictionary.ContainsKey(i + 1))
-                {
-                    GUIUpdate.Raise(
-                        this,
-                        new DataPacket(
-                            myEnemyPartyDictionary[i + 1],
-                            "CharacterData",
-                            myArrayOfObjects[i].name
-                        )
-                    );
-                }
             }
-            int randomIndex = UnityEngine.Random.Range(0, MAX_PARTY_SIZE);
         }
 
         /// <summary>
@@ -126,80 +109,74 @@ namespace DefaultNamespace {
         /// </summary>
         void Update()
         {
-            myEnemyPartyDictionary = myEnemyParty.GetPartyPositions();
-            DataPacket dataSent;
-            for (int i = 0; i < MAX_PARTY_SIZE; i++)
-            {
-                char index = myArrayOfObjects[i].name[myArrayOfObjects[i].name.Length - 1];
-                int value = index - '0';
-                if (myEnemyPartyDictionary.ContainsKey(value))
+            if (myEnemyParty != null){
+                myEnemyPartyDictionary = myEnemyParty.GetPartyPositions();
+                for (int i = 0; i < MAX_PARTY_SIZE; i++)
                 {
-                    dataSent = new DataPacket(
-                        myEnemyPartyDictionary[value],
-                        "CharacterData",
-                        myArrayOfObjects[i].name
-                    );
-                }
-                else
-                {
-                    dataSent = new DataPacket(null, "CharacterData", myArrayOfObjects[i].name);
-                }
-                GUIUpdate.Raise(this, dataSent);
-            }
-        }
-
-        /// <summary>
-        /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
-        /// Can be expanded upon to include more behaviors.
-        /// </summary>
-        /// <param name="sender"> The component that sent the DataPacket. </param>
-        /// <param name="data"> The object (DataPacket) held. </param>
-        public void ReceiveDataPacket(Component sender, object data)
-        {
-            DataPacket dPacket = (DataPacket)data;
-            if (dPacket.GetLabel() == "SwapRequest")
-            {
-                // Debug.Log((string)dPacket.GetData());
-                int startPosition = Int32.Parse((string)dPacket.GetData());
-                int endPosition = Int32.Parse(sender.name);
-                // Debug.Log(startPosition + " / " + endPosition);
-                myArrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
-                myArrayOfObjects[startPosition - 1].GetComponent<enemyCell>().ToggleClicked();
-                myEnemyParty.moveCharacter(endPosition, myEnemyPartyDictionary[startPosition]);
-            }
-        }
-
-        /// <summary>
-        /// Checks if a given string array representation is a valid set of data.
-        /// </summary>
-        /// <param name="enemy"> The array representation of the enemy. </param>
-        private EnemyCharacter checkValidEnemy(string[] enemy)
-        {
-            Debug.Log(enemy.Length);
-            if (enemy.Length != 7)
-            {
-                return null;
-            }
-            else
-            {
-                double[] loadStats = new double[5];
-                for (int i = 2; i <= 6; i++)
-                {
-                    if (!Double.TryParse(enemy[i], out loadStats[i - 2]))
+                    if (myEnemyPartyDictionary.ContainsKey(i + 1))
                     {
-                        return null;
+                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetCharacterRepresentative", myEnemyPartyDictionary[i + 1]);
+                    }
+                    else
+                    {
+                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetNullCharacterRepresentative");
                     }
                 }
-                return new EnemyCharacter(
-                    enemy[1], // Name
-                    loadStats[0], // HP
-                    loadStats[1], // Attack
-                    loadStats[2], // Defense
-                    loadStats[3], // Mana
-                    (int)loadStats[4] // Intiative
-                );
             }
         }
+
+        // /// <summary>
+        // /// Intakes a DataPacket and utilizes the data, depending on the label of the packet.
+        // /// Can be expanded upon to include more behaviors.
+        // /// </summary>
+        // /// <param name="sender"> The component that sent the DataPacket. </param>
+        // /// <param name="data"> The object (DataPacket) held. </param>
+        // public void ReceiveDataPacket(Component sender, object data)
+        // {
+        //     DataPacket dPacket = (DataPacket)data;
+        //     if (dPacket.GetLabel() == "SwapRequest")
+        //     {
+        //         // Debug.Log((string)dPacket.GetData());
+        //         int startPosition = Int32.Parse((string)dPacket.GetData());
+        //         int endPosition = Int32.Parse(sender.name);
+        //         // Debug.Log(startPosition + " / " + endPosition);
+        //         myArrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
+        //         myArrayOfObjects[startPosition - 1].GetComponent<enemyCell>().ToggleClicked();
+        //         myEnemyParty.moveCharacter(endPosition, myEnemyPartyDictionary[startPosition]);
+        //     }
+        // }
+
+        // /// <summary>
+        // /// Checks if a given string array representation is a valid set of data.
+        // /// </summary>
+        // /// <param name="enemy"> The array representation of the enemy. </param>
+        // private EnemyCharacter checkValidEnemy(string[] enemy)
+        // {
+        //     Debug.Log(enemy.Length);
+        //     if (enemy.Length != 7)
+        //     {
+        //         return null;
+        //     }
+        //     else
+        //     {
+        //         double[] loadStats = new double[5];
+        //         for (int i = 2; i <= 6; i++)
+        //         {
+        //             if (!Double.TryParse(enemy[i], out loadStats[i - 2]))
+        //             {
+        //                 return null;
+        //             }
+        //         }
+        //         return new EnemyCharacter(
+        //             enemy[1], // Name
+        //             loadStats[0], // HP
+        //             loadStats[1], // Attack
+        //             loadStats[2], // Defense
+        //             loadStats[3], // Mana
+        //             (int)loadStats[4] // Intiative
+        //         );
+        //     }
+        // }
 
         /// <summary>
         /// Returns the position vectors to be used to place the cells.
@@ -242,8 +219,11 @@ namespace DefaultNamespace {
             return returnSet;
         }
 
-        public void setDisplayedParty(EnemyParty theParty) {
+        public void setDisplayedParty(EnemyParty theParty)
+        {
             myEnemyParty = theParty;
         }
-    }    
+
+        
+    }
 }

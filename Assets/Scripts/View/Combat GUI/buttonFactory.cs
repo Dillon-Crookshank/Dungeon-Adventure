@@ -1,4 +1,4 @@
-using DefaultNamespace;
+using DungeonAdventure;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,8 @@ using System.Text;
 /// <summary>
 /// A class to generate usuable cells to move heroes within.
 /// </summary>
-namespace DefaultNamespace {
+namespace DungeonAdventure
+{
     sealed class buttonFactory : MonoBehaviour
     {
         [Header("Events")]
@@ -74,12 +75,12 @@ namespace DefaultNamespace {
         /// <summary>
         /// A party for testing purposes.
         /// </summary>
-        private PlayerParty myTestParty;
+        private PlayerParty myParty;
 
         /// <summary>
         /// A reference to the party's dictionary of positions, for testing purposes.
         /// </summary>
-        private Dictionary<int, AbstractCharacter> myTestPartyDictionary;
+        private Dictionary<int, AbstractCharacter> myPartyDictionary;
 
         /// <summary>
         /// Generates the cells and places two knights in their appropriate locations as a basis
@@ -87,11 +88,6 @@ namespace DefaultNamespace {
         /// </summary>
         void Start()
         {
-            PlayerCharacter h1 = new PlayerCharacter("Knight 1", 25, 3, 2, 10, 5);
-            PlayerCharacter h2 = new PlayerCharacter("Knight 2", 25, 7, 9, 10, 5);
-            myTestParty = new PlayerParty(h1);
-            myTestParty.AddCharacter(h2);
-            myTestPartyDictionary = myTestParty.GetPartyPositions();
 
             Vector3 colliderSize = templateSprite.GetComponent<BoxCollider2D>().bounds.size;
             Vector3 scaleSize = new Vector3(
@@ -115,18 +111,6 @@ namespace DefaultNamespace {
                 myArrayOfObjects[i].transform.localScale = scaleSize;
                 myArrayOfObjects[i].name = myButtonLabels[i];
                 myArrayOfObjects[i].transform.position = (myPositionVectors[i]);
-                if (myTestPartyDictionary.ContainsKey(i + 1))
-                {
-                    
-                    GUIUpdate.Raise(
-                        this,
-                        new DataPacket(
-                            myTestPartyDictionary[i + 1],
-                            "CharacterData",
-                            myArrayOfObjects[i].name
-                        )
-                    );
-                }
             }
         }
 
@@ -135,25 +119,19 @@ namespace DefaultNamespace {
         /// </summary>
         void Update()
         {
-            myTestPartyDictionary = myTestParty.GetPartyPositions();
-            DataPacket dataSent;
-            for (int i = 0; i < MAX_PARTY_SIZE; i++)
-            {
-                char index = myArrayOfObjects[i].name[myArrayOfObjects[i].name.Length - 1];
-                int value = index - '0';
-                if (myTestPartyDictionary.ContainsKey(value))
+            if (myParty != null){
+                myPartyDictionary = myParty.GetPartyPositions();
+                for (int i = 0; i < MAX_PARTY_SIZE; i++)
                 {
-                    dataSent = new DataPacket(
-                        myTestPartyDictionary[value],
-                        "CharacterData",
-                        myArrayOfObjects[i].name
-                    );
+                    if (myPartyDictionary.ContainsKey(i + 1))
+                    {
+                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetCharacterRepresentative", myPartyDictionary[i + 1]);
+                    }
+                    else
+                    {
+                        GameObject.Find(myArrayOfObjects[i].name).SendMessage("SetNullCharacterRepresentative");
+                    }
                 }
-                else
-                {
-                    dataSent = new DataPacket(null, "CharacterData", myArrayOfObjects[i].name);
-                }
-                GUIUpdate.Raise(this, dataSent);
             }
         }
 
@@ -168,36 +146,36 @@ namespace DefaultNamespace {
             DataPacket dPacket = (DataPacket)data;
             if (dPacket.GetLabel() == "SwapRequest")
             {
-                string label = (string) dPacket.GetData();
+                string label = (string)dPacket.GetData();
                 int startPosition = Int32.Parse(label.Substring(label.Length - 1));
                 int endPosition = Int32.Parse(sender.name.Substring(sender.name.Length - 1));
                 myArrayOfObjects[startPosition - 1].GetComponent<SpriteRenderer>().color = Color.white;
-                myArrayOfObjects[startPosition - 1].GetComponent<testButton>().ToggleClicked();
-                myTestParty.moveCharacter(endPosition, myTestPartyDictionary[startPosition]);
+                myArrayOfObjects[startPosition - 1].GetComponent<playerCell>().ToggleClicked();
+                myParty.moveCharacter(endPosition, myPartyDictionary[startPosition]);
             }
         }
 
-        /// <summary>
-        /// Handles saving and loading parties.
-        /// Can be expanded upon to include more behaviors.
-        /// </summary>
-        /// <param name="sender"> The component that sent the DataPacket. </param>
-        /// <param name="data"> The object (DataPacket) held. </param>
-        public void HandleFileRequest(Component sender, object data)
-        {
-            DataPacket dPacket = (DataPacket)data;
+        // /// <summary>
+        // /// Handles saving and loading parties.
+        // /// Can be expanded upon to include more behaviors.
+        // /// </summary>
+        // /// <param name="sender"> The component that sent the DataPacket. </param>
+        // /// <param name="data"> The object (DataPacket) held. </param>
+        // public void HandleFileRequest(Component sender, object data)
+        // {
+        //     DataPacket dPacket = (DataPacket)data;
 
-            if (dPacket.GetLabel() == "SaveRequest")
-            {
-                Debug.Log("A save was requested");
-                changeFileRequest.Raise(this, new DataPacket(myTestParty, "PartyData", "Save"));
-            }
-            else if (dPacket.GetLabel() == "LoadRequest")
-            {
-                Debug.Log("A load was requested");
-                myTestParty = (PlayerParty) dPacket.GetData();
-            }
-        }
+        //     if (dPacket.GetLabel() == "SaveRequest")
+        //     {
+        //         Debug.Log("A save was requested");
+        //         changeFileRequest.Raise(this, new DataPacket(myParty, "PartyData", "Save"));
+        //     }
+        //     else if (dPacket.GetLabel() == "LoadRequest")
+        //     {
+        //         Debug.Log("A load was requested");
+        //         myParty = (PlayerParty)dPacket.GetData();
+        //     }
+        // }
 
         /// <summary>
         /// Checks if a given string array representation is a valid set of data.
@@ -272,8 +250,15 @@ namespace DefaultNamespace {
             return returnSet;
         }
 
-        public void setDisplayedParty(PlayerParty theParty){
-            myTestParty = theParty;
+        void setDisplayedParty(PlayerParty theParty)
+        {
+            myParty = theParty;
+        }
+
+        void SetButtonsGameLoadedFlag(){
+            for (int i = 0; i < MAX_PARTY_SIZE; i++){
+                myArrayOfObjects[i].SendMessage("SetGameLoadedFlag");
+            }
         }
     }
 }

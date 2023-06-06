@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// An abstraction of a GUI button that handles file editing.
 /// </summary>
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
     public abstract class clickableButton : MonoBehaviour
     {
@@ -14,11 +14,6 @@ namespace DefaultNamespace
         /// A reference to the rectangular backing of the cell.
         /// </summary>
         private SpriteRenderer rend;
-
-        /// <summary>
-        /// The GameEvent to be called whenever there is a file request.
-        /// </summary>
-        public GameEvent onButtonClick;
 
         void Start()
         {

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DefaultNamespace {
+namespace DungeonAdventure
+{
     [CreateAssetMenu(menuName = "Game Event")]
     public class GameEvent : ScriptableObject
     {

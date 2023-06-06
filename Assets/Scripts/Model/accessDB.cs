@@ -2,15 +2,22 @@ using System.Data;
 using Mono.Data.Sqlite;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
 
     /// <summary>
-    /// This class will be a representation of a stat change or active effect on an Actor.
+    /// This class handles SQLite Database access and logic.
     /// </summary>
-    public class accessDB : MonoBehaviour
+    public class AccessDB : MonoBehaviour
     {
-        internal static PlayerCharacter PlayerDatabaseConstructor(string theClass)
+
+        /// <summary>
+        /// Constructs a PlayerCharacter by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be created.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create a PlayerCharacter of.</param>
+        /// <returns>A new PlayerCharacter object with values from the SQLite database.</returns>
+        internal static PlayerCharacter PlayerDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -35,7 +42,13 @@ namespace DefaultNamespace
 
         }
 
-        internal static EnemyCharacter EnemyDatabaseConstructor(string theClass)
+        /// <summary>
+        /// Constructs an EnemyCharacter by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be created.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create an EnemyCharacter of.</param>
+        /// <returns>A new EnemyCharacter object with values from the SQLite database.</returns>
+        internal static EnemyCharacter EnemyDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -60,7 +73,13 @@ namespace DefaultNamespace
 
         }
 
-        internal static int BuffDatabaseDuration(string theClass)
+        /// <summary>
+        /// Constructs a Buff object by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be based on.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create an Buff from.</param>
+        /// <returns>A new Buff object with values from the SQLite database.</returns>
+        internal static Buff BuffDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
@@ -73,20 +92,29 @@ namespace DefaultNamespace
 
                     if (dataReader.GetString(0) == theClass.ToLower())
                     {
-                        int duration = dataReader.GetInt32(2);
+                        Buff buff = new Buff(dataReader.GetString(1), dataReader.GetInt32(2), dataReader.GetDouble(5),
+                        dataReader.GetString(3), dataReader.GetInt32(4));
                         dbConnection.Close();
-                        return duration;
+                        return buff;
                     }
                 }
-                throw new System.Exception("Duration for buff not found.");
+                Debug.Log(theClass);
+                throw new System.Exception("Class provided for Buff not found.");
             }
         }
 
-        internal static double BuffDatabasePercentage(string theClass)
+
+        /// <summary>
+        /// Constructs a SpecialAttack object by accessing the SQLite database with a string
+        /// that represents the CharacterClass to be based on.
+        /// </summary>
+        /// <param name="theClass">The CharacterClass to attempt to create a Special Attack from.</param>
+        /// <returns>A new Special Attack object with values from the SQLite database.</returns>
+        internal static SpecialAttack SpecialAttackDatabaseConstructor(in string theClass)
         {
             IDbConnection dbConnection = OpenDatabase();
             IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
-            dbCommandReadValues.CommandText = "SELECT * FROM buffTemplates;";
+            dbCommandReadValues.CommandText = "SELECT * FROM specialAttackTemplates;";
             IDataReader dataReader = dbCommandReadValues.ExecuteReader();
             {
 
@@ -95,63 +123,22 @@ namespace DefaultNamespace
 
                     if (dataReader.GetString(0) == theClass.ToLower())
                     {
-                        double percentage = dataReader.GetDouble(5);
+                        SpecialAttack special = new SpecialAttack(dataReader.GetString(1), dataReader.GetInt32(2), dataReader.GetDouble(5),
+                        dataReader.GetString(3), dataReader.GetInt32(4), dataReader.GetDouble(6));
                         dbConnection.Close();
-                        return percentage;
+                        return special;
                     }
                 }
-                throw new System.Exception("Percentage for buff not found.");
-            }
-        }
-
-        internal static string BuffDatabaseStatModified(string theClass)
-        {
-            IDbConnection dbConnection = OpenDatabase();
-            IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
-            dbCommandReadValues.CommandText = "SELECT * FROM buffTemplates;";
-            IDataReader dataReader = dbCommandReadValues.ExecuteReader();
-            {
-
-                while (dataReader.Read())
-                {
-
-                    if (dataReader.GetString(0) == theClass.ToLower())
-                    {
-                        string statModified = dataReader.GetString(3);
-                        dbConnection.Close();
-                        return statModified;
-                    }
-                }
-                throw new System.Exception("Stat for buff not found.");
-            }
-        }
-
-        internal static int BuffDatabaseManaCost(string theClass)
-        {
-            IDbConnection dbConnection = OpenDatabase();
-            IDbCommand dbCommandReadValues = dbConnection.CreateCommand();
-            dbCommandReadValues.CommandText = "SELECT * FROM buffTemplates;";
-            IDataReader dataReader = dbCommandReadValues.ExecuteReader();
-            {
-
-                while (dataReader.Read())
-                {
-
-                    if (dataReader.GetString(0) == theClass.ToLower())
-                    {
-                        int manaCost = dataReader.GetInt32(4);
-                        dbConnection.Close();
-                        return manaCost;
-                    }
-                }
-                throw new System.Exception("Stat for buff not found.");
+                Debug.Log(theClass);
+                throw new System.Exception("Class provided for Special Attack not found.");
             }
         }
 
 
-
-
-
+        /// <summary>
+        /// A static method for connecting to the SQLite database.
+        /// </summary>
+        /// <returns>A connection to the SQLite database.</returns>
         private static IDbConnection OpenDatabase()
         {
             // Open a connection to the database.

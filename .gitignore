@@ -85,3 +85,7 @@ Packages/manifest.json
 .idea/.idea.Dungeon-Adventure.dir/.idea/projectSettingsUpdater.xml
 .idea/.idea.Dungeon-Adventure.dir/.idea/workspace.xml
 ProjectSettings/ProjectVersion.txt
+EnemyQueue.bin
+EnemyQueue.bin
+myMap.bin
+PlayerParty.bin

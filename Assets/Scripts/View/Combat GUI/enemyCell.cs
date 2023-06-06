@@ -1,5 +1,5 @@
 using System;
-using DefaultNamespace;
+using DungeonAdventure;
 using UnityEngine;
 
 /// <summary>
@@ -104,7 +104,6 @@ sealed class enemyCell : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(name + ": " + (characterRepresentative != null));
         arrowDisplay.SetActive(false);
         rend = gameObject.GetComponent<SpriteRenderer>();
     }
@@ -115,11 +114,15 @@ sealed class enemyCell : MonoBehaviour
 
         if (hasHero && name != "EnemyTemplate")
         {
+            if (!characterRepresentative.IsAlive()){
+                rend.color = new Color(0.5f, 0f, 0f, 1f);
+            }
             // stats[0].text = "" + characterRepresentative.Attack;
             stats[0].text = "";
-            stats[1].text = "" + characterRepresentative.CurrentHitpoints;
+            stats[1].text = "" + Math.Ceiling(characterRepresentative.CurrentHitpoints);
             stats[2].text = "" + characterRepresentative.Name;
-            
+            stats[2].GetComponent<TextMesh>().fontSize = 93 - (stats[2].text.Length * 2);
+
             float healthPercentage = (float)(
                 characterRepresentative.CurrentHitpoints
                 / characterRepresentative.MaxHitpoints
@@ -131,6 +134,8 @@ sealed class enemyCell : MonoBehaviour
                 -0.51f
             );
             healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+        } else {
+            rend.color = Color.white;
         }
 
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
@@ -139,7 +144,7 @@ sealed class enemyCell : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (isSelectableByAction)
+        if (isSelectableByAction && hasHero && characterRepresentative.IsAlive())
         {
             arrowDisplay.SetActive(true);
             arrowDisplay.transform.position = arrowVector;
@@ -150,15 +155,17 @@ sealed class enemyCell : MonoBehaviour
             float newZ = arrowDisplay.transform.rotation.z;
             float newW = arrowDisplay.transform.rotation.w;
             arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
-            if (hasHero)
+            if (hasHero && characterRepresentative.IsAlive())
             {
                 rend.color = Color.red;
-            }
-            if (Input.GetMouseButtonDown(0)){ 
-                GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
-                Debug.Log("We are attacking " + name);
-                for (int i = 1; i <= 6; i++){
-                    GameObject.Find("E" + i).SendMessage("setBehaviorString", "");
+                if (Input.GetMouseButtonDown(0))
+                {
+                    GameObject.Find("Dungeon Controller").SendMessage(behaviorString, characterRepresentative);
+                    Debug.Log("We are attacking " + name);
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        GameObject.Find("E" + i).SendMessage("setBehaviorString", "");
+                    }
                 }
             }
         }
@@ -206,7 +213,7 @@ sealed class enemyCell : MonoBehaviour
     /// <param name="sender"> The component that sent the DataPacket. </param>
     /// <param name="data"> The object (DataPacket) held. </param>
     public void ReceiveDataPacket(Component sender, object data)
-    {   
+    {
         DataPacket dPacket = (DataPacket)data;
         if ((dPacket.GetDestination() == null || dPacket.GetDestination().Equals(gameObject.name)))
         {
@@ -266,12 +273,21 @@ sealed class enemyCell : MonoBehaviour
         }
     }
 
-    public AbstractCharacter GetCharacterRepresentative(){
+    public AbstractCharacter GetCharacterRepresentative()
+    {
         return characterRepresentative;
     }
 
-    public void setBehaviorString(string theBehavior){
+    public void setBehaviorString(string theBehavior)
+    {
         behaviorString = theBehavior;
         isSelectableByAction = (theBehavior != "");
+    }
+
+    void SetNullCharacterRepresentative() {
+        characterRepresentative = null;
+    }
+    void SetCharacterRepresentative(EnemyCharacter theCharacter) {
+        characterRepresentative = theCharacter;
     }
 }
