@@ -1,15 +1,18 @@
 using UnityEngine;
 
-/// <summary>
-/// An abstraction of a GUI button that handles file editing.
-/// </summary>
 namespace DungeonAdventure
 {
+    /// <summary>
+    /// An abstract class representation of a clickable button.
+    /// </summary>
     public abstract class clickableButton : MonoBehaviour
     {
-
+        /// <summary>
+        /// The color of the cell when it is highlighted. Defined in the editor.
+        /// </summary>
         [SerializeField]
-        public Color myHighlightColor; 
+        public Color myHighlightColor;
+
         /// <summary>
         /// A reference to the rectangular backing of the cell.
         /// </summary>
@@ -25,9 +28,12 @@ namespace DungeonAdventure
         /// </summary>
         void OnMouseOver()
         {
-            if (myHighlightColor != null){
+            if (myHighlightColor != null)
+            {
                 myRenderer.color = myHighlightColor;
-            } else {
+            }
+            else
+            {
                 myRenderer.color = Color.green;
             }
             if (Input.GetMouseButtonDown(0))
@@ -43,6 +49,7 @@ namespace DungeonAdventure
         {
             myRenderer.color = Color.white;
         }
+
         public abstract void PressButton();
     }
 }
