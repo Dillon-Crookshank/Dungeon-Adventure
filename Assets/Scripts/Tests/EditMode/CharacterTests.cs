@@ -12,7 +12,8 @@ namespace DungeonAdventure
         public void ConstructorTest()
         {
             PlayerCharacter test = new PlayerCharacter("warrior", 25, 10, 5, 2, 1);
-            Assert.AreEqual("warrior", test.Name);
+            Assert.AreEqual("Warrior", test.Name);
+            Assert.AreEqual("warrior", test.CharacterClass);
             Assert.AreEqual(25, test.MaxHitpoints);
             Assert.AreEqual(test.CurrentHitpoints, test.MaxHitpoints);
             Assert.AreEqual(10, test.Attack);
@@ -107,8 +108,15 @@ namespace DungeonAdventure
             PlayerCharacter testWarrior = new PlayerCharacter("warrior", 100, 20, 20, 10, 0);
             EnemyCharacter testEnemy = new EnemyCharacter("goblin", 100, 20, 20, 10, 0);
 
-            Assert.AreEqual(true, testWarrior.BasicAttack(testEnemy));
-            Assert.AreEqual(testEnemy.CurrentHitpoints, 99);
+            testWarrior.BasicAttack(testEnemy);
+
+            Assert.AreEqual(true, ((100 - testEnemy.CurrentHitpoints) <= 10) && (100 - testEnemy.CurrentHitpoints > 0));
+
+            EnemyCharacter testEnemy2 = new EnemyCharacter("goblin", 100, 20, 0, 10, 0);
+
+            testWarrior.BasicAttack(testEnemy2);
+
+            Assert.AreEqual(true, ((100 - testEnemy2.CurrentHitpoints) <= 30) && (100 - testEnemy2.CurrentHitpoints > 20));
         }
 
         [Test]
@@ -118,6 +126,18 @@ namespace DungeonAdventure
 
             Assert.AreEqual(2, testWarrior.Buff());
             Assert.AreEqual(26, testWarrior.Attack);
+        }
+
+        [Test]
+        public void SpecialAttackDatabaseTests()
+        {
+            PlayerCharacter testWarrior = new PlayerCharacter("warrior", 100, 20, 20, 10, 0);
+
+            EnemyCharacter testEnemy = new EnemyCharacter("goblin", 100, 20, 20, 10, 0);
+
+            double damage = testWarrior.SpecialAttack(testEnemy);
+
+            Assert.AreEqual(true, damage <= 20 && damage > 10);
         }
 
     }
