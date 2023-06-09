@@ -53,12 +53,24 @@ namespace DungeonAdventure
         /// </summary>
         private DungeonMap myMapModel;
 
+        /// <summary>
+        /// The instance of the enemy party queue. This holds every encounter of the dungeon, instead of it being stored in the map.
+        /// </summary>
         private Queue<EnemyParty> myEnemyQueue;
 
+        /// <summary>
+        /// The instance of the player party.
+        /// </summary>
         private PlayerParty myPlayerParty;
 
+        /// <summary>
+        /// The instance of the combat model
+        /// </summary>
         private Combat myCombatModel;
 
+        /// <summary>
+        /// A flag used to make sure an invalid state isn't achieved in the combat view.
+        /// </summary>
         private bool isGameLoaded;
 
         /// <summary>
@@ -336,7 +348,7 @@ namespace DungeonAdventure
         }
 
         /// <summary>
-        /// Called by
+        /// Does everything needed to load a new save file
         /// </summary>
         public void NewGame()
         {
@@ -369,6 +381,9 @@ namespace DungeonAdventure
             SwitchToMap();
         }
 
+        /// <summary>
+        /// Does everything needed when the combat ends
+        /// </summary>
         void EndCombatEncounter()
         {
             //Determine if that was the last battle of the game
@@ -391,6 +406,9 @@ namespace DungeonAdventure
             }
         }
 
+        /// <summary>
+        /// Helper method to quickly set the game loaded flag in the view
+        /// </summary>
         private void SetGameLoadedFlag(){
             GameObject.Find("Button Factory").SendMessage("SetButtonsGameLoadedFlag");
             isGameLoaded = true;
@@ -453,6 +471,9 @@ namespace DungeonAdventure
             myCombatModel.EndTurn();
         }
 
+        /// <summary>
+        /// Puts the current active character in combat in their defend state
+        /// </summary>
         void Defend()
         {
             GameObject
@@ -465,6 +486,9 @@ namespace DungeonAdventure
             myCombatModel.EndTurn();
         }
 
+        /// <summary>
+        /// Puts the current active character in combat in their buff state
+        /// </summary>
         void Buff()
         {
             GameObject
@@ -477,6 +501,9 @@ namespace DungeonAdventure
             myCombatModel.EndTurn();
         }
 
+        /// <summary>
+        /// Ends a turn of combat.
+        /// </summary>
         void EndTurn()
         {
             GameObject

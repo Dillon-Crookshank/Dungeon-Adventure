@@ -44,7 +44,7 @@ namespace DungeonAdventure
                 }
             }
         }
-
+        
         void OnMouseExit(){
             if (isClickable){
                 GetComponent<SpriteRenderer>().color = Color.white;
