@@ -122,6 +122,7 @@ namespace DungeonAdventure
                     //Show "enemies slain"
                     myAnimationFlag = true;
                     GameObject.Find("Enemies Slain Display").SendMessage("DoFadeAnimation");
+                    myCombatModel.stopCombat();
                     //Response : EndCombatEncounter();
                 }
                 else if (!myPlayerParty.IsAllAlive() && !myAnimationFlag)
@@ -129,6 +130,7 @@ namespace DungeonAdventure
                     //Show "you died"
                     myAnimationFlag = true;
                     GameObject.Find("You Died Display").SendMessage("DoFadeAnimation");
+                    myCombatModel.stopCombat();
                     //Response : SwitchToMainMenu();
                 }
 
@@ -282,7 +284,13 @@ namespace DungeonAdventure
             if (File.Exists("myMap.bin")){
                 File.Delete("myMap.bin");
             }   
-            GameObject.Find("Continue Button").SetActive(false);
+            if (!isGameLoaded){
+                try {
+                    GameObject.Find("Continue Button").SetActive(false);
+                } catch (Exception e){
+                    Debug.Log(e.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -354,7 +362,44 @@ namespace DungeonAdventure
         {
             myMapModel = new DungeonMap();
             myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
+            int randomNumber = UnityEngine.Random.Range(0, 10);
+            int numberOfPartyMembers = 0;
+            if (randomNumber < 2){
+                numberOfPartyMembers = 2;
+            } else if (randomNumber < 6){
+                numberOfPartyMembers = 3;
+            } else if (randomNumber < 8){
+                numberOfPartyMembers = 4;
+            } else {
+                numberOfPartyMembers = 5;
+            }
             myPlayerParty = new PlayerParty(AccessDB.PlayerDatabaseConstructor("warrior"));
+
+            string classNameAdder = "";
+            for (int i = 0; i < numberOfPartyMembers - 1; i++){
+                randomNumber = UnityEngine.Random.Range(0, 6);
+                switch (randomNumber){
+                    case 0:
+                        classNameAdder = "warrior";
+                        break;
+                    case 1:
+                        classNameAdder = "barbarian";
+                        break;
+                    case 2:
+                        classNameAdder = "rogue";
+                        break;
+                    case 3:
+                        classNameAdder = "wizard";
+                        break;
+                    case 4:
+                        classNameAdder = "cleric";
+                        break;
+                    case 5:
+                        classNameAdder = "archer";
+                        break;
+                }
+                myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor(classNameAdder));
+            }
             // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("barbarian"));
             // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("rogue"));
             // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("wizard"));

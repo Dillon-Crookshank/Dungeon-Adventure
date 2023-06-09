@@ -23,6 +23,11 @@ namespace DungeonAdventure
         internal bool isEndOfTurn;
 
         /// <summary>
+        /// A boolean for whether combat should be stopped.
+        /// </summary>
+        private bool stopCombatFlag;
+
+        /// <summary>
         /// A List of all the Characters involved in the Combat.
         /// </summary>
         private List<AbstractCharacter> characterList;
@@ -41,6 +46,8 @@ namespace DungeonAdventure
         /// The Enemy's party in the Combat.
         /// </summary>
         private EnemyParty myEnemyParty;
+
+        
 
         /// <summary>
         /// Constructor for Combat that sets the different parties and starts a Combat encounter.
@@ -62,7 +69,7 @@ namespace DungeonAdventure
         /// </summary>
         internal async void CombatEncounter()
         {
-            Debug.Log("Encounter started!");
+            // Debug.Log("Encounter started!");
             turnCounter = 0;
 
             isEndOfTurn = false;
@@ -76,17 +83,18 @@ namespace DungeonAdventure
                 turnCounter++;
                 foreach (AbstractCharacter character in characterList)
                 {
+                    GameObject.Find("Enemy Button Factory").SendMessage("SetActiveCharacter", character);
+                    GameObject.Find("Button Factory").SendMessage("SetActiveCharacter", character);
                     myActiveCharacter = character;
 
                     character.CurrentMana = 5;
-                    Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
-
-                    if (!isPlayer())
-                    {
-                        GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
-                        //Select random move
-                        if (myActiveCharacter.IsAlive())
+                    // Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
+                    if (myActiveCharacter.IsAlive()){
+                        if (!isPlayer())
                         {
+                            GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
+                            
+                            //Select random move
                             await Task.Delay(500);
 
                             PlayerCharacter target = (PlayerCharacter)myPlayerParty.GetPartyPositions().ElementAt(Random.Range(0, myPlayerParty.GetPartyPositions().Count)).Value;
@@ -108,17 +116,17 @@ namespace DungeonAdventure
                         {
                             GameObject.Find("SpecialAttackButton").SendMessage("SetClickable", false);
                         }
+                        await TurnOver(myActiveCharacter);
+                        isEndOfTurn = false;
                     }
-                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
+                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive) || stopCombatFlag)
                     {
                         break;
                     }
-                    await TurnOver(myActiveCharacter);
-                    isEndOfTurn = false;
-                    if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
-                    {
-                        break;
-                    }
+                }
+                if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive) || stopCombatFlag)
+                {
+                    break;
                 }
             }
         }
@@ -190,5 +198,9 @@ namespace DungeonAdventure
             return (myActiveCharacter.GetType() == typeof(PlayerCharacter));
         }
 
+
+        internal void stopCombat(){
+            stopCombatFlag = true;
+        }
     }
 }

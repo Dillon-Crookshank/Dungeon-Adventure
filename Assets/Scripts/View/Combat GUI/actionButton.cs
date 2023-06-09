@@ -1,74 +1,97 @@
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 /// <summary>
-/// An representation of a GUI button that handles file loading.
+/// A button that provides an action.
 /// </summary>
 namespace DungeonAdventure
 {
     class actionButton : clickableButton
-    {    
+    {
+        /// <summary>
+        /// Determines whether or not this button is clickable.
+        /// </summary>
+        private bool myClickability;
 
-        private bool isClickable;
+        /// <summary>
+        /// The color to set the sprite renderer when this button is not clickable.
+        /// </summary>
+        private Color myLockedColor = new Color(0.2f, 0.2f, 0.2f, 1f);
 
-        private Color lockedColor = new Color(0.2f, 0.2f, 0.2f, 1f);
-
+        /// <summary>
+        /// The string to display in the action help header. Defined in the editor.
+        /// </summary>
         [SerializeField]
-        string displayHeader;
+        private string myDisplayHeader;
 
+        /// <summary>
+        /// The string to display in the action help description. Defined in the editor.
+        /// </summary>
         [SerializeField]
-        string displayDescription;
+        private string myDisplayDescription;
 
+        /// <summary>
+        /// The reference to the sprite renderer of the object.
+        /// </summary>
         private SpriteRenderer myActionRenderer;
 
-        void Start(){
+        void Start()
+        {
             myActionRenderer = GetComponent<SpriteRenderer>();
         }
 
-        void Update(){
-            if (!isClickable){
-                myActionRenderer.color = lockedColor;
+        void Update()
+        {
+            if (!myClickability)
+            {
+                myActionRenderer.color = myLockedColor;
             }
         }
 
-        void OnMouseOver(){
-            if (isClickable){
-                GameObject.Find("ActionHeader").SendMessage("setText", displayHeader);
-                GameObject.Find("ActionDescription").SendMessage("setText", displayDescription);
-                myActionRenderer.color = highlightColor;
+        void OnMouseOver()
+        {
+            if (myClickability)
+            {
+                GameObject.Find("ActionHeader").SendMessage("setText", myDisplayHeader);
+                GameObject.Find("ActionDescription").SendMessage("setText", myDisplayDescription);
+                myActionRenderer.color = myHighlightColor;
                 if (Input.GetMouseButtonDown(0))
                 {
                     PressButton();
                 }
             }
         }
-        
-        void OnMouseExit(){
-            if (isClickable){
+
+        void OnMouseExit()
+        {
+            if (myClickability)
+            {
                 GetComponent<SpriteRenderer>().color = Color.white;
                 GameObject.Find("ActionHeader").SendMessage("setText", "");
                 GameObject.Find("ActionDescription").SendMessage("setText", "");
-            }   
+            }
         }
 
         /// <summary>
-        /// Handles sending a request to the Button Factory to load the party.
+        /// The actions that happen when this button is clicked (implemented in a child class).
         /// </summary>
-        public override void PressButton()
+        public override void PressButton() { }
+
+        /// <summary>
+        /// Changes the description string that appears when the button is hovered.
+        /// </summary>
+        public void SetDescription(in string theDescription)
         {
-            if (isClickable){
-                Debug.Log(name + " pressed");
-            }   
+            myDisplayDescription = theDescription;
         }
 
-        public void SetDescription(in string theDescription) {
-            displayDescription = theDescription;
-        }
-
-        void SetClickable(bool theClickability){
-            isClickable = theClickability;
+        /// <summary>
+        /// Changes whether or not this button can be clicked.
+        /// </summary>
+        /// <summary>
+        /// <param name="theClickability"> The current clickability of the button. </param>
+        void SetClickable(bool theClickability)
+        {
+            myClickability = theClickability;
         }
     }
 }

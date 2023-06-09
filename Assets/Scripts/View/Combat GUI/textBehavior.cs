@@ -1,10 +1,22 @@
 using UnityEngine;
 
+/// <summary>
+/// Changes the text held in an assigned text mesh.
+/// </summary>
 sealed class textBehavior : MonoBehaviour
 {
-    public TextMesh textMesh;
+    /// <summary>
+    /// The assigned text mesh to change. Defined in the editor.
+    /// </summary>
+    [SerializeField]
+    private TextMesh myTextMesh;
 
-    void setText(string theText){
-        textMesh.text = theText;
+    /// <summary>
+    /// Changes the text held in an assigned text mesh.
+    /// </summary>
+    /// <param name="theText"> The text to set the text mesh. </param>
+    void setText(string theText)
+    {
+        myTextMesh.text = theText;
     }
 }

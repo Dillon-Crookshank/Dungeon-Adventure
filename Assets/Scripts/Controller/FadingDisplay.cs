@@ -52,9 +52,9 @@ public class FadingDisplay : MonoBehaviour {
     /// </summary>
     private async void FadeAnimation() {
         this.transform.localPosition += new Vector3(0, 0, -25);
-        Debug.Log(myRenderer.color.a);
+        // Debug.Log(myRenderer.color.a);
         //Fade in
-        Debug.Log("Fade In");
+        // Debug.Log("Fade In");
         GameObject.Find("ActionButtons").SendMessage("UnlockButtons", false);
         myRenderer.color = new Color(myRenderer.color.r, myRenderer.color.g, myRenderer.color.b, 0f);
         for (int i = 0; i < 100; i++) {
