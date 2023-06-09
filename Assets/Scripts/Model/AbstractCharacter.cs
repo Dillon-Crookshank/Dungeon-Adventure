@@ -202,11 +202,6 @@ namespace DungeonAdventure
             set { _mySpecialAttack = value; }
         }
 
-        /// <summary>
-        /// A Random object for damage calculations.
-        /// </summary>
-        [NonSerialized()] private Random rng;
-
         private int _currentBuffDuration;
 
 
@@ -272,7 +267,6 @@ namespace DungeonAdventure
             CombatInitiative = 0;
             MyBuff = new Buff("empty", 0, 0, "attack", 0);
             MySpecialAttack = new SpecialAttack("empty", 0, 0, "attack", 0, 0);
-            rng = new Random();
         }
 
 
@@ -293,7 +287,7 @@ namespace DungeonAdventure
         /// <returns>The damage the Attack dealt to theTarget.</returns>
         internal double BasicAttack(in AbstractCharacter theTarget)
         {
-            double theDamage = (Math.Max(1, Attack + rng.Next(1, 10) - theTarget.Defence));
+            double theDamage = (Math.Max(1, Attack - theTarget.Defence) + new Random().Next(1, 10));
             theTarget.CurrentHitpoints = (-1 * theDamage);
             return theDamage;
         }
@@ -348,7 +342,7 @@ namespace DungeonAdventure
 
             double temporaryAttack = Attack + Attack * MySpecialAttack.DamageModifier;
 
-            double theDamage = (Math.Max(1, (temporaryAttack + rng.Next(1, 10) - theTarget.Defence)));
+            double theDamage = (Math.Max(1, (temporaryAttack + new Random().Next(1, 10) - theTarget.Defence)));
 
             switch (MySpecialAttack.DebuffedStat)
             {

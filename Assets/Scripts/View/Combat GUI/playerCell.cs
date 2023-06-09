@@ -91,6 +91,8 @@ sealed class playerCell : MonoBehaviour
     /// </summary>
     private bool clicked = false;
 
+    private bool isButtonGameLoaded = false;
+
     /// <summary>
     /// A reference to the SpriteRenderer component of this object.
     /// </summary>
@@ -112,149 +114,152 @@ sealed class playerCell : MonoBehaviour
         {
             // stats[0].text = "" + characterRepresentative.Attack;
             stats[0].text = "";
-            stats[1].text = "" + characterRepresentative.CurrentHitpoints;
+            stats[1].text = "" + characterRepresentative.Defence;
             stats[2].text = "" + characterRepresentative.Name;
+            stats[2].GetComponent<TextMesh>().fontSize = 93 - (stats[2].text.Length * 2);
 
-            float healthPercentage = (float)(
-                characterRepresentative.CurrentHitpoints
-                / characterRepresentative.MaxHitpoints
-            );
-
-            healthBar.transform.localPosition = new Vector3(
-                0f,
-                (float)(healthPercentage - 1) / 2,
-                -0.51f
-            );
-            healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+            if (isButtonGameLoaded){
+                float healthPercentage = (float)(
+                    characterRepresentative.CurrentHitpoints
+                    / characterRepresentative.MaxHitpoints
+                );
+                
+                healthBar.transform.localPosition = new Vector3(
+                    0f,
+                    (float)(healthPercentage - 1) / 2,
+                    -0.51f
+                );
+                healthBar.transform.localScale = new Vector3(1f, healthPercentage, 1f);
+            }
         }
 
         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
         statDisplays.SetActive(hasHero);
     }
 
-    void OnMouseOver()
-    {
-        if (name != "Template")
-        {
-            // Click on cell
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (
-                    characterRepresentative != null && characterRepresentative.IsAlive()
-                    || characterRepresentative == null
-                )
-                {
-                    // Checking to see if clicking a cell should select it or cause a character to be moved
-                    if (!selectMoveMode)
-                    {
-                        // (First click) checking cell for character
-                        if (hasHero)
-                        {
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(gameObject.transform.position, "ArrowVector")
-                            );
-                            rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
-                            held = true;
-                            clicked = !clicked;
-                        }
-                    }
-                    else
-                    {
-                        // (Second click) checking clicked cell for empty
-                        if (!hasHero)
-                        {
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(clickedCellName, "SwapRequest", "Button Factory")
-                            );
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(gameObject.transform.position, "ArrowVector")
-                            );
-                            clicked = false;
-                            rend.color = Color.white;
-                            arrowDisplay.SetActive(false);
-                        }
-                        else if (clicked)
-                        {
-                            onButtonClick.Raise(
-                                this,
-                                new DataPacket(gameObject.transform.position, "ArrowVector")
-                            );
-                            rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
-                            held = true;
-                            clicked = !clicked;
-                        }
-                    }
-                }
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                held = false;
-            }
+    // void OnMouseOver()
+    // {
+    //     if (name != "Template")
+    //     {
+    //         // Click on cell
+    //         if (Input.GetMouseButtonDown(0))
+    //         {
+    //             if (
+    //                 characterRepresentative != null && characterRepresentative.IsAlive()
+    //                 || characterRepresentative == null
+    //             )
+    //             {
+    //                 // Checking to see if clicking a cell should select it or cause a character to be moved
+    //                 if (!selectMoveMode)
+    //                 {
+    //                     // (First click) checking cell for character
+    //                     if (hasHero)
+    //                     {
+    //                         onButtonClick.Raise(
+    //                             this,
+    //                             new DataPacket(gameObject.transform.position, "ArrowVector")
+    //                         );
+    //                         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
+    //                         held = true;
+    //                         clicked = !clicked;
+    //                     }
+    //                 }
+    //                 else
+    //                 {
+    //                     // (Second click) checking clicked cell for empty
+    //                     if (!hasHero)
+    //                     {
+    //                         onButtonClick.Raise(
+    //                             this,
+    //                             new DataPacket(clickedCellName, "SwapRequest", "Button Factory")
+    //                         );
+    //                         onButtonClick.Raise(
+    //                             this,
+    //                             new DataPacket(gameObject.transform.position, "ArrowVector")
+    //                         );
+    //                         clicked = false;
+    //                         rend.color = Color.white;
+    //                         arrowDisplay.SetActive(false);
+    //                     }
+    //                     else if (clicked)
+    //                     {
+    //                         onButtonClick.Raise(
+    //                             this,
+    //                             new DataPacket(gameObject.transform.position, "ArrowVector")
+    //                         );
+    //                         rend.sprite = spriteArray[System.Convert.ToInt32(hasHero)];
+    //                         held = true;
+    //                         clicked = !clicked;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         else if (Input.GetMouseButtonUp(0))
+    //         {
+    //             held = false;
+    //         }
 
-            if (held)
-            {
-                rend.color = new Color(0.0f, 0.5f, 0.0f);
-            }
-            else if (hasHero || selectMoveMode)
-            {
-                if (characterRepresentative == null || characterRepresentative.IsAlive())
-                {
-                    rend.color = Color.green;
-                }
-                else
-                {
-                    rend.color = Color.red;
-                }
+    //         if (held)
+    //         {
+    //             rend.color = new Color(0.0f, 0.5f, 0.0f);
+    //         }
+    //         else if (hasHero || selectMoveMode)
+    //         {
+    //             if (characterRepresentative == null || characterRepresentative.IsAlive())
+    //             {
+    //                 rend.color = Color.green;
+    //             }
+    //             else
+    //             {
+    //                 rend.color = Color.red;
+    //             }
 
-                if (selectMoveMode && !clicked)
-                {
-                    arrowDisplay.SetActive(true);
-                    arrowDisplay.transform.position = arrowVector;
-                    arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
+    //             if (selectMoveMode && !clicked)
+    //             {
+    //                 arrowDisplay.SetActive(true);
+    //                 arrowDisplay.transform.position = arrowVector;
+    //                 arrowDisplay.GetComponent<SpriteRenderer>().size = arrowSize;
 
-                    // Obtains the new rotation values by calling LookAt to obtain new Z and W values.
-                    arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
-                    float newZ = arrowDisplay.transform.rotation.z;
-                    float newW = arrowDisplay.transform.rotation.w;
-                    arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
-                    if (hasHero)
-                    {
-                        rend.color = Color.red;
-                    }
-                }
-            }
-        }
-    }
+    //                 // Obtains the new rotation values by calling LookAt to obtain new Z and W values.
+    //                 arrowDisplay.transform.LookAt(gameObject.transform, new Vector3(0f, 0f, -1f));
+    //                 float newZ = arrowDisplay.transform.rotation.z;
+    //                 float newW = arrowDisplay.transform.rotation.w;
+    //                 arrowDisplay.transform.rotation = new Quaternion(0f, 0f, newZ, newW);
+    //                 if (hasHero)
+    //                 {
+    //                     rend.color = Color.red;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-    void OnMouseExit()
-    {
-        held = false;
-        if (selectMoveMode)
-        {
-            arrowDisplay.SetActive(false);
-        }
-        if (!clicked)
-        {
-            if (
-                characterRepresentative != null && characterRepresentative.IsAlive()
-                || characterRepresentative == null
-            )
-            {
-                rend.color = Color.white;
-            }
-            else
-            {
-                rend.color = new Color(0.5f, 0f, 0f, 1f);
-            }
-        }
-        else
-        {
-            rend.color = Color.yellow;
-        }
-    }
+    // void OnMouseExit()
+    // {
+    //     held = false;
+    //     if (selectMoveMode)
+    //     {
+    //         arrowDisplay.SetActive(false);
+    //     }
+    //     if (!clicked)
+    //     {
+    //         if (
+    //             characterRepresentative != null && characterRepresentative.IsAlive()
+    //             || characterRepresentative == null
+    //         )
+    //         {
+    //             rend.color = Color.white;
+    //         }
+    //         else
+    //         {
+    //             rend.color = new Color(0.5f, 0f, 0f, 1f);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         rend.color = Color.yellow;
+    //     }
+    // }
 
     /// <summary>
     /// Toggles the 'clicked' variable.
@@ -340,5 +345,10 @@ sealed class playerCell : MonoBehaviour
     
     void SetCharacterRepresentative(PlayerCharacter theCharacter) {
         characterRepresentative = theCharacter;
+    }
+
+    void SetGameLoadedFlag(){
+        Debug.Log("Hello!");
+        isButtonGameLoaded = true;
     }
 }

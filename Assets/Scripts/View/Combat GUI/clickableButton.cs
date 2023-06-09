@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// An abstraction of a GUI button that handles file editing.
 /// </summary>
-namespace DefaultNamespace
+namespace DungeonAdventure
 {
     public abstract class clickableButton : MonoBehaviour
     {
@@ -13,8 +13,7 @@ namespace DefaultNamespace
         /// <summary>
         /// A reference to the rectangular backing of the cell.
         /// </summary>
-        [SerializeField]
-        public SpriteRenderer rend;
+        private SpriteRenderer rend;
 
         void Start()
         {

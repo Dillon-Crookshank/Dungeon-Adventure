@@ -77,6 +77,7 @@ namespace DungeonAdventure
                 foreach (AbstractCharacter character in characterList)
                 {
                     myActiveCharacter = character;
+                    
                     character.CurrentMana = 5;
                     Debug.LogFormat("{0}, initiative: {1}", myActiveCharacter.Name, myActiveCharacter.CombatInitiative);
 
@@ -100,7 +101,12 @@ namespace DungeonAdventure
                     }
                     else
                     {
+                        
+                        GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", "It is " + (myActiveCharacter.Name) + "'s turn!");
                         GameObject.Find("ActionButtons").SendMessage("UnlockButtons", true);
+                        if (myActiveCharacter.CurrentMana < myActiveCharacter.MySpecialAttack.SpecialAttackManaCost){
+                            GameObject.Find("SpecialAttackButton").SendMessage("SetClickable", false);
+                        }
                     }
                     if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive))
                     {

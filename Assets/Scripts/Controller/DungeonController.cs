@@ -9,7 +9,6 @@ using System.Runtime.Serialization;
 
 namespace DungeonAdventure
 {
-
     /// <summary>
     /// The Controller to the Dungeon Adventure Game. **Must attach this script to a GameObject initialized in the Unity Editor**
     /// </summary>
@@ -60,6 +59,8 @@ namespace DungeonAdventure
 
         private Combat myCombatModel;
 
+        private bool isGameLoaded;
+
         /// <summary>
         /// A flag used to check if an animation is still in progress, so that the controller knows to wait.
         /// </summary>
@@ -70,16 +71,20 @@ namespace DungeonAdventure
         /// </summary>
         public void Start()
         {
-            myMapCameraController = new CameraController(myMapCamera, myMapCamera.transform.localPosition, (4.5f, 18.0f), (32.0f, 18.0f));
+            myMapCameraController = new CameraController(
+                myMapCamera,
+                myMapCamera.transform.localPosition,
+                (4.5f, 18.0f),
+                (32.0f, 18.0f)
+            );
             myMapView = new MapView(myMapCamera.transform.localPosition);
-
-            LoadGame();
 
             myMapCamera.SetActive(false);
             myCombatCamera.SetActive(false);
             myMenuCamera.SetActive(true);
 
             myAnimationFlag = false;
+            GameObject.Find("Continue Button").SetActive(File.Exists("myMap.bin"));
         }
 
         /// <summary>
@@ -87,52 +92,57 @@ namespace DungeonAdventure
         /// </summary>
         public void Update()
         {
-            (GameObject.Find("Button Factory")).SendMessage("setDisplayedParty", myPlayerParty);
-            //Do extra check since peek throws an error when the queue is empty
-            if (myEnemyQueue.Count != 0)
-            {
-                (GameObject.Find("Enemy Button Factory")).SendMessage("setDisplayedParty", myEnemyQueue.Peek());
-            }
-
-            //If either party is dead, we know that combat was just finished
-            if (myEnemyQueue.Count != 0 && !(myEnemyQueue.Peek()).IsAllAlive() && !myAnimationFlag)
-            {
-                //Show "enemies slain"
-                myAnimationFlag = true;
-                GameObject.Find("Enemies Slain Display").SendMessage("DoFadeAnimation");
-                //Response : EndCombatEncounter();
-            }
-
-            else if (!myPlayerParty.IsAllAlive() && !myAnimationFlag)
-            {
-                //Show "you died"
-                myAnimationFlag = true;
-                GameObject.Find("You Died Display").SendMessage("DoFadeAnimation");
-                //Response : SwitchToMainMenu();
-            }
-
-
-            //left-ctr + w -> kill entire enemy party
-            if (Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftControl))
-            {
-                foreach (AbstractCharacter character in myEnemyQueue.Peek().GetPartyPositions().Values)
+            
+            if (isGameLoaded){
+                (GameObject.Find("Button Factory")).SendMessage("setDisplayedParty", myPlayerParty);
+                //Do extra check since peek throws an error when the queue is empty
+                if (myEnemyQueue.Count != 0)
                 {
-                    character.CurrentHitpoints = -999;
+                    (GameObject.Find("Enemy Button Factory")).SendMessage(
+                        "setDisplayedParty",
+                        myEnemyQueue.Peek()
+                    );
                 }
-            }
 
-            //left-ctr + l -> kill entire user party
-            if (Input.GetKeyDown(KeyCode.L) && Input.GetKey(KeyCode.LeftControl))
-            {
-                foreach (AbstractCharacter character in myPlayerParty.GetPartyPositions().Values)
+                //If either party is dead, we know that combat was just finished
+                if (myEnemyQueue.Count != 0 && !(myEnemyQueue.Peek()).IsAllAlive() && !myAnimationFlag)
                 {
-                    character.CurrentHitpoints = -999;
+                    //Show "enemies slain"
+                    myAnimationFlag = true;
+                    GameObject.Find("Enemies Slain Display").SendMessage("DoFadeAnimation");
+                    //Response : EndCombatEncounter();
                 }
+                else if (!myPlayerParty.IsAllAlive() && !myAnimationFlag)
+                {
+                    //Show "you died"
+                    myAnimationFlag = true;
+                    GameObject.Find("You Died Display").SendMessage("DoFadeAnimation");
+                    //Response : SwitchToMainMenu();
+                }
+
+                //left-ctr + w -> kill entire enemy party
+                if (Input.GetKeyDown(KeyCode.W) && Input.GetKey(KeyCode.LeftControl))
+                {
+                    foreach (
+                        AbstractCharacter character in myEnemyQueue.Peek().GetPartyPositions().Values
+                    )
+                    {
+                        character.CurrentHitpoints = -999;
+                    }
+                }
+
+                //left-ctr + l -> kill entire user party
+                if (Input.GetKeyDown(KeyCode.L) && Input.GetKey(KeyCode.LeftControl))
+                {
+                    foreach (AbstractCharacter character in myPlayerParty.GetPartyPositions().Values)
+                    {
+                        character.CurrentHitpoints = -999;
+                    }
+                }
+
+                UpdateMapView();
+                myMapCameraController.UpdateCamera();
             }
-
-
-            UpdateMapView();
-            myMapCameraController.UpdateCamera();
         }
 
         /// <summary>
@@ -148,13 +158,14 @@ namespace DungeonAdventure
             for (int i = 0; myMapModel.GetNthAdjacentRoom(i) != null; i++)
             {
                 myMapView.GiveSprite(myMapModel.GetNthAdjacentRoom(i), mySprites[1]);
-
-
             }
 
             for (int i = 0; i < myMapModel.GetRoomCount(); i++)
             {
-                if (myMapModel.GetNthRoom(i).GetEnemyFlag() && myMapModel.GetNthRoom(i).GetSeenFlag())
+                if (
+                    myMapModel.GetNthRoom(i).GetEnemyFlag()
+                    && myMapModel.GetNthRoom(i).GetSeenFlag()
+                )
                 {
                     myMapView.GiveIcon(myMapModel.GetNthRoom(i), mySprites[3]);
                 }
@@ -162,7 +173,6 @@ namespace DungeonAdventure
                 {
                     myMapView.ClearIcon(myMapModel.GetNthRoom(i));
                 }
-
             }
         }
 
@@ -174,7 +184,12 @@ namespace DungeonAdventure
         private void SerializeObject(in String theFileName, in System.Object theMap)
         {
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(theFileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream(
+                theFileName,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.None
+            );
             formatter.Serialize(stream, theMap);
             stream.Close();
         }
@@ -186,9 +201,13 @@ namespace DungeonAdventure
         /// <returns> The deserialized dungeon map. </returns>
         private System.Object DeserializeObject(in String theFileName)
         {
-
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(theFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            Stream stream = new FileStream(
+                theFileName,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read
+            );
 
             //Save the map to a temp variable so we can close the file stream
             System.Object temp = formatter.Deserialize(stream);
@@ -234,6 +253,7 @@ namespace DungeonAdventure
                     }
                 }
             }
+            SetGameLoadedFlag();
         }
 
         /// <summary>
@@ -241,11 +261,16 @@ namespace DungeonAdventure
         /// </summary>
         public void SwitchToMainMenu()
         {
+            
             myMapCamera.SetActive(false);
             myCombatCamera.SetActive(false);
             myMenuCamera.SetActive(true);
-            LoadGame();
             myAnimationFlag = false;
+            isGameLoaded = false;
+            if (File.Exists("myMap.bin")){
+                File.Delete("myMap.bin");
+            }   
+            GameObject.Find("Continue Button").SetActive(false);
         }
 
         /// <summary>
@@ -306,6 +331,7 @@ namespace DungeonAdventure
         /// </summary>
         public void ContinueGame()
         {
+            LoadGame();
             SwitchToMap();
         }
 
@@ -317,11 +343,11 @@ namespace DungeonAdventure
             myMapModel = new DungeonMap();
             myEnemyQueue = EnemyPartyQueue.CreateEnemyQueue();
             myPlayerParty = new PlayerParty(AccessDB.PlayerDatabaseConstructor("warrior"));
-            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("barbarian"));
-            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("rogue"));
-            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("wizard"));
-            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("cleric"));
-            myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("archer"));
+            // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("barbarian"));
+            // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("rogue"));
+            // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("wizard"));
+            // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("cleric"));
+            // myPlayerParty.AddCharacter(AccessDB.PlayerDatabaseConstructor("archer"));
 
             SaveGame();
 
@@ -339,7 +365,7 @@ namespace DungeonAdventure
                     }
                 }
             }
-
+            SetGameLoadedFlag();
             SwitchToMap();
         }
 
@@ -351,12 +377,10 @@ namespace DungeonAdventure
             SwitchToMap();
             if (myEnemyQueue.Count != 1)
             {
-
                 myEnemyQueue.Dequeue();
                 myAnimationFlag = false;
 
                 SaveGame();
-
             }
             else
             {
@@ -367,17 +391,34 @@ namespace DungeonAdventure
             }
         }
 
+        private void SetGameLoadedFlag(){
+            GameObject.Find("Button Factory").SendMessage("SetButtonsGameLoadedFlag");
+            isGameLoaded = true;
+        }
+
         /// <summary>
         /// After the attack button is clicked, calls the attack on the target character and updates the combat log.
         /// </summary>
         /// <param name="theTarget">The AbstractCharacter being attacked.</param>
         async void DeliverBasicAttack(AbstractCharacter theTarget)
         {
-            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveCharacter().Name) + " attacks " + theTarget.Name + "...");
+            GameObject
+                .Find("Combat Log")
+                .SendMessage(
+                    "UpdateCombatLog",
+                    (myCombatModel.GetActiveCharacter().Name) + " attacks " + theTarget.Name + "..."
+                );
             await Task.Delay(300);
-            double damage = myCombatModel.GetActiveCharacter().BasicAttack(theTarget);
-            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
-            if (!theTarget.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (theTarget.Name + " dies!")); }
+            double damage = Math.Round(myCombatModel.GetActiveCharacter().BasicAttack(theTarget), 1);
+            GameObject
+                .Find("Combat Log")
+                .SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
+            if (!theTarget.IsAlive())
+            {
+                GameObject
+                    .Find("Combat Log")
+                    .SendMessage("UpdateCombatLog", (theTarget.Name + " dies!"));
+            }
             myCombatModel.EndTurn();
         }
 
@@ -387,14 +428,64 @@ namespace DungeonAdventure
         /// <param name="theTarget">The AbstractCharacter being attacked.</param>
         async void DeliverSpecialAttack(AbstractCharacter theTarget)
         {
-            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (myCombatModel.GetActiveCharacter().Name) + " uses " +
-            myCombatModel.GetActiveCharacter().MySpecialAttack.SpecialAttackName + " on " + theTarget.Name + "...");
+            GameObject
+                .Find("Combat Log")
+                .SendMessage(
+                    "UpdateCombatLog",
+                    (myCombatModel.GetActiveCharacter().Name)
+                        + " uses "
+                        + myCombatModel.GetActiveCharacter().MySpecialAttack.SpecialAttackName
+                        + " on "
+                        + theTarget.Name
+                        + "..."
+                );
             await Task.Delay(300);
-            double damage = myCombatModel.GetActiveCharacter().SpecialAttack(theTarget);
-            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
-            if (!theTarget.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (theTarget.Name + " dies!")); }
+            double damage = Math.Round(myCombatModel.GetActiveCharacter().SpecialAttack(theTarget), 1);
+            GameObject
+                .Find("Combat Log")
+                .SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
+            if (!theTarget.IsAlive())
+            {
+                GameObject
+                    .Find("Combat Log")
+                    .SendMessage("UpdateCombatLog", (theTarget.Name + " dies!"));
+            }
+            myCombatModel.EndTurn();
+        }
+
+        void Defend()
+        {
+            GameObject
+                .Find("Combat Log")
+                .SendMessage(
+                    "UpdateCombatLog",
+                    (myCombatModel.GetActiveCharacter().Name) + " is on guard this turn!"
+                );
+            myCombatModel.GetActiveCharacter().Defend();
+            myCombatModel.EndTurn();
+        }
+
+        void Buff()
+        {
+            GameObject
+                .Find("Combat Log")
+                .SendMessage(
+                    "UpdateCombatLog",
+                    (myCombatModel.GetActiveCharacter().Name) + " uses " + myCombatModel.GetActiveCharacter().MyBuff.BuffName + "!"
+                );
+            myCombatModel.GetActiveCharacter().Buff();
+            myCombatModel.EndTurn();
+        }
+
+        void EndTurn()
+        {
+            GameObject
+                .Find("Combat Log")
+                .SendMessage(
+                    "UpdateCombatLog",
+                    (myCombatModel.GetActiveCharacter().Name) + " skips their turn!"
+                );
             myCombatModel.EndTurn();
         }
     }
-
 }
