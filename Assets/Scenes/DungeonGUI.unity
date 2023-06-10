@@ -293,7 +293,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44776403}
-  m_Text: 
+  m_Text: The attack deals 6 damage!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -648,7 +648,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 280389169}
-  m_Text: 
+  m_Text: It is Barbarian's turn!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -953,7 +953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74bfe60e8f6d94091da5d24d70add9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHighlightColor: {r: 0.6792453, g: 0.56133646, b: 0.18839444, a: 1}
+  myHighlightColor: {r: 0.9056604, g: 0.74823743, b: 0, a: 1}
   myDisplayHeader: Special Attack
   myDisplayDescription: Stronger attack; costs mana.
 --- !u!1 &345762845
@@ -1535,7 +1535,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640573485}
-  m_Text: 
+  m_Text: The attack deals 2 damage!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -1778,9 +1778,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4146695580b524fbff92642f2a0e02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHighlightColor: {r: 0.5283019, g: 0.35937145, b: 0.26614454, a: 1}
+  myHighlightColor: {r: 1, g: 0.81853384, b: 0.51320755, a: 1}
   myDisplayHeader: End Turn
-  myDisplayDescription: End turn without action.
+  myDisplayDescription: Ends turn without action.
 --- !u!4 &816272442
 Transform:
   m_ObjectHideFlags: 0
@@ -2140,7 +2140,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058374953}
-  m_Text: 
+  m_Text: Skeleton archer attacks Warrior...
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -2457,7 +2457,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112664349}
-  m_Text: 
+  m_Text: Warrior dies!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -2568,7 +2568,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1148140930}
-  m_Text: 
+  m_Text: The attack deals 10 damage!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -2679,7 +2679,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1212999682}
-  m_Text: 
+  m_Text: Necromancer attacks Warrior...
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -2887,9 +2887,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b2102ea1aadb045b6b19619453626a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHighlightColor: {r: 0.073050864, g: 0.6792453, b: 0.3711737, a: 1}
+  myHighlightColor: {r: 0, g: 0.8490566, b: 0.17694159, a: 1}
   myDisplayHeader: Buff
-  myDisplayDescription: Increases stats.
+  myDisplayDescription: Increase stats; costs mana.
 --- !u!1 &1300969670
 GameObject:
   m_ObjectHideFlags: 0
@@ -3028,7 +3028,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1333733920}
-  m_Text: 
+  m_Text: Warrior dies!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -4083,7 +4083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 660c59f2e321a204e8755113c929bad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHighlightColor: {r: 0.8207547, g: 0.3225724, b: 0.2121573, a: 1}
+  myHighlightColor: {r: 1, g: 0.15516564, b: 0, a: 1}
   myDisplayHeader: Attack
   myDisplayDescription: Attack a chosen enemy.
 --- !u!1 &1723061610
@@ -4210,9 +4210,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f1667177b8e8c4e971fe3eabd36987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHighlightColor: {r: 0.7264151, g: 0, b: 0.67093134, a: 1}
+  myHighlightColor: {r: 1, g: 0, b: 0.886693, a: 1}
   myDisplayHeader: Item
-  myDisplayDescription: Not yet implemented.
+  myDisplayDescription: To be implemented.
 --- !u!1 &1761380991
 GameObject:
   m_ObjectHideFlags: 0
@@ -4240,7 +4240,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761380991}
-  m_Text: 
+  m_Text: It is Barbarian's turn!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -4672,9 +4672,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3823cf1c866582a46a6ed24f959ef8b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHighlightColor: {r: 0, g: 0.8016935, b: 0.9339623, a: 1}
+  myHighlightColor: {r: 0, g: 0.95200586, b: 1, a: 1}
   myDisplayHeader: Defend
-  myDisplayDescription: Raises defense.
+  myDisplayDescription: Increase defense.
 --- !u!1 &1856986316
 GameObject:
   m_ObjectHideFlags: 0
@@ -4702,7 +4702,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1856986316}
-  m_Text: 
+  m_Text: The attack deals 6 damage!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -4941,7 +4941,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1976454980}
-  m_Text: 
+  m_Text: It is Warrior's turn!
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
@@ -5233,7 +5233,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2105582232}
-  m_Text: 
+  m_Text: Necromancer attacks Warrior...
   m_OffsetZ: 0
   m_CharacterSize: 0.04
   m_LineSpacing: 1
