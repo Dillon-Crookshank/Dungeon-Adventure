@@ -104,19 +104,18 @@ namespace DungeonAdventure
                             double damage = myActiveCharacter.BasicAttack(target);
                             GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", ("The attack deals " + damage + " damage!"));
                             if (!target.IsAlive()) { GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", (target.Name + " dies!")); }
+                            isEndOfTurn = true;
                         }
-                        isEndOfTurn = true;
-                    }
-                    else
-                    {
-
-                        GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", "It is " + (myActiveCharacter.Name) + "'s turn!");
-                        GameObject.Find("ActionButtons").SendMessage("UnlockButtons", true);
-                        if (myActiveCharacter.CurrentMana < myActiveCharacter.MySpecialAttack.SpecialAttackManaCost)
+                        else
                         {
-                            GameObject.Find("SpecialAttackButton").SendMessage("SetClickable", false);
+                            
+                            GameObject.Find("Combat Log").SendMessage("UpdateCombatLog", "It is " + (myActiveCharacter.Name) + "'s turn!");
+                            GameObject.Find("ActionButtons").SendMessage("UnlockButtons", true);
+                            if (myActiveCharacter.CurrentMana < myActiveCharacter.MySpecialAttack.SpecialAttackManaCost){
+                                GameObject.Find("SpecialAttackButton").SendMessage("SetClickable", false);
+                            }
+                            await TurnOver(myActiveCharacter);
                         }
-                        await TurnOver(myActiveCharacter);
                         isEndOfTurn = false;
                     }
                     if (!(myPlayerParty.isAllAlive && myEnemyParty.isAllAlive) || stopCombatFlag)
